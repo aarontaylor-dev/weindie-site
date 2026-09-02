@@ -27,12 +27,18 @@ Then visit <http://127.0.0.1:8787/index.html>.
 
 ## Deployment
 
-Production is served by Cloudflare from this repository's default branch
-(`main`). There is no build command and no build output directory — the
-repository root is published as-is. Pushing to `main` deploys automatically.
+Production is served by **Cloudflare Pages**, project `weindie-site`, connected
+to this repository. Pushing to `main` deploys automatically.
 
-The canonical hostname is `https://weindie.com`; `https://www.weindie.com`
-redirects to it.
+    Production branch    main
+    Build command        (none)
+    Output directory     / (repository root)
+    Pages hostname       weindie-site.pages.dev
+    Canonical hostname   weindie.com
+
+`https://www.weindie.com` redirects to `https://weindie.com` with a 301 that
+preserves the path and query string. The Pages hostname stays available and is
+useful for checking a deploy independently of DNS.
 
 ## Repository status
 
