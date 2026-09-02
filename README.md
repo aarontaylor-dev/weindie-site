@@ -9,13 +9,23 @@ problem and take away a starter skill file.
 
 ## What is here
 
-    index.html    the entire site — HTML, CSS and JavaScript in one file
+    index.html    the whole site — HTML, CSS and JavaScript in one file
+    404.html      not-found page, same styling, also self-contained
+    og.png        1200x630 link-preview image (referenced by meta tags only)
+    og.svg        source for og.png
     README.md     this file
     .gitignore
 
 That is the whole thing on purpose. There is no framework, no build step, no
-CMS, no database, no analytics, no trackers, and no third-party requests. The
-page loads one file and nothing else.
+CMS, no database, no analytics, no trackers, and no third-party requests.
+
+`index.html` still loads one file and nothing else — `og.png` is never fetched
+by the browser rendering the page, only by link-preview scrapers reading the
+Open Graph tags. `og.png` is generated from `og.svg` with:
+
+    sips -s format png og.svg --out og.png
+
+Regenerate it if the wordmark or headline changes.
 
 ## Local preview
 
