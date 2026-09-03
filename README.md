@@ -1,54 +1,120 @@
 # weindie
 
-Source for [weindie.com](https://weindie.com) — the WeIndie homepage.
+Source for [weindie.com](https://weindie.com).
 
-WeIndie is a small independent workbench for practical AI work. The site is
-deliberately plain: it explains what WeIndie is, lists the current Spec First
-skills (`/spec`, `/drift`, `/kiss`, `/ship`), and lets a visitor describe a
-problem and take away a starter skill file.
+WeIndie is a small independent workbench for practical AI work. The site explains
+what WeIndie is, and gives each skill in the current **Spec First** set
+(`/spec`, `/drift`, `/kiss`, `/ship`) a page you can send to someone.
+
+## The model
+
+    canonical skill  +  platform packaging  =  platform download
+    canonical skill  +  your preferences    =  custom skill
+
+There is exactly one version of each skill. There are no separate Claude Code,
+Cursor or Codex variants — only different install paths.
 
 ## What is here
 
-    index.html    the whole site — HTML, CSS and JavaScript in one file
-    404.html      not-found page, same styling, also self-contained
-    og.png        1200x630 link-preview image (referenced by meta tags only)
-    og.svg        source for og.png
-    README.md     this file
-    .gitignore
+    skills/
+      catalogue.json        which skills exist, and in what order
+      <slug>/SKILL.md       the canonical skill — the single source of truth
+      <slug>/skill.json     page content and customisation options
 
-That is the whole thing on purpose. There is no framework, no build step, no
-CMS, no database, no analytics, no trackers, and no third-party requests.
+    src/
+      site.css              styling shared by every generated page
+      home.html             homepage template
+      skill.js              skill-page behaviour (copy, customise, diff, download)
 
-`index.html` still loads one file and nothing else — `og.png` is never fetched
-by the browser rendering the page, only by link-preview scrapers reading the
-Open Graph tags. `og.png` is generated from `og.svg` with:
+    build.js                the generator — no dependencies
+    404.html                not-found page, hand-maintained
 
-    sips -s format png og.svg --out og.png
+Everything else in the repository root is **generated**. Do not edit it by hand:
 
-Regenerate it if the wordmark or headline changes.
+    index.html              homepage
+    <slug>/index.html       skill page      -> weindie.com/<slug>
+    <slug>/SKILL.md         raw skill       -> weindie.com/<slug>/SKILL.md
+    og.svg, og.png          homepage link-preview card
+    og/<slug>.svg, .png     per-skill link-preview cards
+
+## Build
+
+    node build.js
+
+Requires Node and, for the link-preview images, macOS `sips`. Generated PNGs are
+only rebuilt when their SVG is newer, so a normal build does no image work.
+
+The build refuses to run if a skill is inconsistent. It checks that:
+
+- the `name` in SKILL.md frontmatter matches the folder name
+- `metadata.source` matches the public URL
+- every customisation option has exactly one default
+- each default option line appears in SKILL.md **exactly once**
+- no non-default option line appears in SKILL.md
+- the bullets under "Defaults you can change" correspond one-to-one with the
+  options in `skill.json`
+
+That last set is what keeps customisation honest: the browser generates a custom
+skill by replacing those exact lines, so if the text drifts apart the build stops
+rather than silently producing a file that changes nothing.
+
+## Adding a skill
+
+1. `mkdir skills/<slug>` and add `SKILL.md` and `skill.json`. Copy an existing
+   pair — the shapes are small and self-explanatory.
+2. Add the slug to `skills/catalogue.json`.
+3. `node build.js`, then commit the generated output.
+
+Nothing assumes a particular number of skills.
+
+## Frontmatter
+
+SKILL.md frontmatter stays inside the six fields of the
+[Agent Skills specification](https://agentskills.io/specification). Version and
+source live in the `metadata` map so the file remains spec-valid:
+
+    ---
+    name: drift
+    description: ...
+    metadata:
+      version: "0.1"
+      source: https://weindie.com/drift
+    ---
+
+A customised download adds `based_on: WeIndie /drift v0.1` to the same map.
 
 ## Local preview
 
-Open `index.html` directly in a browser, or serve it:
-
     python3 -m http.server 8787
 
-Then visit <http://127.0.0.1:8787/index.html>.
+Then <http://127.0.0.1:8787/>. Use the trailing-slash form for skill pages
+(`/kiss/`) — Cloudflare Pages resolves `/kiss` in production, Python's server
+does not.
+
+## Privacy
+
+No analytics, no trackers, no third-party requests, no build-time or run-time
+network calls, no cookies, no storage. Problem matching, customisation and
+download generation all happen in the visitor's browser. The claim on the site
+that nothing leaves the browser is literally true — keep it that way.
 
 ## Deployment
 
-Production is served by **Cloudflare Pages**, project `weindie-site`, connected
-to this repository. Pushing to `main` deploys automatically.
+Production is **Cloudflare Pages**, project `weindie-site`, connected to this
+repository. Pushing to `main` deploys automatically.
 
     Production branch    main
-    Build command        (none)
+    Build command        (none — generated output is committed)
     Output directory     / (repository root)
     Pages hostname       weindie-site.pages.dev
     Canonical hostname   weindie.com
 
+Pages has no build command on purpose: the generated files are committed, so the
+deployed site is exactly what is in the repository, and Pages stays a plain
+static host. Run `node build.js` before committing.
+
 `https://www.weindie.com` redirects to `https://weindie.com` with a 301 that
-preserves the path and query string. The Pages hostname stays available and is
-useful for checking a deploy independently of DNS.
+preserves the path and query string.
 
 ## Repository status
 
@@ -56,6 +122,6 @@ This repository is **private**.
 
 ## Licensing
 
-Not yet specified. The site copy talks about work being open and forkable, but
-no licence has been chosen for this repository, so no `LICENSE.md` is included.
-Until a licence is added, default copyright applies.
+Not yet specified. The site copy talks about work being open and forkable, but no
+licence has been chosen, so default copyright applies. Until a licence is added,
+that contradiction stands and is known.

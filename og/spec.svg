@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f6f3ec"/>
+  <rect x="0" y="0" width="1200" height="8" fill="#315c4d"/>
+  <text x="90" y="130" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="2.9" fill="#315c4d">SPEC FIRST SKILL</text>
+  <text x="86" y="240" font-family="Menlo,Consolas,monospace" font-size="86" letter-spacing="-3" fill="#315c4d">/spec</text>
+  <text x="88" y="330" font-family="Georgia,serif" font-size="54" letter-spacing="-2" fill="#20201d">What are we actually trying to do?</text>
+  <text x="90" y="410" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="23" fill="#68675f">Establishes the goal, what finished looks like, and the</text>
+  <text x="90" y="444" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="23" fill="#68675f">boundaries — before substantial work begins.</text>
+  <line x1="90" y1="522" x2="1110" y2="522" stroke="#d8d3c8" stroke-width="1"/>
+  <text x="88" y="570" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="27" font-weight="700" letter-spacing="-1.1" fill="#20201d">weindie</text>
+  <text x="1110" y="570" text-anchor="end" font-family="Georgia,serif" font-size="22" fill="#68675f">weindie.com/spec &#183; v0.1</text>
+</svg>

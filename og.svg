@@ -1,21 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#f6f3ec"/>
   <rect x="0" y="0" width="1200" height="8" fill="#315c4d"/>
-
-  <text x="90" y="150" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="19"
-        font-weight="700" letter-spacing="2.9" fill="#315c4d">WE ARE INDEPENDENT</text>
-
+  <text x="90" y="150" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="2.9" fill="#315c4d">WE ARE INDEPENDENT</text>
   <text x="86" y="290" font-family="Georgia,serif" font-size="92" letter-spacing="-3.6" fill="#20201d">Small tools for</text>
   <text x="86" y="386" font-family="Georgia,serif" font-size="92" letter-spacing="-3.6" fill="#20201d">working with AI.</text>
-
-  <text x="90" y="452" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="23"
-        fill="#68675f">Skills, notes and experiments for a changing AI landscape.</text>
-
+  <text x="90" y="452" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="23" fill="#68675f">Skills, notes and experiments for a changing AI landscape.</text>
   <line x1="90" y1="522" x2="1110" y2="522" stroke="#d8d3c8" stroke-width="1"/>
-
-  <text x="88" y="570" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="27"
-        font-weight="700" letter-spacing="-1.1" fill="#20201d">weindie</text>
-
-  <text x="1110" y="570" text-anchor="end" font-family="Georgia,serif" font-size="22"
-        fill="#68675f">/spec &#183; /drift &#183; /kiss &#183; /ship</text>
+  <text x="88" y="570" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="27" font-weight="700" letter-spacing="-1.1" fill="#20201d">weindie</text>
+  <text x="1110" y="570" text-anchor="end" font-family="Georgia,serif" font-size="22" fill="#68675f">/spec &#183; /drift &#183; /kiss &#183; /ship</text>
 </svg>
