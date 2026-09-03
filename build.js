@@ -10,7 +10,7 @@
  *   skills/catalogue.json     which skills exist, and in what order
  *
  * Generated output (do not edit by hand):
- *   <slug>/index.html   the public page          -> https://weindie.com/<slug>
+ *   <slug>.html         the public page          -> https://weindie.com/<slug>
  *   <slug>/SKILL.md     copy of the canonical    -> https://weindie.com/<slug>/SKILL.md
  *   index.html          homepage
  *   og.svg, og/<slug>.svg + .png   link-preview cards
@@ -36,7 +36,6 @@ const fail = m => { console.error('build failed: ' + m); process.exit(1); };
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;');
-const attr = s => esc(s);
 /* Safe to embed inside <script>. */
 const json = v => JSON.stringify(v).replace(/</g, '\\u003c').replace(/-->/g, '--\\u003e');
 
@@ -147,24 +146,24 @@ function head(o) {
   return `<meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>${esc(o.title)}</title>
-  <meta name="description" content="${attr(o.description)}">
-  <link rel="canonical" href="${attr(o.url)}">
+  <meta name="description" content="${esc(o.description)}">
+  <link rel="canonical" href="${esc(o.url)}">
   <link rel="icon" href="${FAVICON}">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="WeIndie">
-  <meta property="og:title" content="${attr(o.title)}">
-  <meta property="og:description" content="${attr(o.description)}">
-  <meta property="og:url" content="${attr(o.url)}">
-  <meta property="og:image" content="${attr(o.image)}">
+  <meta property="og:title" content="${esc(o.title)}">
+  <meta property="og:description" content="${esc(o.description)}">
+  <meta property="og:url" content="${esc(o.url)}">
+  <meta property="og:image" content="${esc(o.image)}">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="${attr(o.imageAlt)}">
+  <meta property="og:image:alt" content="${esc(o.imageAlt)}">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="${attr(o.title)}">
-  <meta name="twitter:description" content="${attr(o.description)}">
-  <meta name="twitter:image" content="${attr(o.image)}">
-  <meta name="twitter:image:alt" content="${attr(o.imageAlt)}">
+  <meta name="twitter:title" content="${esc(o.title)}">
+  <meta name="twitter:description" content="${esc(o.description)}">
+  <meta name="twitter:image" content="${esc(o.image)}">
+  <meta name="twitter:image:alt" content="${esc(o.imageAlt)}">
   <style>${CSS}</style>`;
 }
 
@@ -238,7 +237,7 @@ function skillPage(s, all, project) {
       <p class="lede">One canonical skill, packaged for wherever you work. Choose your environment for the right path.</p>
       <div class="card">
         <div class="pills" id="platforms" role="group" aria-label="Environment">
-          ${PLATFORMS.map((p, i) => `<button class="pill${i === 0 ? ' active' : ''}" data-platform="${attr(p.id)}" aria-pressed="${i === 0}">${esc(p.name)}</button>`).join('')}
+          ${PLATFORMS.map((p, i) => `<button class="pill${i === 0 ? ' active' : ''}" data-platform="${esc(p.id)}" aria-pressed="${i === 0}">${esc(p.name)}</button>`).join('')}
         </div>
         <h3 style="margin-top:20px">In a project</h3>
         <div class="path" id="destPath"></div>
@@ -365,7 +364,7 @@ function homePage(skills, cat) {
   const cards = skills.map(s =>
     `<a class="skill-card" href="/${s.slug}"><code>/${s.slug}</code><p>${esc(s.homeBlurb)}</p></a>`).join('');
   const choices = skills.map(s =>
-    `<button class="choice" data-key="${attr(s.slug)}" aria-pressed="false">${esc(s.homeLabel)}</button>`).join('');
+    `<button class="choice" data-key="${esc(s.slug)}" aria-pressed="false">${esc(s.homeLabel)}</button>`).join('');
   const data = json(skills.map(s => ({
     slug: s.slug, question: s.question, summary: s.summary,
     match: s.match || [], example: s.example
