@@ -183,7 +183,39 @@
   $('#dlCustom').addEventListener('click', function () { download(generate()); });
   $('#copySource').addEventListener('click', function () { copy(D.canonical, 'SKILL.md'); });
 
+  /* The action bar highlighted "Try it once" permanently, whatever you were
+     reading. Track the sections instead. A plain scroll handler over four
+     rects is cheaper to reason about than an observer, and needs no
+     thresholds or root margins to get right. */
+  function spy() {
+    var pairs = [];
+    Array.prototype.forEach.call(document.querySelectorAll('.actions a[href^="#"]'), function (a) {
+      var el = document.querySelector(a.getAttribute('href'));
+      if (el) pairs.push({ a: a, el: el });
+    });
+    if (!pairs.length) return;
+
+    function update() {
+      /* Whichever section crosses the reading line is the one you are on. */
+      var line = window.innerHeight * 0.3, active = null;
+      pairs.forEach(function (p) {
+        var r = p.el.getBoundingClientRect();
+        if (r.top <= line && r.bottom > line) active = p;
+      });
+      /* Past the last section, keep it lit rather than going blank. */
+      if (!active && pairs[pairs.length - 1].el.getBoundingClientRect().bottom <= line) {
+        active = pairs[pairs.length - 1];
+      }
+      pairs.forEach(function (p) { p.a.classList.toggle('on', p === active); });
+    }
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+
   renderOptions();
   renderCustom();
   renderPlatform();
+  spy();
 })();

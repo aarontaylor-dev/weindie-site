@@ -14,11 +14,34 @@
   --ink:#16181a;
   --muted:#54574f;
   --faint:#6b6e66;
-  --accent:#315c4d;
-  --accent-deep:#224236;
+  --accent:#27705a;
+  --accent-deep:#1a5342;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --serif:"Newsreader",Georgia,"Times New Roman",serif;
   --gut:clamp(20px,4vw,44px);
+  --add:#1f6b45;
+  --del:#a8412c;
+  color-scheme:light;
+}
+
+/* Dark is the same document under a reading lamp: warmer ink, same structure.
+   Defined three times so system-default, explicit-light and explicit-dark all
+   resolve — never style a component from inside one of these blocks. */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#121412;--sunk:#1a1d1a;--rule:#2d312c;
+    --ink:#ece9e1;--muted:#a9a89d;--faint:#83867c;
+    --accent:#5cb894;--accent-deep:#7fd0af;
+    --add:#6fd39c;--del:#e0876e;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121412;--sunk:#1a1d1a;--rule:#2d312c;
+  --ink:#ece9e1;--muted:#a9a89d;--faint:#83867c;
+  --accent:#5cb894;--accent-deep:#7fd0af;
+  --add:#6fd39c;--del:#e0876e;
+  color-scheme:dark;
 }
 
 *{box-sizing:border-box}
@@ -40,6 +63,10 @@ code{font-family:var(--mono);font-size:.86em}
 
 .wrap{width:min(1080px,calc(100% - var(--gut)*2));margin:0 auto}
 
+.skip{position:absolute;left:-9999px;top:0;z-index:20;font-family:var(--mono);font-size:12px;
+  background:var(--ink);color:var(--paper);padding:10px 16px;text-decoration:none}
+.skip:focus{left:8px;top:8px}
+
 /* ---------- masthead ---------- */
 .nav{
   display:flex;justify-content:space-between;align-items:baseline;gap:16px;
@@ -50,6 +77,10 @@ code{font-family:var(--mono);font-size:.86em}
 .navlinks{display:flex;gap:20px;color:var(--faint)}
 .navlinks a{color:var(--faint);text-decoration:none}
 .navlinks a:hover{color:var(--accent)}
+.navend{display:flex;align-items:baseline;gap:20px}
+.theme{border:0;background:transparent;color:var(--faint);cursor:pointer;padding:0;
+  font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.theme:hover{color:var(--accent)}
 
 /* ---------- shared type ---------- */
 .label{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
@@ -171,8 +202,8 @@ details.reveal[open] > summary{margin-bottom:10px}
 .diff{font-family:var(--mono);font-size:13px;line-height:1.65;background:var(--sunk);border:1px solid var(--rule);padding:14px 16px;overflow-x:auto;margin:0}
 /* every line is a block; context lines carry class="" so :not([class]) misses them */
 .diff span{display:block;color:var(--muted)}
-.diff .add{color:#1f6b45}
-.diff .del{color:#a8412c}
+.diff .add{color:var(--add)}
+.diff .del{color:var(--del)}
 .diff .hunk{color:var(--faint)}
 
 /* other skills */
@@ -220,4 +251,28 @@ footer{border-top:2px solid var(--ink);margin-top:64px;padding:20px 0 56px}
   .seg > *:last-child{border-bottom:0}
   .opt .seg > *{border-bottom-color:var(--rule)}
   .index a{grid-template-columns:1fr;gap:4px}
+}
+
+/* ---------- print ----------
+   A manual should print like one: ink on white, every panel open, and the
+   controls gone since none of them do anything on paper. */
+@media print{
+  :root{
+    --paper:#fff;--sunk:#fff;--rule:#bbb;--ink:#000;--muted:#333;--faint:#555;
+    --accent:#000;--accent-deep:#000;--add:#000;--del:#000;
+  }
+  body{font-size:11pt;line-height:1.45}
+  .nav,.skip,.actions,.btnrow,.toast,.navlinks,.theme,.crumbs{display:none!important}
+  .index a:hover{background:none}
+  details.reveal{display:none}            /* generated + diff are per-visit, not part of the document */
+  .blk{grid-template-columns:130px minmax(0,1fr);page-break-inside:avoid;border-top:1px solid #bbb}
+  .blk:first-of-type{border-top:1px solid #000;margin-top:24px}
+  .rail{position:static}
+  .code,.diff{border:1px solid #bbb;background:#fff;white-space:pre-wrap}
+  .chat{border-left:1px solid #bbb}
+  .shead{padding-top:0}
+  a{text-decoration:none}
+  .body a[href^="http"]::after,.body a[href^="/"]::after{content:" (" attr(href) ")";font-family:var(--mono);font-size:9pt;color:#555}
+  footer{border-top:1px solid #000}
+  section,footer{page-break-inside:avoid}
 }

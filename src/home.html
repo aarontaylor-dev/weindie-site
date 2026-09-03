@@ -33,15 +33,13 @@
     .principle{display:grid;grid-template-columns:170px minmax(0,1fr);gap:20px;padding:16px 0;border-bottom:1px solid var(--rule)}
     .principle b{font-family:var(--mono);font-size:12.5px;font-weight:500;letter-spacing:.02em}
     .principle span{color:var(--muted)}
+    .alias{display:block;height:0}
     @media(max-width:620px){.principle{grid-template-columns:1fr;gap:4px}.hero{padding-top:44px}}
   </style>
 </head>
 <body>
-  <header class="wrap nav">
-    <a class="brand" href="/">weindie</a>
-    <nav class="navlinks"><a href="#skills">The skills</a><a href="#which-one">Which one</a><a href="#what-this-is">What this is</a></nav>
-  </header>
-  <main class="wrap">
+  <!--NAV-->
+  <main class="wrap" id="main">
     <div class="hero">
       <div class="eyebrow">We are independent</div>
       <h1>Skills you can read before you run them.</h1>
@@ -49,6 +47,7 @@
       <p class="aside"><b>Open by design.</b> Use the work, change it, fork it, ignore what you do not need, or build something better. Everything here is MIT licensed, so that is an actual permission and not just a sentiment.</p>
     </div>
 
+    <a id="work" class="alias" aria-hidden="true" tabindex="-1"></a>
     <section class="blk" id="skills">
       <div class="rail"><div class="n">&sect; 1</div><h2>The skills</h2></div>
       <div class="body">
@@ -77,6 +76,8 @@
       </div>
     </section>
 
+    <a id="about" class="alias" aria-hidden="true" tabindex="-1"></a>
+    <a id="status" class="alias" aria-hidden="true" tabindex="-1"></a>
     <section class="blk" id="what-this-is">
       <div class="rail"><div class="n">&sect; 3</div><h2>What this is</h2></div>
       <div class="body">
@@ -138,5 +139,6 @@
       show(r[0].score === 0 ? SKILLS[0] : r[0].skill, unsure ? r[1].skill : null);
     });
   </script>
+  <script><!--THEMEJS--></script>
 </body>
 </html>

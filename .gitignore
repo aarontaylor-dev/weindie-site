@@ -14,3 +14,6 @@
 *.log
 .wrangler/
 node_modules/
+
+# Build scratch (link-preview card sources)
+.cache/

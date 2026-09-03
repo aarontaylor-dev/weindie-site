@@ -28,16 +28,17 @@ Cursor or Codex variants — only different install paths.
       home.html             homepage template
       skill.js              skill-page behaviour (copy, customise, diff, download)
 
+      404.html              not-found page template
+
     build.js                the generator — no dependencies
-    404.html                not-found page, hand-maintained
 
 Everything else in the repository root is **generated**. Do not edit it by hand:
 
     index.html              homepage
+    404.html                not-found page
     <slug>.html             skill page      -> weindie.com/<slug>
     <slug>/SKILL.md         raw skill       -> weindie.com/<slug>/SKILL.md
-    og.svg, og.png          homepage link-preview card
-    og/<slug>.svg, .png     per-skill link-preview cards
+    og.png, og/<slug>.png   link-preview cards
 
 The page is `<slug>.html` rather than `<slug>/index.html` on purpose: Cloudflare
 Pages serves `/kiss` straight from `kiss.html`, where a directory would
@@ -49,8 +50,11 @@ people end up on.
 
     node build.js
 
-Requires Node and, for the link-preview images, macOS `sips`. Generated PNGs are
-only rebuilt when their SVG is newer, so a normal build does no image work.
+Requires Node, and Google Chrome for the link-preview cards. The cards are laid
+out as HTML in `.cache/og/` and screenshotted headless at 1200x630, because they
+use the site's own webfonts and an SVG rasteriser only sees system fonts. PNGs
+are only re-rendered when their source HTML changes, so a normal build does no
+image work.
 
 The build refuses to run if a skill is inconsistent. It checks that:
 
@@ -109,6 +113,16 @@ Two self-hosted faces, latin subset, ~78 kB total:
 
 They are served from `/fonts/` rather than a font CDN so the site keeps making
 zero third-party requests. See `fonts/README.md`.
+
+## Theme
+
+Light and dark, driven entirely by CSS custom properties. A small script in
+`<head>` applies a stored choice before the first paint; with no stored choice
+there is no `data-theme` attribute and `prefers-color-scheme` decides. Never
+declare a colour inside a `@media (prefers-color-scheme)` or `[data-theme]`
+block — only redefine tokens there, or the un-stamped state breaks.
+
+There is also a print stylesheet: ink on white, panels open, controls hidden.
 
 ## Privacy
 

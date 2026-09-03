@@ -22,6 +22,7 @@
   <meta name="twitter:description" content="Is this the smallest version that still works? Reviews AI work for complexity that is not earning its place.">
   <meta name="twitter:image" content="https://weindie.com/og/kiss.png">
   <meta name="twitter:image:alt" content="/kiss — Is this the smallest version that still works?">
+  <link rel="preload" href="/fonts/ibm-plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/ibm-plex-mono-500.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/newsreader-var.woff2" as="font" type="font/woff2" crossorigin>
   <style>/* WeIndie — Direction B, "Plain Text".
@@ -40,11 +41,34 @@
   --ink:#16181a;
   --muted:#54574f;
   --faint:#6b6e66;
-  --accent:#315c4d;
-  --accent-deep:#224236;
+  --accent:#27705a;
+  --accent-deep:#1a5342;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --serif:"Newsreader",Georgia,"Times New Roman",serif;
   --gut:clamp(20px,4vw,44px);
+  --add:#1f6b45;
+  --del:#a8412c;
+  color-scheme:light;
+}
+
+/* Dark is the same document under a reading lamp: warmer ink, same structure.
+   Defined three times so system-default, explicit-light and explicit-dark all
+   resolve — never style a component from inside one of these blocks. */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#121412;--sunk:#1a1d1a;--rule:#2d312c;
+    --ink:#ece9e1;--muted:#a9a89d;--faint:#83867c;
+    --accent:#5cb894;--accent-deep:#7fd0af;
+    --add:#6fd39c;--del:#e0876e;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121412;--sunk:#1a1d1a;--rule:#2d312c;
+  --ink:#ece9e1;--muted:#a9a89d;--faint:#83867c;
+  --accent:#5cb894;--accent-deep:#7fd0af;
+  --add:#6fd39c;--del:#e0876e;
+  color-scheme:dark;
 }
 
 *{box-sizing:border-box}
@@ -66,6 +90,10 @@ code{font-family:var(--mono);font-size:.86em}
 
 .wrap{width:min(1080px,calc(100% - var(--gut)*2));margin:0 auto}
 
+.skip{position:absolute;left:-9999px;top:0;z-index:20;font-family:var(--mono);font-size:12px;
+  background:var(--ink);color:var(--paper);padding:10px 16px;text-decoration:none}
+.skip:focus{left:8px;top:8px}
+
 /* ---------- masthead ---------- */
 .nav{
   display:flex;justify-content:space-between;align-items:baseline;gap:16px;
@@ -76,6 +104,10 @@ code{font-family:var(--mono);font-size:.86em}
 .navlinks{display:flex;gap:20px;color:var(--faint)}
 .navlinks a{color:var(--faint);text-decoration:none}
 .navlinks a:hover{color:var(--accent)}
+.navend{display:flex;align-items:baseline;gap:20px}
+.theme{border:0;background:transparent;color:var(--faint);cursor:pointer;padding:0;
+  font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.theme:hover{color:var(--accent)}
 
 /* ---------- shared type ---------- */
 .label{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
@@ -197,8 +229,8 @@ details.reveal[open] > summary{margin-bottom:10px}
 .diff{font-family:var(--mono);font-size:13px;line-height:1.65;background:var(--sunk);border:1px solid var(--rule);padding:14px 16px;overflow-x:auto;margin:0}
 /* every line is a block; context lines carry class="" so :not([class]) misses them */
 .diff span{display:block;color:var(--muted)}
-.diff .add{color:#1f6b45}
-.diff .del{color:#a8412c}
+.diff .add{color:var(--add)}
+.diff .del{color:var(--del)}
 .diff .hunk{color:var(--faint)}
 
 /* other skills */
@@ -247,20 +279,49 @@ footer{border-top:2px solid var(--ink);margin-top:64px;padding:20px 0 56px}
   .opt .seg > *{border-bottom-color:var(--rule)}
   .index a{grid-template-columns:1fr;gap:4px}
 }
+
+/* ---------- print ----------
+   A manual should print like one: ink on white, every panel open, and the
+   controls gone since none of them do anything on paper. */
+@media print{
+  :root{
+    --paper:#fff;--sunk:#fff;--rule:#bbb;--ink:#000;--muted:#333;--faint:#555;
+    --accent:#000;--accent-deep:#000;--add:#000;--del:#000;
+  }
+  body{font-size:11pt;line-height:1.45}
+  .nav,.skip,.actions,.btnrow,.toast,.navlinks,.theme,.crumbs{display:none!important}
+  .index a:hover{background:none}
+  details.reveal{display:none}            /* generated + diff are per-visit, not part of the document */
+  .blk{grid-template-columns:130px minmax(0,1fr);page-break-inside:avoid;border-top:1px solid #bbb}
+  .blk:first-of-type{border-top:1px solid #000;margin-top:24px}
+  .rail{position:static}
+  .code,.diff{border:1px solid #bbb;background:#fff;white-space:pre-wrap}
+  .chat{border-left:1px solid #bbb}
+  .shead{padding-top:0}
+  a{text-decoration:none}
+  .body a[href^="http"]::after,.body a[href^="/"]::after{content:" (" attr(href) ")";font-family:var(--mono);font-size:9pt;color:#555}
+  footer{border-top:1px solid #000}
+  section,footer{page-break-inside:avoid}
+}
 </style>
+  <script>try{var t=localStorage.getItem('weindie-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
+  <a class="skip" href="#main">Skip to content</a>
   <header class="wrap nav">
     <a class="brand" href="/">weindie</a>
-    <nav class="navlinks"><a href="/spec">/spec</a><a href="/drift">/drift</a><a href="/ship">/ship</a><a href="/#skills">All skills</a></nav>
+    <div class="navend">
+      <nav class="navlinks"><a href="/spec">/spec</a><a href="/drift">/drift</a><a href="/ship">/ship</a><a href="/#skills">All skills</a></nav>
+      <button class="theme" id="theme" type="button">Dark</button>
+    </div>
   </header>
-  <main class="wrap">
+  <main class="wrap" id="main">
     <div class="shead">
       <div class="stitle"><h1>/kiss</h1><span class="ver">Spec First skill &middot; v0.1</span></div>
       <h2 class="squestion">Is this the smallest version that still works?</h2>
       <p class="ssummary">Reviews work for complexity that is not earning its place, and proposes the smallest version that still meets the goal.</p>
       <div class="actions seg">
-        <a class="on" href="#try-once">Try it once</a>
+        <a href="#try-once">Try it once</a>
         <a href="#install">Install</a>
         <a href="#make-it-yours">Make it yours</a>
         <a href="#skill-source">SKILL.md</a>
@@ -390,7 +451,7 @@ These are the adjustable lines of this skill. A customised copy from
         <div class="btnrow"><button class="btn" id="copySource">Copy SKILL.md</button><a class="btn" href="/kiss/SKILL.md">Open raw file</a></div></div>
     </section>
     <section class="blk" id="other-skills">
-      <div class="rail"><div class="n">&sect; 7</div><h2>Other skills</h2></div>
+      <div class="rail"><h2>Other skills</h2></div>
       <div class="body"><div class="index"><a href="/spec"><span class="k">/spec</span><span class="q">What are we actually trying to do?</span></a><a href="/drift"><span class="k">/drift</span><span class="q">Are we still doing what we meant to do?</span></a><a href="/ship"><span class="k">/ship</span><span class="q">Does the evidence support calling this done?</span></a></div></div>
     </section>
   </main>
@@ -581,10 +642,64 @@ These are the adjustable lines of this skill. A customised copy from
   $('#dlCustom').addEventListener('click', function () { download(generate()); });
   $('#copySource').addEventListener('click', function () { copy(D.canonical, 'SKILL.md'); });
 
+  /* The action bar highlighted "Try it once" permanently, whatever you were
+     reading. Track the sections instead. A plain scroll handler over four
+     rects is cheaper to reason about than an observer, and needs no
+     thresholds or root margins to get right. */
+  function spy() {
+    var pairs = [];
+    Array.prototype.forEach.call(document.querySelectorAll('.actions a[href^="#"]'), function (a) {
+      var el = document.querySelector(a.getAttribute('href'));
+      if (el) pairs.push({ a: a, el: el });
+    });
+    if (!pairs.length) return;
+
+    function update() {
+      /* Whichever section crosses the reading line is the one you are on. */
+      var line = window.innerHeight * 0.3, active = null;
+      pairs.forEach(function (p) {
+        var r = p.el.getBoundingClientRect();
+        if (r.top <= line && r.bottom > line) active = p;
+      });
+      /* Past the last section, keep it lit rather than going blank. */
+      if (!active && pairs[pairs.length - 1].el.getBoundingClientRect().bottom <= line) {
+        active = pairs[pairs.length - 1];
+      }
+      pairs.forEach(function (p) { p.a.classList.toggle('on', p === active); });
+    }
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+
   renderOptions();
   renderCustom();
   renderPlatform();
+  spy();
 })();
 </script>
+  <script>(function(){
+  var btn=document.getElementById('theme');if(!btn)return;
+  var root=document.documentElement;
+  function current(){
+    var set=root.getAttribute('data-theme');
+    if(set)return set;
+    return matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
+  }
+  function paint(){
+    var next=current()==='dark'?'light':'dark';
+    btn.textContent=next==='dark'?'Dark':'Light';
+    btn.setAttribute('aria-label','Switch to '+next+' theme');
+  }
+  btn.addEventListener('click',function(){
+    var next=current()==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next);
+    try{localStorage.setItem('weindie-theme',next)}catch(e){}
+    paint();
+  });
+  matchMedia('(prefers-color-scheme:dark)').addEventListener('change',paint);
+  paint();
+})();</script>
 </body>
 </html>
