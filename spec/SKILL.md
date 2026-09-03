@@ -1,6 +1,7 @@
 ---
 name: spec
 description: Establish what a task is actually asking for before substantial work begins.
+license: MIT
 metadata:
   version: "0.1"
   source: https://weindie.com/spec

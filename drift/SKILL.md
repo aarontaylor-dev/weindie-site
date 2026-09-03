@@ -1,6 +1,7 @@
 ---
 name: drift
 description: Check whether current work has moved away from the task it was meant to do, and recover when it has.
+license: MIT
 metadata:
   version: "0.1"
   source: https://weindie.com/drift

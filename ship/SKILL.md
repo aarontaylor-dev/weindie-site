@@ -1,6 +1,7 @@
 ---
 name: ship
 description: Decide whether the evidence actually supports calling the work complete.
+license: MIT
 metadata:
   version: "0.1"
   source: https://weindie.com/ship

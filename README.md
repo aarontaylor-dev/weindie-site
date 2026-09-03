@@ -34,14 +34,14 @@ Everything else in the repository root is **generated**. Do not edit it by hand:
     index.html              homepage
     <slug>.html             skill page      -> weindie.com/<slug>
     <slug>/SKILL.md         raw skill       -> weindie.com/<slug>/SKILL.md
+    og.svg, og.png          homepage link-preview card
+    og/<slug>.svg, .png     per-skill link-preview cards
 
 The page is `<slug>.html` rather than `<slug>/index.html` on purpose: Cloudflare
 Pages serves `/kiss` straight from `kiss.html`, where a directory would
 308-redirect to `/kiss/` and leave the address bar disagreeing with the canonical
 tag. These URLs get pasted into conversations, so the short form should be what
 people end up on.
-    og.svg, og.png          homepage link-preview card
-    og/<slug>.svg, .png     per-skill link-preview cards
 
 ## Build
 
@@ -82,6 +82,7 @@ source live in the `metadata` map so the file remains spec-valid:
     ---
     name: drift
     description: ...
+    license: MIT
     metadata:
       version: "0.1"
       source: https://weindie.com/drift
@@ -128,6 +129,15 @@ This repository is **private**.
 
 ## Licensing
 
-Not yet specified. The site copy talks about work being open and forkable, but no
-licence has been chosen, so default copyright applies. Until a licence is added,
-that contradiction stands and is known.
+MIT — see `LICENSE.txt`. This covers the site and the skills.
+
+The site copy says the work can be used, changed and forked; the licence is what
+makes that true rather than merely stated. Each canonical `SKILL.md` also carries
+`license: MIT` in its frontmatter, so a downloaded skill states its own terms
+without needing to be traced back here.
+
+`LICENSE.txt` rather than `LICENSE` so the same file is both recognised by GitHub
+and served as readable text at <https://weindie.com/LICENSE.txt>.
+
+The copyright line names **WeIndie**. Change it to a legal name if you would
+rather the licence identify a person or company.

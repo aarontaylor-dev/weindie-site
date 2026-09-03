@@ -1,6 +1,7 @@
 ---
 name: kiss
 description: Review work for complexity that is not earning its place, and propose the smallest version that still works.
+license: MIT
 metadata:
   version: "0.1"
   source: https://weindie.com/kiss

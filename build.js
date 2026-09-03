@@ -167,7 +167,7 @@ function head(o) {
   <style>${CSS}</style>`;
 }
 
-const FOOTER = `<footer class="wrap"><div class="foot"><strong>weindie</strong><span>Independent tools for navigating work with AI.</span></div></footer>`;
+const FOOTER = `<footer class="wrap"><div class="foot"><strong>weindie</strong><span>Independent tools for navigating work with AI. <a href="/LICENSE.txt">MIT licensed</a>.</span></div></footer>`;
 
 /* --------------------------------------------------------- the skill page */
 
