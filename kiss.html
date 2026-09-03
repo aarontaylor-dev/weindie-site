@@ -6,7 +6,7 @@
   <title>/kiss — WeIndie</title>
   <meta name="description" content="Is this the smallest version that still works? Reviews AI work for complexity that is not earning its place.">
   <link rel="canonical" href="https://weindie.com/kiss">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2316181a'/%3E%3Cpath d='M8 22L14 10M18 22l6-12' fill='none' stroke='%23fbfaf7' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23315c4d'/%3E%3Cpath d='M8 22L14 10M18 22l6-12' fill='none' stroke='%23fbfaf7' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="WeIndie">
   <meta property="og:title" content="/kiss — WeIndie">
@@ -40,8 +40,8 @@
   --ink:#16181a;
   --muted:#54574f;
   --faint:#6b6e66;
-  --accent:#b8442a;
-  --accent-deep:#93341f;
+  --accent:#315c4d;
+  --accent-deep:#224236;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --serif:"Newsreader",Georgia,"Times New Roman",serif;
   --gut:clamp(20px,4vw,44px);
@@ -196,7 +196,7 @@ details.reveal[open] > summary{margin-bottom:10px}
 /* diff keeps the one code treatment, tinted by sign only */
 .diff{font-family:var(--mono);font-size:13px;line-height:1.65;background:var(--sunk);border:1px solid var(--rule);padding:14px 16px;overflow-x:auto;margin:0}
 .diff .add{color:#1f6b45;display:block}
-.diff .del{color:var(--accent-deep);display:block}
+.diff .del{color:#a8412c;display:block}
 .diff .hunk{color:var(--faint);display:block}
 .diff span:not([class]){display:block;color:var(--muted)}
 
@@ -227,7 +227,7 @@ footer{border-top:2px solid var(--ink);margin-top:64px;padding:20px 0 56px}
   font-family:var(--mono);font-size:12px;color:var(--faint);
 }
 .foot b{color:var(--ink);font-weight:500;letter-spacing:.08em;text-transform:uppercase}
-.foot a{color:var(--faint)}
+.foot a{color:var(--faint);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
 .foot a:hover{color:var(--accent)}
 
 @media (max-width:820px){

@@ -140,7 +140,7 @@ function loadSkill(slug) {
 
 const CSS = read('src/site.css');
 const SKILL_JS = read('src/skill.js');
-const FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2316181a'/%3E%3Cpath d='M8 22L14 10M18 22l6-12' fill='none' stroke='%23fbfaf7' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E";
+const FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23315c4d'/%3E%3Cpath d='M8 22L14 10M18 22l6-12' fill='none' stroke='%23fbfaf7' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E";
 
 function head(o) {
   return `<meta charset="utf-8">
@@ -315,8 +315,8 @@ function ogCard(s, project) {
   const H = 'Helvetica Neue,Helvetica,Arial,sans-serif';
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#fbfaf7"/>
-  <rect x="0" y="0" width="1200" height="8" fill="#b8442a"/>
-  <text x="90" y="130" font-family="${H}" font-size="19" font-weight="700" letter-spacing="2.9" fill="#b8442a">${sesc(project.toUpperCase())} SKILL</text>
+  <rect x="0" y="0" width="1200" height="8" fill="#315c4d"/>
+  <text x="90" y="130" font-family="${H}" font-size="19" font-weight="700" letter-spacing="2.9" fill="#315c4d">${sesc(project.toUpperCase())} SKILL</text>
   <text x="86" y="240" font-family="Menlo,Consolas,monospace" font-size="86" letter-spacing="-3" fill="#16181a">/${sesc(s.slug)}</text>
 ${q.map((l, i) => `  <text x="88" y="${330 + i * 62}" font-family="Georgia,serif" font-size="54" letter-spacing="-2" fill="#16181a">${sesc(l)}</text>`).join('\n')}
 ${sum.map((l, i) => `  <text x="90" y="${(q.length > 1 ? 470 : 410) + i * 34}" font-family="${H}" font-size="23" fill="#54574f">${sesc(l)}</text>`).join('\n')}
@@ -331,8 +331,8 @@ function homeCard(skills) {
   const H = 'Helvetica Neue,Helvetica,Arial,sans-serif';
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#fbfaf7"/>
-  <rect x="0" y="0" width="1200" height="8" fill="#b8442a"/>
-  <text x="90" y="150" font-family="${H}" font-size="19" font-weight="700" letter-spacing="2.9" fill="#b8442a">WE ARE INDEPENDENT</text>
+  <rect x="0" y="0" width="1200" height="8" fill="#315c4d"/>
+  <text x="90" y="150" font-family="${H}" font-size="19" font-weight="700" letter-spacing="2.9" fill="#315c4d">WE ARE INDEPENDENT</text>
   <text x="86" y="290" font-family="Georgia,serif" font-size="80" letter-spacing="-3.2" fill="#16181a">Skills you can read</text>
   <text x="86" y="386" font-family="Georgia,serif" font-size="80" letter-spacing="-3.2" fill="#16181a">before you run them.</text>
   <text x="90" y="452" font-family="${H}" font-size="23" fill="#54574f">Small, plain-text skills for working with AI.</text>

@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#fbfaf7"/>
-  <rect x="0" y="0" width="1200" height="8" fill="#b8442a"/>
-  <text x="90" y="130" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="2.9" fill="#b8442a">SPEC FIRST SKILL</text>
+  <rect x="0" y="0" width="1200" height="8" fill="#315c4d"/>
+  <text x="90" y="130" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="2.9" fill="#315c4d">SPEC FIRST SKILL</text>
   <text x="86" y="240" font-family="Menlo,Consolas,monospace" font-size="86" letter-spacing="-3" fill="#16181a">/kiss</text>
   <text x="88" y="330" font-family="Georgia,serif" font-size="54" letter-spacing="-2" fill="#16181a">Is this the smallest version that</text>
   <text x="88" y="392" font-family="Georgia,serif" font-size="54" letter-spacing="-2" fill="#16181a">still works?</text>
