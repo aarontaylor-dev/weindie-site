@@ -6,7 +6,7 @@
   <title>/drift — WeIndie</title>
   <meta name="description" content="Are we still doing what we meant to do? Checks whether current AI work has moved away from the intended task.">
   <link rel="canonical" href="https://weindie.com/drift">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23315c4d'/%3E%3Cpath d='M7 11l4 11 5-8 5 8 4-11' fill='none' stroke='%23f6f3ec' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2316181a'/%3E%3Cpath d='M8 22L14 10M18 22l6-12' fill='none' stroke='%23fbfaf7' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="WeIndie">
   <meta property="og:title" content="/drift — WeIndie">
@@ -22,176 +22,306 @@
   <meta name="twitter:description" content="Are we still doing what we meant to do? Checks whether current AI work has moved away from the intended task.">
   <meta name="twitter:image" content="https://weindie.com/og/drift.png">
   <meta name="twitter:image:alt" content="/drift — Are we still doing what we meant to do?">
-  <style>:root{--paper:#f6f3ec;--ink:#20201d;--muted:#68675f;--line:#d8d3c8;--card:#fffdf8;--accent:#315c4d;--soft:#e5ede8;--code:#19231f;--shadow:0 18px 45px rgba(40,37,30,.08)}
+  <link rel="preload" href="/fonts/ibm-plex-mono-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/newsreader-var.woff2" as="font" type="font/woff2" crossorigin>
+  <style>/* WeIndie — Direction B, "Plain Text".
+   The product is readable plain-text files, so the site is set like one:
+   monospace carries structure, a reading serif carries language, and there
+   are no cards. Separation comes from rules and space. */
+
+@font-face{font-family:"IBM Plex Mono";src:url(/fonts/ibm-plex-mono-400.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"IBM Plex Mono";src:url(/fonts/ibm-plex-mono-500.woff2) format("woff2");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Newsreader";src:url(/fonts/newsreader-var.woff2) format("woff2");font-weight:400 600;font-style:normal;font-display:swap}
+
+:root{
+  --paper:#fbfaf7;
+  --sunk:#f2f0ea;
+  --rule:#d9d7ce;
+  --ink:#16181a;
+  --muted:#54574f;
+  --faint:#6b6e66;
+  --accent:#b8442a;
+  --accent-deep:#93341f;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --gut:clamp(20px,4vw,44px);
+}
+
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button,textarea{font:inherit}
-a{color:inherit}
-code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-.wrap{width:min(1120px,calc(100% - 40px));margin:auto}
-.nav{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
-.brand{font-size:21px;font-weight:750;letter-spacing:-.04em;text-decoration:none}
-.navlinks{display:flex;gap:24px;color:var(--muted);font-size:14px}
-.navlinks a{text-decoration:none}
-.navlinks a:hover{color:var(--ink)}
-footer{padding:36px 0 52px;color:var(--muted);font-size:13px}
-.foot{display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--line);padding-top:28px}
-.eyebrow{color:var(--accent);font-size:12px;text-transform:uppercase;letter-spacing:.14em;font-weight:750}
-.btn{border:1px solid var(--line);background:transparent;border-radius:10px;padding:11px 15px;cursor:pointer;color:var(--ink);text-decoration:none;display:inline-block}
-.btn:hover{background:var(--soft);border-color:#aac0b6}
-.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
-.btn.primary:hover{filter:brightness(.93);background:var(--accent)}
-.pill{border:1px solid var(--line);background:transparent;border-radius:999px;padding:8px 12px;cursor:pointer;color:var(--muted)}
-.pill:hover,.pill.active{background:var(--soft);border-color:#aac0b6;color:var(--accent)}
-.pills{display:flex;flex-wrap:wrap;gap:8px}
-pre.src{background:var(--code);color:#eaf1ed;border-radius:12px;padding:18px;font-size:13px;line-height:1.6;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word;margin:0}
-.chat{background:var(--code);color:#eaf1ed;border-radius:12px;padding:18px;font-size:14px}
-.msg{margin-bottom:15px}.msg:last-child{margin-bottom:0}
-.who{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:#9cb1a7;margin-bottom:4px}
-
-/* skill page */
-.shead{padding:64px 0 0}
-.stitle{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-.stitle h1{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:clamp(40px,7vw,64px);line-height:1;letter-spacing:-.04em;margin:0;font-weight:600;color:var(--accent)}
-.ver{border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12px;color:var(--muted)}
-.squestion{font-family:Georgia,serif;font-size:clamp(24px,3.4vw,34px);line-height:1.2;letter-spacing:-.03em;margin:20px 0 14px;font-weight:500;max-width:19em}
-.ssummary{font-size:18px;color:var(--muted);max-width:34em;margin:0}
-.actions{display:flex;flex-wrap:wrap;gap:10px;margin:30px 0 8px}
-.sec{padding:52px 0;border-top:1px solid var(--line);margin-top:52px}
-.sec>h2{font:500 30px/1.15 Georgia,serif;letter-spacing:-.03em;margin:0 0 8px}
-.sec>.lede{color:var(--muted);margin:0 0 22px;max-width:38em}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.two h3,.card h3{font-size:15px;margin:0 0 10px}
-.two ul{margin:0;padding-left:18px;color:var(--muted)}
-.two li{margin-bottom:7px}
-.rowbtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;align-items:center}
-.note{color:var(--muted);font-size:14px;margin:12px 0 0}
-.path{background:var(--soft);border-radius:10px;padding:12px 14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;overflow-x:auto;color:var(--code)}
-.opt{border-top:1px solid var(--line);padding:18px 0}
-.opt:first-of-type{border-top:0;padding-top:0}
-.opt .lbl{font-weight:700;font-size:15px}
-.opt .help{color:var(--muted);font-size:14px;margin:2px 0 10px}
-.changes{background:var(--soft);border-radius:12px;padding:16px 18px;margin-top:6px}
-.changes h3{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent)}
-.chg{margin-bottom:12px;font-size:14px}.chg:last-child{margin-bottom:0}
-.chg b{display:block;font-size:13px}
-.chg .was{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
-.chg .now{color:var(--code)}
-.none{color:var(--muted);font-size:14px;margin:0}
-.reveal{margin-top:14px}
-.reveal summary{cursor:pointer;color:var(--accent);font-size:14px;padding:6px 0}
-.reveal[open] summary{margin-bottom:10px}
-.diff{background:var(--code);border-radius:12px;padding:16px;font-size:13px;line-height:1.6;overflow-x:auto;margin:0;color:#c8d6cf}
-.diff .add{color:#9fe3b6}
-.diff .del{color:#f0a9a0}
-.diff .hunk{color:#8ea89c}
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(14px);background:var(--code);color:#eaf1ed;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:9}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.crumbs{color:var(--muted);font-size:14px;margin-top:26px}
-.other{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
-.other a{text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--card);min-width:150px}
-.other a:hover{border-color:#aac0b6;background:var(--soft)}
-.other code{color:var(--accent);font-weight:700}
-.other span{display:block;color:var(--muted);font-size:13px;margin-top:4px}
-@media(max-width:760px){
-  .navlinks{display:none}
-  .shead{padding-top:40px}
-  .two{grid-template-columns:1fr}
-  .sec{padding:40px 0;margin-top:40px}
-  .actions .btn,.rowbtns .btn{flex:1 1 auto;text-align:center}
-  .foot{display:block}.foot span{display:block;margin-top:8px}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--serif);font-size:17px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
 }
-@media(max-width:520px){
-  .wrap{width:min(100% - 24px,1120px)}
-  .card{padding:18px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+button,input,textarea,select{font:inherit;color:inherit}
+a{color:var(--accent)}
+a:hover{color:var(--accent-deep)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3,h4{margin:0;font-weight:400;text-wrap:balance}
+p{margin:0}
+code{font-family:var(--mono);font-size:.86em}
+
+.wrap{width:min(1080px,calc(100% - var(--gut)*2));margin:0 auto}
+
+/* ---------- masthead ---------- */
+.nav{
+  display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  padding:22px 0 12px;border-bottom:2px solid var(--ink);
+}
+.brand{color:var(--ink);text-decoration:none;font-weight:500}
+.navlinks{display:flex;gap:20px;color:var(--faint)}
+.navlinks a{color:var(--faint);text-decoration:none}
+.navlinks a:hover{color:var(--accent)}
+
+/* ---------- shared type ---------- */
+.label{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+.lede{color:var(--muted);max-width:34em}
+.small{font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--faint)}
+
+/* one code treatment, everywhere */
+.code{
+  font-family:var(--mono);font-size:13px;line-height:1.65;
+  background:var(--sunk);border:1px solid var(--rule);
+  padding:14px 16px;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word;
+  margin:0;color:var(--ink);
+}
+.code.oneline{white-space:pre;padding:11px 14px}
+
+/* buttons: mono, square, hairline */
+.btn{
+  font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;
+  border:1px solid var(--ink);background:transparent;color:var(--ink);
+  padding:9px 15px;cursor:pointer;text-decoration:none;display:inline-block;
+}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn.primary:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+
+/* segmented switch */
+.seg{display:flex;flex-wrap:wrap;border:1px solid var(--ink)}
+.seg > *{
+  flex:1 1 auto;text-align:center;font-family:var(--mono);font-size:12.5px;letter-spacing:.05em;
+  padding:11px 12px;border:0;border-right:1px solid var(--ink);background:transparent;
+  color:var(--ink);text-decoration:none;cursor:pointer;white-space:nowrap;
+}
+.seg > *:last-child{border-right:0}
+.seg > *:hover{background:var(--sunk)}
+.seg > .on,.seg > [aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg > .on:hover,.seg > [aria-pressed="true"]:hover{background:var(--ink)}
+
+/* ---------- skill page head ---------- */
+.shead{padding:52px 0 0}
+.stitle{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.stitle h1{
+  font-family:var(--mono);font-weight:500;
+  font-size:clamp(46px,9vw,84px);line-height:.94;letter-spacing:-.05em;
+}
+.stitle .ver{font-family:var(--mono);font-size:13px;color:var(--faint)}
+.squestion{
+  font-size:clamp(27px,4.2vw,40px);line-height:1.14;letter-spacing:-.012em;
+  margin-top:22px;max-width:17em;font-weight:500;
+}
+.ssummary{margin-top:16px;color:var(--muted);max-width:33em;font-size:18px}
+.actions{margin-top:32px}
+.crumbs{margin-top:16px;font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--faint);max-width:56em}
+.crumbs code{color:var(--ink)}
+
+/* ---------- numbered blocks (the label rail) ---------- */
+.blk{
+  display:grid;grid-template-columns:154px minmax(0,1fr);gap:var(--gut);
+  border-top:1px solid var(--rule);padding:40px 0;margin-top:0;
+}
+.blk:first-of-type{border-top:2px solid var(--ink);margin-top:52px}
+.rail{position:sticky;top:22px;align-self:start}
+.rail .n{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.1em}
+.rail h2{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink);margin-top:5px;font-weight:500}
+.body{min-width:0}
+.body > .lede{margin-bottom:20px;font-size:17px}
+.body > .lede:last-child{margin-bottom:0}
+.stack{display:flex;flex-direction:column;gap:16px}
+
+/* transcript — a conversation, deliberately not styled as code */
+.chat{border-left:2px solid var(--rule);padding-left:20px;display:flex;flex-direction:column;gap:16px}
+.msg .who{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:4px}
+.msg.skill .who{color:var(--accent)}
+.msg p{color:var(--muted)}
+.msg.skill p{color:var(--ink)}
+
+/* two lists, no boxes */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:var(--gut)}
+.two h3{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin-bottom:10px;font-weight:500}
+.two ul{margin:0;padding:0;list-style:none}
+.two li{color:var(--muted);padding:7px 0;border-top:1px solid var(--rule)}
+.two li:first-child{border-top:0;padding-top:0}
+
+/* install */
+.dest{display:grid;gap:6px;margin-top:4px}
+.dest .label{margin-top:10px}
+.dest .label:first-child{margin-top:0}
+
+/* customiser */
+.opt{padding:16px 0;border-top:1px solid var(--rule)}
+.opt:first-of-type{border-top:0;padding-top:0}
+.opt .lbl{font-family:var(--mono);font-size:12.5px;letter-spacing:.03em}
+.opt .help{color:var(--muted);font-size:15.5px;margin:2px 0 10px}
+.opt .seg{border-color:var(--rule)}
+.opt .seg > *{border-right-color:var(--rule);font-size:12px;padding:8px 11px}
+.opt .seg > [aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.resting{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 16px;justify-content:space-between}
+.resting .now{font-family:var(--mono);font-size:12px;color:var(--faint);line-height:1.7}
+.resting .now b{color:var(--ink);font-weight:400}
+
+.changes{border-left:2px solid var(--accent);padding-left:18px;display:flex;flex-direction:column;gap:14px}
+.changes .h{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent)}
+.chg b{display:block;font-family:var(--mono);font-size:12px;font-weight:400;color:var(--faint);letter-spacing:.03em}
+.chg .was{color:var(--faint);text-decoration:line-through;text-decoration-thickness:1px}
+.chg .now{color:var(--ink)}
+.none{color:var(--muted)}
+
+details.reveal > summary{
+  font-family:var(--mono);font-size:12px;letter-spacing:.05em;color:var(--accent);
+  cursor:pointer;padding:9px 0;list-style:none;
+}
+details.reveal > summary::-webkit-details-marker{display:none}
+details.reveal > summary::before{content:"+ ";color:var(--faint)}
+details.reveal[open] > summary::before{content:"− "}
+details.reveal[open] > summary{margin-bottom:10px}
+
+/* diff keeps the one code treatment, tinted by sign only */
+.diff{font-family:var(--mono);font-size:13px;line-height:1.65;background:var(--sunk);border:1px solid var(--rule);padding:14px 16px;overflow-x:auto;margin:0}
+.diff .add{color:#1f6b45;display:block}
+.diff .del{color:var(--accent-deep);display:block}
+.diff .hunk{color:var(--faint);display:block}
+.diff span:not([class]){display:block;color:var(--muted)}
+
+/* other skills */
+.index{display:grid;gap:0;border-top:1px solid var(--rule)}
+.index a{
+  display:grid;grid-template-columns:130px minmax(0,1fr);gap:20px;align-items:baseline;
+  padding:15px 0;border-bottom:1px solid var(--rule);text-decoration:none;color:var(--ink);
+}
+.index a:hover{background:var(--sunk)}
+.index .k{font-family:var(--mono);font-size:16px;color:var(--accent)}
+.index .q{color:var(--muted);font-size:17px}
+.index a:hover .q{color:var(--ink)}
+
+/* toast */
+.toast{
+  position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(12px);
+  background:var(--ink);color:var(--paper);padding:10px 18px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.04em;
+  opacity:0;pointer-events:none;transition:opacity .16s,transform .16s;z-index:9;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* footer */
+footer{border-top:2px solid var(--ink);margin-top:64px;padding:20px 0 56px}
+.foot{
+  display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;
+  font-family:var(--mono);font-size:12px;color:var(--faint);
+}
+.foot b{color:var(--ink);font-weight:500;letter-spacing:.08em;text-transform:uppercase}
+.foot a{color:var(--faint)}
+.foot a:hover{color:var(--accent)}
+
+@media (max-width:820px){
+  .blk{grid-template-columns:1fr;gap:16px;padding:32px 0}
+  .rail{position:static;display:flex;align-items:baseline;gap:12px}
+  .rail h2{margin-top:0}
+  .two{grid-template-columns:1fr;gap:26px}
+  .navlinks{gap:14px}
+}
+@media (max-width:560px){
+  body{font-size:16px}
+  .navlinks{display:none}
+  .seg{flex-direction:column}
+  .seg > *{border-right:0;border-bottom:1px solid var(--ink);text-align:left}
+  .seg > *:last-child{border-bottom:0}
+  .opt .seg > *{border-bottom-color:var(--rule)}
+  .index a{grid-template-columns:1fr;gap:4px}
 }
 </style>
 </head>
 <body>
   <header class="wrap nav">
     <a class="brand" href="/">weindie</a>
-    <nav class="navlinks"><a href="/spec">/spec</a><a href="/kiss">/kiss</a><a href="/ship">/ship</a><a href="/#about">What this is</a></nav>
+    <nav class="navlinks"><a href="/spec">/spec</a><a href="/kiss">/kiss</a><a href="/ship">/ship</a><a href="/#skills">All skills</a></nav>
   </header>
   <main class="wrap">
     <div class="shead">
-      <div class="eyebrow">Spec First skill</div>
-      <div class="stitle"><h1>/drift</h1><span class="ver">v0.1</span></div>
-      <p class="squestion">Are we still doing what we meant to do?</p>
+      <div class="stitle"><h1>/drift</h1><span class="ver">Spec First skill &middot; v0.1</span></div>
+      <h2 class="squestion">Are we still doing what we meant to do?</h2>
       <p class="ssummary">Checks whether the current work has moved away from the task it was meant to do, and helps get back to it.</p>
-      <div class="actions">
-        <a class="btn primary" href="#try">Try it once</a>
-        <a class="btn" href="#install">Install</a>
-        <a class="btn" href="#customise">Make it yours</a>
-        <a class="btn" href="#source">View SKILL.md</a>
+      <div class="actions seg">
+        <a class="on" href="#try-once">Try it once</a>
+        <a href="#install">Install</a>
+        <a href="#make-it-yours">Make it yours</a>
+        <a href="#skill-source">SKILL.md</a>
       </div>
-      <p class="crumbs">Sent this link by someone? <code>/drift</code> is a skill you can add to an AI coding tool — or just try the prompt below in a conversation you already have open.</p>
+      <p class="crumbs">Sent this link by someone? <code>/drift</code> is a skill you can add to an AI coding tool &mdash; or just try the prompt below in a conversation you already have open.</p>
     </div>
-
-    <section class="sec" id="try">
-      <h2>Try it once</h2>
-      <p class="lede">Nothing to install. Copy this into a conversation that is already underway, and see whether the idea is useful before you commit to it.</p>
-      <div class="card">
-        <pre class="src" id="tryPrompt">Run a drift check on this conversation before continuing. Restate the task I last actually asked for, describe what you are working on right now, and say whether they still match — ALIGNED, MINOR DRIFT or OFF TASK. If they have diverged, name concretely what moved and what returning to the task would take. If the work is aligned, say so in one line and carry on. Do not invent a problem to find.</pre>
-        <div class="rowbtns"><button class="btn primary" id="copyTry">Copy prompt</button></div>
-        <p class="note">This is a short, portable version. The installed skill below carries the fuller behaviour — when to stay quiet, how to report, and what not to flag — and your AI does not need to be able to read this page for either to work.</p>
-      </div>
+    <section class="blk" id="example">
+      <div class="rail"><div class="n">&sect; 1</div><h2>Example</h2></div>
+      <div class="body"><p class="lede">A focused fix turns into an unrelated refactor.</p>
+        <div class="chat"><div class="msg"><div class="who">You</div><p>Fix the login redirect — it drops the return URL.</p></div><div class="msg"><div class="who">AI</div><p>I've started restructuring the auth service so redirects are handled centrally.</p></div><div class="msg skill"><div class="who">/drift</div><p>OFF TASK. The request was one broken redirect; this is now an auth refactor. The return URL is dropped in buildRedirect(). Park the restructure and fix that line — the refactor may still be worth doing, but as its own decision.</p></div></div></div>
     </section>
-
-    <section class="sec" id="example">
-      <h2>What it looks like</h2>
-      <p class="lede">A focused fix turns into an unrelated refactor.</p>
-      <div class="chat"><div class="msg"><div class="who">You</div>Fix the login redirect — it drops the return URL.</div><div class="msg"><div class="who">AI</div>I've started restructuring the auth service so redirects are handled centrally.</div><div class="msg"><div class="who">/drift</div>OFF TASK. The request was one broken redirect; this is now an auth refactor. The return URL is dropped in buildRedirect(). Park the restructure and fix that line — the refactor may still be worth doing, but as its own decision.</div></div>
+    <section class="blk" id="try-once">
+      <div class="rail"><div class="n">&sect; 2</div><h2>Try once</h2></div>
+      <div class="body"><p class="lede">Nothing to install. Copy this into a conversation that is already underway, and see whether the idea is useful before you commit to it.</p>
+        <pre class="code" id="tryPrompt">Run a drift check on this conversation before continuing. Restate the task I last actually asked for, describe what you are working on right now, and say whether they still match — ALIGNED, MINOR DRIFT or OFF TASK. If they have diverged, name concretely what moved and what returning to the task would take. If the work is aligned, say so in one line and carry on. Do not invent a problem to find.</pre>
+        <div class="btnrow"><button class="btn primary" id="copyTry">Copy prompt</button></div>
+        <p class="small" style="margin-top:16px">A short, portable version. The installed skill carries the fuller behaviour &mdash; when to stay quiet, how to report, what not to flag &mdash; and neither needs your AI to be able to read this page.</p></div>
     </section>
-
-    <section class="sec" id="when">
-      <h2>When to reach for it</h2>
-      <p class="lede">A skill that fires on everything stops meaning anything. <code>/drift</code> is allowed to find nothing.</p>
-      <div class="two">
-        <div class="card"><h3>Useful when</h3><ul><li>An agent has been working for a while without checking back.</li><li>The change surface is growing beyond what the request implied.</li><li>You are about to review or accept work you did not watch closely.</li></ul></div>
-        <div class="card"><h3>Probably not needed when</h3><ul><li>The task is small and still in plain view.</li><li>The larger change was requested deliberately.</li><li>A new direction has just been agreed — that is the new task, not drift.</li></ul></div>
-      </div>
+    <section class="blk" id="when">
+      <div class="rail"><div class="n">&sect; 3</div><h2>When</h2></div>
+      <div class="body"><p class="lede">A skill that fires on everything stops meaning anything. <code>/drift</code> is allowed to find nothing.</p>
+        <div class="two">
+          <div><h3>Useful when</h3><ul><li>An agent has been working for a while without checking back.</li><li>The change surface is growing beyond what the request implied.</li><li>You are about to review or accept work you did not watch closely.</li></ul></div>
+          <div><h3>Probably not needed when</h3><ul><li>The task is small and still in plain view.</li><li>The larger change was requested deliberately.</li><li>A new direction has just been agreed — that is the new task, not drift.</li></ul></div>
+        </div></div>
     </section>
-
-    <section class="sec" id="install">
-      <h2>Install the full skill</h2>
-      <p class="lede">One canonical skill, packaged for wherever you work. Choose your environment for the right path.</p>
-      <div class="card">
-        <div class="pills" id="platforms" role="group" aria-label="Environment">
-          <button class="pill active" data-platform="claude" aria-pressed="true">Claude Code</button><button class="pill" data-platform="cursor" aria-pressed="false">Cursor</button><button class="pill" data-platform="codex" aria-pressed="false">OpenAI / Codex</button><button class="pill" data-platform="generic" aria-pressed="false">Generic</button>
+    <section class="blk" id="install">
+      <div class="rail"><div class="n">&sect; 4</div><h2>Install</h2></div>
+      <div class="body"><p class="lede">One canonical skill, packaged for wherever you work.</p>
+        <div class="seg" id="platforms" role="group" aria-label="Environment">
+          <button data-platform="claude" aria-pressed="true">Claude Code</button><button data-platform="cursor" aria-pressed="false">Cursor</button><button data-platform="codex" aria-pressed="false">OpenAI / Codex</button><button data-platform="generic" aria-pressed="false">Generic</button>
         </div>
-        <h3 style="margin-top:20px">In a project</h3>
-        <div class="path" id="destPath"></div>
-        <div id="destUserRow"><h3 style="margin-top:16px">For all your projects</h3><div class="path" id="destUser"></div></div>
-        <p class="note" id="platformNote"></p>
-        <div class="rowbtns">
+        <div class="dest">
+          <div class="label">In a project</div>
+          <div class="code oneline" id="destPath"></div>
+          <div id="destUserRow"><div class="label">For all your projects</div><div class="code oneline" id="destUser"></div></div>
+        </div>
+        <p class="small" id="platformNote" style="margin-top:14px"></p>
+        <div class="btnrow">
           <button class="btn primary" id="dlCanonical">Download SKILL.md</button>
           <button class="btn" id="copyCmd">Copy install command</button>
-          <a class="btn" id="docsLink" href="#" rel="noreferrer noopener" target="_blank"></a>
+          <a class="btn" id="docsLink" href="#" target="_blank" rel="noreferrer noopener"></a>
         </div>
-        <p class="note">Or fetch it straight into place:</p>
-        <div class="path" id="cmd"></div>
-      </div>
+        <div class="label" style="margin:18px 0 6px">Or fetch it straight into place</div>
+        <div class="code oneline" id="cmd"></div></div>
     </section>
-
-    <section class="sec" id="customise">
-      <h2>Make it yours</h2>
-      <p class="lede">A few choices that change how <code>/drift</code> behaves. Everything below happens in this browser — nothing is sent anywhere, and nothing is saved.</p>
-      <div class="card">
-        <div id="opts"></div>
+    <section class="blk" id="make-it-yours">
+      <div class="rail"><div class="n">&sect; 5</div><h2>Make it yours</h2></div>
+      <div class="body"><p class="lede">A few choices that change how <code>/drift</code> behaves. Everything here happens in this browser &mdash; nothing is sent anywhere, and nothing is saved.</p>
+        <div class="resting">
+          <div class="now" id="restNow"></div>
+          <button class="btn primary" id="dlCustom">Download /drift</button>
+        </div>
+        <details class="reveal" id="optsWrap"><summary>Change the defaults</summary><div id="opts"></div></details>
         <div class="changes" id="changes"></div>
-        <div class="rowbtns"><button class="btn primary" id="dlCustom">Download your /drift</button></div>
-        <p class="note">Install it exactly as above — same file name, same folder.</p>
-        <details class="reveal"><summary>View generated SKILL.md</summary><pre class="src" id="gen"></pre></details>
-        <details class="reveal"><summary id="diffTitle">Compare with default</summary><pre class="diff" id="diff"></pre></details>
-      </div>
+        <details class="reveal"><summary>View generated SKILL.md</summary><pre class="code" id="gen"></pre></details>
+        <details class="reveal"><summary id="diffTitle">Compare with default</summary><pre class="diff" id="diff"></pre></details></div>
     </section>
-
-    <section class="sec" id="source">
-      <h2>Skill source</h2>
-      <p class="lede">This is the whole skill — the same file the downloads are built from. Nothing downloadable here should be less inspectable than the page explaining it. Raw copy: <a href="/drift/SKILL.md"><code>/drift/SKILL.md</code></a></p>
-      <pre class="src">---
+    <section class="blk" id="skill-source">
+      <div class="rail"><div class="n">&sect; 6</div><h2>Skill source</h2></div>
+      <div class="body"><p class="lede">The whole skill, and the same file every download is built from. Nothing downloadable here should be less inspectable than the page explaining it.</p>
+        <pre class="code">---
 name: drift
 description: Check whether current work has moved away from the task it was meant to do, and recover when it has.
 license: MIT
@@ -268,16 +398,14 @@ These are the adjustable lines of this skill. A customised copy from
 - **Minor drift.** Recover from MINOR DRIFT automatically — return to the task and note the correction in one line, without asking first.
 - **Aligned checks.** When the result is ALIGNED, say so in a single line and continue.
 </pre>
-      <div class="rowbtns"><button class="btn" id="copySource">Copy SKILL.md</button><a class="btn" href="/drift/SKILL.md">Open raw file</a></div>
+        <div class="btnrow"><button class="btn" id="copySource">Copy SKILL.md</button><a class="btn" href="/drift/SKILL.md">Open raw file</a></div></div>
     </section>
-
-    <section class="sec" id="more">
-      <h2>Other Spec First skills</h2>
-      <p class="lede">Independent lenses, not a pipeline. Use one when it helps.</p>
-      <div class="other"><a href="/spec"><code>/spec</code><span>What are we actually trying to do?</span></a><a href="/kiss"><code>/kiss</code><span>Is this the smallest version that still works?</span></a><a href="/ship"><code>/ship</code><span>Does the evidence support calling this done?</span></a></div>
+    <section class="blk" id="other-skills">
+      <div class="rail"><div class="n">&sect; 7</div><h2>Other skills</h2></div>
+      <div class="body"><div class="index"><a href="/spec"><span class="k">/spec</span><span class="q">What are we actually trying to do?</span></a><a href="/kiss"><span class="k">/kiss</span><span class="q">Is this the smallest version that still works?</span></a><a href="/ship"><span class="k">/ship</span><span class="q">Does the evidence support calling this done?</span></a></div></div>
     </section>
   </main>
-  <footer class="wrap"><div class="foot"><strong>weindie</strong><span>Independent tools for navigating work with AI. <a href="/LICENSE.txt">MIT licensed</a>.</span></div></footer>
+  <footer class="wrap"><div class="foot"><b>weindie</b><span>Independent tools for navigating work with AI.</span><span>v1.1 &middot; early and evolving</span><span><a href="/LICENSE.txt">MIT licensed</a></span></div></footer>
   <script>window.SKILL={"slug":"drift","version":"0.1","source":"https://weindie.com/drift","raw":"https://weindie.com/drift/SKILL.md","canonical":"---\nname: drift\ndescription: Check whether current work has moved away from the task it was meant to do, and recover when it has.\nlicense: MIT\nmetadata:\n  version: \"0.1\"\n  source: https://weindie.com/drift\n---\n\n# /drift\n\n**Are we still doing what we meant to do?**\n\nWork drifts. A focused fix becomes a refactor; a question becomes a rewrite. Drift\nis not automatically wrong — sometimes the detour is the more valuable work — but\nit should be a decision rather than an accident. This skill compares what is being\ndone now against what was last actually agreed, and says plainly whether they\nstill match.\n\n## Useful when\n\n- An agent has been working for a while without checking back.\n- The change surface is growing beyond what the request implied.\n- You are about to review or accept work you did not watch closely.\n- Something feels off but you cannot yet name what.\n\n## Probably not needed when\n\n- The task is small and still in plain view.\n- The larger change was requested deliberately.\n- A new direction has just been agreed — that is the new task, not drift.\n\nDeviation is not the same as drift. Work that moved for a stated and accepted\nreason is aligned. Do not manufacture a finding when the work is on track.\n\n## How to run the check\n\n1. **Restate the task.** What was last explicitly asked for? Use the most recent\n   agreement, not the original one, if the goal was deliberately changed since.\n2. **Describe the current work.** What is actually being changed right now, in one\n   or two sentences, without justification.\n3. **Compare.** Does the current work serve the restated task?\n4. **Classify** the result as ALIGNED, MINOR DRIFT or OFF TASK.\n5. **Act** according to the classification and the settings below.\n\n## Classifications\n\n**ALIGNED** — the current work serves the task as last agreed.\n\n**MINOR DRIFT** — a small deviation that is cheap to correct and does not change\nthe outcome: adjacent files touched, unrequested renaming, extra polish.\n\n**OFF TASK** — the work now serves a different goal, or would change the outcome,\ncost or risk of the task in a way that was never agreed.\n\nThe common shapes are scope growth, unrequested refactoring, quietly moving the\ndefinition of done, and solving a more interesting problem than the one asked for.\n\n## Reporting\n\n- Keep it short. A drift report is an interruption; earn it.\n- Name the drift concretely — what moved, and where.\n- Say what returning to the task would take.\n- Do not relitigate work that is aligned.\n- If the detour looks genuinely more valuable than the task, say so once, as a\n  question, and let the human decide.\n\n## Defaults you can change\n\nThese are the adjustable lines of this skill. A customised copy from\n\u003chttps://weindie.com/drift> replaces them and records what changed.\n\n- **Sensitivity.** Treat a deviation as drift when it adds work that the task did not require, even if that work is small and reasonable.\n- **Interrupting.** Interrupt the work immediately when the classification is OFF TASK. For MINOR DRIFT, continue and mention it in the next report.\n- **Minor drift.** Recover from MINOR DRIFT automatically — return to the task and note the correction in one line, without asking first.\n- **Aligned checks.** When the result is ALIGNED, say so in a single line and continue.\n","defaultsNote":"These are the adjustable lines of this skill. A customised copy from\n\u003chttps://weindie.com/drift> replaces them and records what changed.","tryOnce":"Run a drift check on this conversation before continuing. Restate the task I last actually asked for, describe what you are working on right now, and say whether they still match — ALIGNED, MINOR DRIFT or OFF TASK. If they have diverged, name concretely what moved and what returning to the task would take. If the work is aligned, say so in one line and carry on. Do not invent a problem to find.","options":[{"id":"sensitivity","label":"Drift sensitivity","help":"How much deviation counts as drift.","choices":[{"id":"consequential","label":"Only consequential drift","line":"- **Sensitivity.** Treat a deviation as drift only when it changes the outcome, cost or risk of the task. Ignore small additions that a reasonable person would have made anyway.","isDefault":false},{"id":"balanced","label":"Balanced","line":"- **Sensitivity.** Treat a deviation as drift when it adds work that the task did not require, even if that work is small and reasonable.","isDefault":true},{"id":"strict","label":"Strict","line":"- **Sensitivity.** Treat any work that was not part of the stated task as drift, including small additions, renaming and unrequested polish.","isDefault":false}]},{"id":"interrupting","label":"When to interrupt","help":"Whether drift stops the work or waits for the next report.","choices":[{"id":"offtask","label":"Only when off task","line":"- **Interrupting.** Interrupt the work immediately when the classification is OFF TASK. For MINOR DRIFT, continue and mention it in the next report.","isDefault":true},{"id":"any","label":"On any drift","line":"- **Interrupting.** Interrupt the work as soon as any drift is detected, including MINOR DRIFT.","isDefault":false},{"id":"never","label":"Never mid-task","line":"- **Interrupting.** Never interrupt mid-task. Collect drift findings and report them together when the work next pauses.","isDefault":false}]},{"id":"minor","label":"Minor drift","help":"Whether small deviations are corrected without asking.","choices":[{"id":"auto","label":"Recover automatically","line":"- **Minor drift.** Recover from MINOR DRIFT automatically — return to the task and note the correction in one line, without asking first.","isDefault":true},{"id":"ask","label":"Always ask first","line":"- **Minor drift.** Do not recover from MINOR DRIFT automatically. Report it and wait for a decision before changing course.","isDefault":false}]},{"id":"aligned","label":"Aligned checks","help":"What happens when nothing has drifted.","choices":[{"id":"brief","label":"Confirm in one line","line":"- **Aligned checks.** When the result is ALIGNED, say so in a single line and continue.","isDefault":true},{"id":"silent","label":"Stay silent","line":"- **Aligned checks.** When the result is ALIGNED, say nothing and continue working.","isDefault":false}]}],"platforms":[{"id":"claude","name":"Claude Code","project":".claude/skills/\u003cslug>/SKILL.md","user":"~/.claude/skills/\u003cslug>/SKILL.md","note":"Project skills also load from any parent directory up to the repository root. On a name clash, a personal skill wins over a project one.","docs":"https://code.claude.com/docs/en/skills","docsLabel":"Claude Code skills documentation"},{"id":"cursor","name":"Cursor","project":".cursor/skills/\u003cslug>/SKILL.md","user":"~/.cursor/skills/\u003cslug>/SKILL.md","note":"Cursor also reads .agents/skills/, .claude/skills/ and .codex/skills/, so a skill installed for another tool is usually already available.","docs":"https://cursor.com/docs/skills","docsLabel":"Cursor skills documentation"},{"id":"codex","name":"OpenAI / Codex","project":".agents/skills/\u003cslug>/SKILL.md","user":"~/.agents/skills/\u003cslug>/SKILL.md","note":"Codex scans .agents/skills in every directory from the working directory up to the repository root.","docs":"https://developers.openai.com/codex/skills","docsLabel":"Codex skills documentation"},{"id":"generic","name":"Generic","project":".agents/skills/\u003cslug>/SKILL.md","user":"~/.agents/skills/\u003cslug>/SKILL.md","note":"The Agent Skills specification defines the folder and the SKILL.md format, but leaves it to each tool to decide where to look. .agents/skills/ is the most widely read location — check your tool if it is not picked up.","docs":"https://agentskills.io/specification","docsLabel":"Agent Skills specification"}]};</script>
   <script>(function () {
   var D = window.SKILL;
@@ -378,13 +506,13 @@ These are the adjustable lines of this skill. A customised copy from
   function renderOptions() {
     $('#opts').innerHTML = D.options.map(function (o) {
       return '<div class="opt"><div class="lbl">' + esc(o.label) + '</div>' +
-        '<p class="help">' + esc(o.help) + '</p><div class="pills" role="group" aria-label="' + esc(o.label) + '">' +
+        '<p class="help">' + esc(o.help) + '</p><div class="seg" role="group" aria-label="' + esc(o.label) + '">' +
         o.choices.map(function (c) {
-          return '<button class="pill' + (c.id === sel[o.id] ? ' active' : '') + '" data-opt="' + o.id +
-            '" data-choice="' + c.id + '" aria-pressed="' + (c.id === sel[o.id]) + '">' + esc(c.label) + '</button>';
+          return '<button data-opt="' + o.id + '" data-choice="' + c.id +
+            '" aria-pressed="' + (c.id === sel[o.id]) + '">' + esc(c.label) + '</button>';
         }).join('') + '</div></div>';
     }).join('');
-    Array.prototype.forEach.call($('#opts').querySelectorAll('.pill'), function (b) {
+    Array.prototype.forEach.call($('#opts').querySelectorAll('button[data-opt]'), function (b) {
       b.addEventListener('click', function () {
         sel[b.dataset.opt] = b.dataset.choice;
         renderOptions();
@@ -395,14 +523,19 @@ These are the adjustable lines of this skill. A customised copy from
 
   function renderCustom() {
     var changed = changedOptions(), custom = generate();
+    /* Resting state: say what you would get without opening anything. */
+    $('#restNow').innerHTML = changed.length
+      ? 'Your version &mdash; ' + changed.length + ' of ' + D.options.length + ' defaults changed.'
+      : 'Standard <b>/' + esc(D.slug) + '</b> v' + esc(D.version) +
+        ' &middot; all ' + D.options.length + ' defaults unchanged.';
+
     $('#changes').innerHTML = changed.length
-      ? '<h3>Changed from default</h3>' + changed.map(function (o) {
+      ? '<div class="h">Changed from default</div>' + changed.map(function (o) {
         return '<div class="chg"><b>' + esc(o.label) + '</b>' +
           '<div class="was">' + esc(plain(def(o).line)) + '</div>' +
           '<div class="now">' + esc(plain(cur(o).line)) + '</div></div>';
       }).join('')
-      : '<h3>Changed from default</h3><p class="none">Nothing changed yet. This is the standard <code>/' +
-        esc(D.slug) + '</code> v' + esc(D.version) + '.</p>';
+      : '';
     $('#gen').textContent = custom;
     $('#diffTitle').textContent = changed.length ? 'Compare with default' : 'Compare with default (identical)';
     $('#diff').innerHTML = changed.length
@@ -431,10 +564,8 @@ These are the adjustable lines of this skill. A customised copy from
     $('#docsLink').href = p.docs;
     $('#docsLink').textContent = p.docsLabel;
     $('#cmd').textContent = 'mkdir -p ' + dir(p) + ' && curl -fsSL ' + D.raw + ' -o ' + dir(p) + '/SKILL.md';
-    Array.prototype.forEach.call(document.querySelectorAll('#platforms .pill'), function (b) {
-      var on = b.dataset.platform === platform;
-      b.classList.toggle('active', on);
-      b.setAttribute('aria-pressed', on);
+    Array.prototype.forEach.call(document.querySelectorAll('#platforms button'), function (b) {
+      b.setAttribute('aria-pressed', b.dataset.platform === platform);
     });
   }
   function dir(p) {
@@ -451,7 +582,7 @@ These are the adjustable lines of this skill. A customised copy from
   }
 
   /* ---- wire up ---- */
-  Array.prototype.forEach.call(document.querySelectorAll('#platforms .pill'), function (b) {
+  Array.prototype.forEach.call(document.querySelectorAll('#platforms button'), function (b) {
     b.addEventListener('click', function () { platform = b.dataset.platform; renderPlatform(); });
   });
   $('#copyTry').addEventListener('click', function () { copy(D.tryOnce, 'Prompt'); });

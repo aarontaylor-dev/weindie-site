@@ -140,7 +140,7 @@ function loadSkill(slug) {
 
 const CSS = read('src/site.css');
 const SKILL_JS = read('src/skill.js');
-const FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23315c4d'/%3E%3Cpath d='M7 11l4 11 5-8 5 8 4-11' fill='none' stroke='%23f6f3ec' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E";
+const FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2316181a'/%3E%3Cpath d='M8 22L14 10M18 22l6-12' fill='none' stroke='%23fbfaf7' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E";
 
 function head(o) {
   return `<meta charset="utf-8">
@@ -164,16 +164,84 @@ function head(o) {
   <meta name="twitter:description" content="${esc(o.description)}">
   <meta name="twitter:image" content="${esc(o.image)}">
   <meta name="twitter:image:alt" content="${esc(o.imageAlt)}">
+  <link rel="preload" href="/fonts/ibm-plex-mono-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/newsreader-var.woff2" as="font" type="font/woff2" crossorigin>
   <style>${CSS}</style>`;
 }
 
-const FOOTER = `<footer class="wrap"><div class="foot"><strong>weindie</strong><span>Independent tools for navigating work with AI. <a href="/LICENSE.txt">MIT licensed</a>.</span></div></footer>`;
+const FOOTER = `<footer class="wrap"><div class="foot">\
+<b>weindie</b>\
+<span>Independent tools for navigating work with AI.</span>\
+<span>v1.1 &middot; early and evolving</span>\
+<span><a href="/LICENSE.txt">MIT licensed</a></span>\
+</div></footer>`;
 
 /* --------------------------------------------------------- the skill page */
 
+/* Sections are numbered because a skill page is read in order by someone who
+   arrived cold: what it is, what it looks like, try it, when, install, own it. */
+function block(n, name, inner) {
+  return `<section class="blk" id="${name.toLowerCase().replace(/[^a-z]+/g, '-')}">
+      <div class="rail"><div class="n">&sect; ${n}</div><h2>${esc(name)}</h2></div>
+      <div class="body">${inner}</div>
+    </section>`;
+}
+
 function skillPage(s, all, project) {
   const others = all.filter(x => x.slug !== s.slug);
-  const list = a => a.map(x => `<li>${esc(x)}</li>`).join('');
+  const li = a => a.map(x => `<li>${esc(x)}</li>`).join('');
+
+  const example = `<p class="lede">${esc(s.example.caption)}</p>
+        <div class="chat">${s.example.turns.map(t => {
+          const isSkill = t.who.startsWith('/');
+          return `<div class="msg${isSkill ? ' skill' : ''}"><div class="who">${esc(t.who)}</div><p>${esc(t.text)}</p></div>`;
+        }).join('')}</div>`;
+
+  const tryOnce = `<p class="lede">Nothing to install. Copy this into a conversation that is already underway, and see whether the idea is useful before you commit to it.</p>
+        <pre class="code" id="tryPrompt">${esc(s.tryOnce)}</pre>
+        <div class="btnrow"><button class="btn primary" id="copyTry">Copy prompt</button></div>
+        <p class="small" style="margin-top:16px">A short, portable version. The installed skill carries the fuller behaviour &mdash; when to stay quiet, how to report, what not to flag &mdash; and neither needs your AI to be able to read this page.</p>`;
+
+  const when = `<p class="lede">A skill that fires on everything stops meaning anything. <code>/${esc(s.slug)}</code> is allowed to find nothing.</p>
+        <div class="two">
+          <div><h3>Useful when</h3><ul>${li(s.usefulWhen)}</ul></div>
+          <div><h3>Probably not needed when</h3><ul>${li(s.notNeededWhen)}</ul></div>
+        </div>`;
+
+  const install = `<p class="lede">One canonical skill, packaged for wherever you work.</p>
+        <div class="seg" id="platforms" role="group" aria-label="Environment">
+          ${PLATFORMS.map((p, i) => `<button data-platform="${esc(p.id)}" aria-pressed="${i === 0}">${esc(p.name)}</button>`).join('')}
+        </div>
+        <div class="dest">
+          <div class="label">In a project</div>
+          <div class="code oneline" id="destPath"></div>
+          <div id="destUserRow"><div class="label">For all your projects</div><div class="code oneline" id="destUser"></div></div>
+        </div>
+        <p class="small" id="platformNote" style="margin-top:14px"></p>
+        <div class="btnrow">
+          <button class="btn primary" id="dlCanonical">Download SKILL.md</button>
+          <button class="btn" id="copyCmd">Copy install command</button>
+          <a class="btn" id="docsLink" href="#" target="_blank" rel="noreferrer noopener"></a>
+        </div>
+        <div class="label" style="margin:18px 0 6px">Or fetch it straight into place</div>
+        <div class="code oneline" id="cmd"></div>`;
+
+  const custom = `<p class="lede">A few choices that change how <code>/${esc(s.slug)}</code> behaves. Everything here happens in this browser &mdash; nothing is sent anywhere, and nothing is saved.</p>
+        <div class="resting">
+          <div class="now" id="restNow"></div>
+          <button class="btn primary" id="dlCustom">Download /${esc(s.slug)}</button>
+        </div>
+        <details class="reveal" id="optsWrap"><summary>Change the defaults</summary><div id="opts"></div></details>
+        <div class="changes" id="changes"></div>
+        <details class="reveal"><summary>View generated SKILL.md</summary><pre class="code" id="gen"></pre></details>
+        <details class="reveal"><summary id="diffTitle">Compare with default</summary><pre class="diff" id="diff"></pre></details>`;
+
+  const source = `<p class="lede">The whole skill, and the same file every download is built from. Nothing downloadable here should be less inspectable than the page explaining it.</p>
+        <pre class="code">${esc(s.canonical)}</pre>
+        <div class="btnrow"><button class="btn" id="copySource">Copy SKILL.md</button><a class="btn" href="/${esc(s.slug)}/SKILL.md">Open raw file</a></div>`;
+
+  const more = `<div class="index">${others.map(o =>
+          `<a href="/${o.slug}"><span class="k">/${o.slug}</span><span class="q">${esc(o.question)}</span></a>`).join('')}</div>`;
 
   return `<!doctype html>
 <html lang="en">
@@ -189,96 +257,28 @@ function skillPage(s, all, project) {
 <body>
   <header class="wrap nav">
     <a class="brand" href="/">weindie</a>
-    <nav class="navlinks">${others.map(o => `<a href="/${o.slug}">/${o.slug}</a>`).join('')}<a href="/#about">What this is</a></nav>
+    <nav class="navlinks">${others.map(o => `<a href="/${o.slug}">/${o.slug}</a>`).join('')}<a href="/#skills">All skills</a></nav>
   </header>
   <main class="wrap">
     <div class="shead">
-      <div class="eyebrow">${esc(project)} skill</div>
-      <div class="stitle"><h1>/${esc(s.slug)}</h1><span class="ver">v${esc(s.version)}</span></div>
-      <p class="squestion">${esc(s.question)}</p>
+      <div class="stitle"><h1>/${esc(s.slug)}</h1><span class="ver">${esc(project)} skill &middot; v${esc(s.version)}</span></div>
+      <h2 class="squestion">${esc(s.question)}</h2>
       <p class="ssummary">${esc(s.summary)}</p>
-      <div class="actions">
-        <a class="btn primary" href="#try">Try it once</a>
-        <a class="btn" href="#install">Install</a>
-        <a class="btn" href="#customise">Make it yours</a>
-        <a class="btn" href="#source">View SKILL.md</a>
+      <div class="actions seg">
+        <a class="on" href="#try-once">Try it once</a>
+        <a href="#install">Install</a>
+        <a href="#make-it-yours">Make it yours</a>
+        <a href="#skill-source">SKILL.md</a>
       </div>
-      <p class="crumbs">Sent this link by someone? <code>/${esc(s.slug)}</code> is a skill you can add to an AI coding tool — or just try the prompt below in a conversation you already have open.</p>
+      <p class="crumbs">Sent this link by someone? <code>/${esc(s.slug)}</code> is a skill you can add to an AI coding tool &mdash; or just try the prompt below in a conversation you already have open.</p>
     </div>
-
-    <section class="sec" id="try">
-      <h2>Try it once</h2>
-      <p class="lede">Nothing to install. Copy this into a conversation that is already underway, and see whether the idea is useful before you commit to it.</p>
-      <div class="card">
-        <pre class="src" id="tryPrompt">${esc(s.tryOnce)}</pre>
-        <div class="rowbtns"><button class="btn primary" id="copyTry">Copy prompt</button></div>
-        <p class="note">This is a short, portable version. The installed skill below carries the fuller behaviour — when to stay quiet, how to report, and what not to flag — and your AI does not need to be able to read this page for either to work.</p>
-      </div>
-    </section>
-
-    <section class="sec" id="example">
-      <h2>What it looks like</h2>
-      <p class="lede">${esc(s.example.caption)}</p>
-      <div class="chat">${s.example.turns.map(t =>
-        `<div class="msg"><div class="who">${esc(t.who)}</div>${esc(t.text)}</div>`).join('')}</div>
-    </section>
-
-    <section class="sec" id="when">
-      <h2>When to reach for it</h2>
-      <p class="lede">A skill that fires on everything stops meaning anything. <code>/${esc(s.slug)}</code> is allowed to find nothing.</p>
-      <div class="two">
-        <div class="card"><h3>Useful when</h3><ul>${list(s.usefulWhen)}</ul></div>
-        <div class="card"><h3>Probably not needed when</h3><ul>${list(s.notNeededWhen)}</ul></div>
-      </div>
-    </section>
-
-    <section class="sec" id="install">
-      <h2>Install the full skill</h2>
-      <p class="lede">One canonical skill, packaged for wherever you work. Choose your environment for the right path.</p>
-      <div class="card">
-        <div class="pills" id="platforms" role="group" aria-label="Environment">
-          ${PLATFORMS.map((p, i) => `<button class="pill${i === 0 ? ' active' : ''}" data-platform="${esc(p.id)}" aria-pressed="${i === 0}">${esc(p.name)}</button>`).join('')}
-        </div>
-        <h3 style="margin-top:20px">In a project</h3>
-        <div class="path" id="destPath"></div>
-        <div id="destUserRow"><h3 style="margin-top:16px">For all your projects</h3><div class="path" id="destUser"></div></div>
-        <p class="note" id="platformNote"></p>
-        <div class="rowbtns">
-          <button class="btn primary" id="dlCanonical">Download SKILL.md</button>
-          <button class="btn" id="copyCmd">Copy install command</button>
-          <a class="btn" id="docsLink" href="#" rel="noreferrer noopener" target="_blank"></a>
-        </div>
-        <p class="note">Or fetch it straight into place:</p>
-        <div class="path" id="cmd"></div>
-      </div>
-    </section>
-
-    <section class="sec" id="customise">
-      <h2>Make it yours</h2>
-      <p class="lede">A few choices that change how <code>/${esc(s.slug)}</code> behaves. Everything below happens in this browser — nothing is sent anywhere, and nothing is saved.</p>
-      <div class="card">
-        <div id="opts"></div>
-        <div class="changes" id="changes"></div>
-        <div class="rowbtns"><button class="btn primary" id="dlCustom">Download your /${esc(s.slug)}</button></div>
-        <p class="note">Install it exactly as above — same file name, same folder.</p>
-        <details class="reveal"><summary>View generated SKILL.md</summary><pre class="src" id="gen"></pre></details>
-        <details class="reveal"><summary id="diffTitle">Compare with default</summary><pre class="diff" id="diff"></pre></details>
-      </div>
-    </section>
-
-    <section class="sec" id="source">
-      <h2>Skill source</h2>
-      <p class="lede">This is the whole skill — the same file the downloads are built from. Nothing downloadable here should be less inspectable than the page explaining it. Raw copy: <a href="/${esc(s.slug)}/SKILL.md"><code>/${esc(s.slug)}/SKILL.md</code></a></p>
-      <pre class="src">${esc(s.canonical)}</pre>
-      <div class="rowbtns"><button class="btn" id="copySource">Copy SKILL.md</button><a class="btn" href="/${esc(s.slug)}/SKILL.md">Open raw file</a></div>
-    </section>
-
-    <section class="sec" id="more">
-      <h2>Other ${esc(project)} skills</h2>
-      <p class="lede">Independent lenses, not a pipeline. Use one when it helps.</p>
-      <div class="other">${others.map(o =>
-        `<a href="/${o.slug}"><code>/${o.slug}</code><span>${esc(o.question)}</span></a>`).join('')}</div>
-    </section>
+    ${block(1, 'Example', example)}
+    ${block(2, 'Try once', tryOnce)}
+    ${block(3, 'When', when)}
+    ${block(4, 'Install', install)}
+    ${block(5, 'Make it yours', custom)}
+    ${block(6, 'Skill source', source)}
+    ${block(7, 'Other skills', more)}
   </main>
   ${FOOTER}
   <script>window.SKILL=${json({
@@ -314,15 +314,15 @@ function ogCard(s, project) {
   const sum = wrap(s.summary, 62).slice(0, 2);
   const H = 'Helvetica Neue,Helvetica,Arial,sans-serif';
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#f6f3ec"/>
-  <rect x="0" y="0" width="1200" height="8" fill="#315c4d"/>
-  <text x="90" y="130" font-family="${H}" font-size="19" font-weight="700" letter-spacing="2.9" fill="#315c4d">${sesc(project.toUpperCase())} SKILL</text>
-  <text x="86" y="240" font-family="Menlo,Consolas,monospace" font-size="86" letter-spacing="-3" fill="#315c4d">/${sesc(s.slug)}</text>
-${q.map((l, i) => `  <text x="88" y="${330 + i * 62}" font-family="Georgia,serif" font-size="54" letter-spacing="-2" fill="#20201d">${sesc(l)}</text>`).join('\n')}
-${sum.map((l, i) => `  <text x="90" y="${(q.length > 1 ? 470 : 410) + i * 34}" font-family="${H}" font-size="23" fill="#68675f">${sesc(l)}</text>`).join('\n')}
-  <line x1="90" y1="522" x2="1110" y2="522" stroke="#d8d3c8" stroke-width="1"/>
-  <text x="88" y="570" font-family="${H}" font-size="27" font-weight="700" letter-spacing="-1.1" fill="#20201d">weindie</text>
-  <text x="1110" y="570" text-anchor="end" font-family="Georgia,serif" font-size="22" fill="#68675f">weindie.com/${sesc(s.slug)} &#183; v${sesc(s.version)}</text>
+  <rect width="1200" height="630" fill="#fbfaf7"/>
+  <rect x="0" y="0" width="1200" height="8" fill="#b8442a"/>
+  <text x="90" y="130" font-family="${H}" font-size="19" font-weight="700" letter-spacing="2.9" fill="#b8442a">${sesc(project.toUpperCase())} SKILL</text>
+  <text x="86" y="240" font-family="Menlo,Consolas,monospace" font-size="86" letter-spacing="-3" fill="#16181a">/${sesc(s.slug)}</text>
+${q.map((l, i) => `  <text x="88" y="${330 + i * 62}" font-family="Georgia,serif" font-size="54" letter-spacing="-2" fill="#16181a">${sesc(l)}</text>`).join('\n')}
+${sum.map((l, i) => `  <text x="90" y="${(q.length > 1 ? 470 : 410) + i * 34}" font-family="${H}" font-size="23" fill="#54574f">${sesc(l)}</text>`).join('\n')}
+  <line x1="90" y1="522" x2="1110" y2="522" stroke="#d9d7ce" stroke-width="1"/>
+  <text x="88" y="570" font-family="${H}" font-size="27" font-weight="700" letter-spacing="-1.1" fill="#16181a">weindie</text>
+  <text x="1110" y="570" text-anchor="end" font-family="Georgia,serif" font-size="22" fill="#54574f">weindie.com/${sesc(s.slug)} &#183; v${sesc(s.version)}</text>
 </svg>
 `;
 }
@@ -330,15 +330,15 @@ ${sum.map((l, i) => `  <text x="90" y="${(q.length > 1 ? 470 : 410) + i * 34}" f
 function homeCard(skills) {
   const H = 'Helvetica Neue,Helvetica,Arial,sans-serif';
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#f6f3ec"/>
-  <rect x="0" y="0" width="1200" height="8" fill="#315c4d"/>
-  <text x="90" y="150" font-family="${H}" font-size="19" font-weight="700" letter-spacing="2.9" fill="#315c4d">WE ARE INDEPENDENT</text>
-  <text x="86" y="290" font-family="Georgia,serif" font-size="92" letter-spacing="-3.6" fill="#20201d">Small tools for</text>
-  <text x="86" y="386" font-family="Georgia,serif" font-size="92" letter-spacing="-3.6" fill="#20201d">working with AI.</text>
-  <text x="90" y="452" font-family="${H}" font-size="23" fill="#68675f">Skills, notes and experiments for a changing AI landscape.</text>
-  <line x1="90" y1="522" x2="1110" y2="522" stroke="#d8d3c8" stroke-width="1"/>
-  <text x="88" y="570" font-family="${H}" font-size="27" font-weight="700" letter-spacing="-1.1" fill="#20201d">weindie</text>
-  <text x="1110" y="570" text-anchor="end" font-family="Georgia,serif" font-size="22" fill="#68675f">${skills.map(s => '/' + sesc(s.slug)).join(' &#183; ')}</text>
+  <rect width="1200" height="630" fill="#fbfaf7"/>
+  <rect x="0" y="0" width="1200" height="8" fill="#b8442a"/>
+  <text x="90" y="150" font-family="${H}" font-size="19" font-weight="700" letter-spacing="2.9" fill="#b8442a">WE ARE INDEPENDENT</text>
+  <text x="86" y="290" font-family="Georgia,serif" font-size="80" letter-spacing="-3.2" fill="#16181a">Skills you can read</text>
+  <text x="86" y="386" font-family="Georgia,serif" font-size="80" letter-spacing="-3.2" fill="#16181a">before you run them.</text>
+  <text x="90" y="452" font-family="${H}" font-size="23" fill="#54574f">Small, plain-text skills for working with AI.</text>
+  <line x1="90" y1="522" x2="1110" y2="522" stroke="#d9d7ce" stroke-width="1"/>
+  <text x="88" y="570" font-family="${H}" font-size="27" font-weight="700" letter-spacing="-1.1" fill="#16181a">weindie</text>
+  <text x="1110" y="570" text-anchor="end" font-family="Georgia,serif" font-size="22" fill="#54574f">${skills.map(s => '/' + sesc(s.slug)).join(' &#183; ')}</text>
 </svg>
 `;
 }
@@ -361,24 +361,24 @@ function toPng(svgPath, pngPath) {
 
 function homePage(skills, cat) {
   const template = read('src/home.html');
-  const cards = skills.map(s =>
-    `<a class="skill-card" href="/${s.slug}"><code>/${s.slug}</code><p>${esc(s.homeBlurb)}</p></a>`).join('');
+  const index = skills.map(s =>
+    `<a href="/${s.slug}"><span class="k">/${s.slug}</span><span class="q">${esc(s.question)}</span></a>`).join('');
   const choices = skills.map(s =>
-    `<button class="choice" data-key="${esc(s.slug)}" aria-pressed="false">${esc(s.homeLabel)}</button>`).join('');
+    `<button data-key="${esc(s.slug)}" aria-pressed="false">${esc(s.homeLabel)}</button>`).join('');
   const data = json(skills.map(s => ({
-    slug: s.slug, question: s.question, summary: s.summary,
-    match: s.match || [], example: s.example
+    slug: s.slug, question: s.question, summary: s.summary, match: s.match || []
   })));
   return template
     .replace('<!--HEAD-->', head({
-      title: 'WeIndie — Tools for working with AI',
-      description: 'WeIndie makes small, open tools for navigating work with AI.',
+      title: 'WeIndie — Skills you can read before you run them',
+      description: 'Small, plain-text skills for working with AI. Read the whole thing before you install it, change what you disagree with, and keep it.',
       url: ORIGIN + '/',
       image: ORIGIN + '/og.png',
-      imageAlt: 'WeIndie — small tools for working with AI.'
+      imageAlt: 'WeIndie — skills you can read before you run them.'
     }))
+    .replace('<!--POSITION-->', esc(cat.position))
+    .replace('<!--INDEX-->', index)
     .replace('<!--CHOICES-->', choices)
-    .replace('<!--CARDS-->', cards)
     .replace('<!--PROJECT-->', esc(cat.project))
     .replace('<!--PROJECT_BLURB-->', esc(cat.blurb))
     .replace('<!--FOOTER-->', FOOTER)

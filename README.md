@@ -21,6 +21,8 @@ Cursor or Codex variants — only different install paths.
       <slug>/SKILL.md       the canonical skill — the single source of truth
       <slug>/skill.json     page content and customisation options
 
+    fonts/                  self-hosted woff2 + OFL licences (no third-party requests)
+
     src/
       site.css              styling shared by every generated page
       home.html             homepage template
@@ -97,6 +99,16 @@ A customised download adds `based_on: WeIndie /drift v0.1` to the same map.
 Then <http://127.0.0.1:8787/>. Locally, skill pages need the extension
 (`/kiss.html`) — Cloudflare Pages resolves the extensionless `/kiss` in
 production, Python's server does not.
+
+## Type
+
+Two self-hosted faces, latin subset, ~78 kB total:
+
+    IBM Plex Mono   structure, labels, code, skill names
+    Newsreader      questions and prose (one variable file, weights 400-600)
+
+They are served from `/fonts/` rather than a font CDN so the site keeps making
+zero third-party requests. See `fonts/README.md`.
 
 ## Privacy
 

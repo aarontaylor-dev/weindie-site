@@ -97,13 +97,13 @@
   function renderOptions() {
     $('#opts').innerHTML = D.options.map(function (o) {
       return '<div class="opt"><div class="lbl">' + esc(o.label) + '</div>' +
-        '<p class="help">' + esc(o.help) + '</p><div class="pills" role="group" aria-label="' + esc(o.label) + '">' +
+        '<p class="help">' + esc(o.help) + '</p><div class="seg" role="group" aria-label="' + esc(o.label) + '">' +
         o.choices.map(function (c) {
-          return '<button class="pill' + (c.id === sel[o.id] ? ' active' : '') + '" data-opt="' + o.id +
-            '" data-choice="' + c.id + '" aria-pressed="' + (c.id === sel[o.id]) + '">' + esc(c.label) + '</button>';
+          return '<button data-opt="' + o.id + '" data-choice="' + c.id +
+            '" aria-pressed="' + (c.id === sel[o.id]) + '">' + esc(c.label) + '</button>';
         }).join('') + '</div></div>';
     }).join('');
-    Array.prototype.forEach.call($('#opts').querySelectorAll('.pill'), function (b) {
+    Array.prototype.forEach.call($('#opts').querySelectorAll('button[data-opt]'), function (b) {
       b.addEventListener('click', function () {
         sel[b.dataset.opt] = b.dataset.choice;
         renderOptions();
@@ -114,14 +114,19 @@
 
   function renderCustom() {
     var changed = changedOptions(), custom = generate();
+    /* Resting state: say what you would get without opening anything. */
+    $('#restNow').innerHTML = changed.length
+      ? 'Your version &mdash; ' + changed.length + ' of ' + D.options.length + ' defaults changed.'
+      : 'Standard <b>/' + esc(D.slug) + '</b> v' + esc(D.version) +
+        ' &middot; all ' + D.options.length + ' defaults unchanged.';
+
     $('#changes').innerHTML = changed.length
-      ? '<h3>Changed from default</h3>' + changed.map(function (o) {
+      ? '<div class="h">Changed from default</div>' + changed.map(function (o) {
         return '<div class="chg"><b>' + esc(o.label) + '</b>' +
           '<div class="was">' + esc(plain(def(o).line)) + '</div>' +
           '<div class="now">' + esc(plain(cur(o).line)) + '</div></div>';
       }).join('')
-      : '<h3>Changed from default</h3><p class="none">Nothing changed yet. This is the standard <code>/' +
-        esc(D.slug) + '</code> v' + esc(D.version) + '.</p>';
+      : '';
     $('#gen').textContent = custom;
     $('#diffTitle').textContent = changed.length ? 'Compare with default' : 'Compare with default (identical)';
     $('#diff').innerHTML = changed.length
@@ -150,10 +155,8 @@
     $('#docsLink').href = p.docs;
     $('#docsLink').textContent = p.docsLabel;
     $('#cmd').textContent = 'mkdir -p ' + dir(p) + ' && curl -fsSL ' + D.raw + ' -o ' + dir(p) + '/SKILL.md';
-    Array.prototype.forEach.call(document.querySelectorAll('#platforms .pill'), function (b) {
-      var on = b.dataset.platform === platform;
-      b.classList.toggle('active', on);
-      b.setAttribute('aria-pressed', on);
+    Array.prototype.forEach.call(document.querySelectorAll('#platforms button'), function (b) {
+      b.setAttribute('aria-pressed', b.dataset.platform === platform);
     });
   }
   function dir(p) {
@@ -170,7 +173,7 @@
   }
 
   /* ---- wire up ---- */
-  Array.prototype.forEach.call(document.querySelectorAll('#platforms .pill'), function (b) {
+  Array.prototype.forEach.call(document.querySelectorAll('#platforms button'), function (b) {
     b.addEventListener('click', function () { platform = b.dataset.platform; renderPlatform(); });
   });
   $('#copyTry').addEventListener('click', function () { copy(D.tryOnce, 'Prompt'); });
