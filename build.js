@@ -145,7 +145,7 @@ const THEME_BOOT = "try{var t=localStorage.getItem('weindie-theme');" +
 
 const THEME_JS = `(function(){
   var btn=document.getElementById('theme');if(!btn)return;
-  var root=document.documentElement;
+  var root=document.documentElement, label=btn.querySelector('.vh'), t;
   function current(){
     var set=root.getAttribute('data-theme');
     if(set)return set;
@@ -153,10 +153,15 @@ const THEME_JS = `(function(){
   }
   function paint(){
     var next=current()==='dark'?'light':'dark';
-    btn.textContent=next==='dark'?'Dark':'Light';
-    btn.setAttribute('aria-label','Switch to '+next+' theme');
+    var text='Switch to '+next+' theme';
+    btn.setAttribute('aria-label',text);
+    btn.setAttribute('title',text);
+    if(label)label.textContent=text;
   }
   btn.addEventListener('click',function(){
+    /* Colours only animate during the swap, so nothing pays for it while reading. */
+    root.classList.add('theming');
+    clearTimeout(t);t=setTimeout(function(){root.classList.remove('theming')},340);
     var next=current()==='dark'?'light':'dark';
     root.setAttribute('data-theme',next);
     try{localStorage.setItem('weindie-theme',next)}catch(e){}
@@ -199,12 +204,27 @@ function head(o) {
   <script>${THEME_BOOT}</script>`;
 }
 
+/* Sun and moon are one shape: the orb grows and a mask circle slides in to
+   bite the crescent while the rays retract. Which one shows is decided in CSS
+   by the same three-state pattern as the palette, so it is correct before any
+   script runs. */
+const THEME_ICON = `<svg class="tsvg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <mask id="tcut"><rect width="24" height="24" fill="#fff"/><circle class="cut" cx="15.5" cy="8.5" r="7" fill="#000"/></mask>
+        <circle class="orb" cx="12" cy="12" r="5" mask="url(#tcut)"/>
+        <g class="rays" stroke-linecap="round">
+          <line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/>
+          <line x1="4.9" y1="4.9" x2="6.3" y2="6.3"/><line x1="17.7" y1="17.7" x2="19.1" y2="19.1"/>
+          <line x1="4.9" y1="19.1" x2="6.3" y2="17.7"/><line x1="17.7" y1="6.3" x2="19.1" y2="4.9"/>
+        </g>
+      </svg>`;
+
 const nav = links => `<a class="skip" href="#main">Skip to content</a>
   <header class="wrap nav">
     <a class="brand" href="/">weindie</a>
     <div class="navend">
       <nav class="navlinks">${links}</nav>
-      <button class="theme" id="theme" type="button">Dark</button>
+      <button class="theme" id="theme" type="button">${THEME_ICON}<span class="vh">Switch theme</span></button>
     </div>
   </header>`;
 
