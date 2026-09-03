@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>/spec — WeIndie</title>
+  <meta name="description" content="What are we actually trying to do? Establishes the goal, what done looks like and the boundaries before AI work begins.">
+  <link rel="canonical" href="https://weindie.com/spec">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23315c4d'/%3E%3Cpath d='M7 11l4 11 5-8 5 8 4-11' fill='none' stroke='%23f6f3ec' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WeIndie">
+  <meta property="og:title" content="/spec — WeIndie">
+  <meta property="og:description" content="What are we actually trying to do? Establishes the goal, what done looks like and the boundaries before AI work begins.">
+  <meta property="og:url" content="https://weindie.com/spec">
+  <meta property="og:image" content="https://weindie.com/og/spec.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="/spec — What are we actually trying to do?">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="/spec — WeIndie">
+  <meta name="twitter:description" content="What are we actually trying to do? Establishes the goal, what done looks like and the boundaries before AI work begins.">
+  <meta name="twitter:image" content="https://weindie.com/og/spec.png">
+  <meta name="twitter:image:alt" content="/spec — What are we actually trying to do?">
+  <style>:root{--paper:#f6f3ec;--ink:#20201d;--muted:#68675f;--line:#d8d3c8;--card:#fffdf8;--accent:#315c4d;--soft:#e5ede8;--code:#19231f;--shadow:0 18px 45px rgba(40,37,30,.08)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,textarea,select,input{font:inherit}
+a{color:inherit}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.wrap{width:min(1120px,calc(100% - 40px));margin:auto}
+.nav{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+.brand{font-size:21px;font-weight:750;letter-spacing:-.04em;text-decoration:none}
+.navlinks{display:flex;gap:24px;color:var(--muted);font-size:14px}
+.navlinks a{text-decoration:none}
+.navlinks a:hover{color:var(--ink)}
+footer{padding:36px 0 52px;color:var(--muted);font-size:13px}
+.foot{display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--line);padding-top:28px}
+.eyebrow{color:var(--accent);font-size:12px;text-transform:uppercase;letter-spacing:.14em;font-weight:750}
+.btn{border:1px solid var(--line);background:transparent;border-radius:10px;padding:11px 15px;cursor:pointer;color:var(--ink);text-decoration:none;display:inline-block}
+.btn:hover{background:var(--soft);border-color:#aac0b6}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
+.btn.primary:hover{filter:brightness(.93);background:var(--accent)}
+.pill{border:1px solid var(--line);background:transparent;border-radius:999px;padding:8px 12px;cursor:pointer;color:var(--muted)}
+.pill:hover,.pill.active{background:var(--soft);border-color:#aac0b6;color:var(--accent)}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+pre.src{background:var(--code);color:#eaf1ed;border-radius:12px;padding:18px;font-size:13px;line-height:1.6;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word;margin:0}
+.chat{background:var(--code);color:#eaf1ed;border-radius:12px;padding:18px;font-size:14px}
+.msg{margin-bottom:15px}.msg:last-child{margin-bottom:0}
+.who{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:#9cb1a7;margin-bottom:4px}
+
+/* skill page */
+.shead{padding:64px 0 0}
+.stitle{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.stitle h1{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:clamp(40px,7vw,64px);line-height:1;letter-spacing:-.04em;margin:0;font-weight:600;color:var(--accent)}
+.ver{border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12px;color:var(--muted)}
+.squestion{font-family:Georgia,serif;font-size:clamp(24px,3.4vw,34px);line-height:1.2;letter-spacing:-.03em;margin:20px 0 14px;font-weight:500;max-width:19em}
+.ssummary{font-size:18px;color:var(--muted);max-width:34em;margin:0}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:30px 0 8px}
+.sec{padding:52px 0;border-top:1px solid var(--line);margin-top:52px}
+.sec>h2{font:500 30px/1.15 Georgia,serif;letter-spacing:-.03em;margin:0 0 8px}
+.sec>.lede{color:var(--muted);margin:0 0 22px;max-width:38em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.two h3,.card h3{font-size:15px;margin:0 0 10px}
+.two ul{margin:0;padding-left:18px;color:var(--muted)}
+.two li{margin-bottom:7px}
+.rowbtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;align-items:center}
+.note{color:var(--muted);font-size:14px;margin:12px 0 0}
+.copybox{position:relative}
+.path{background:var(--soft);border-radius:10px;padding:12px 14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;overflow-x:auto;color:var(--code)}
+.opt{border-top:1px solid var(--line);padding:18px 0}
+.opt:first-of-type{border-top:0;padding-top:0}
+.opt .lbl{font-weight:700;font-size:15px}
+.opt .help{color:var(--muted);font-size:14px;margin:2px 0 10px}
+.changes{background:var(--soft);border-radius:12px;padding:16px 18px;margin-top:6px}
+.changes h3{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent)}
+.chg{margin-bottom:12px;font-size:14px}.chg:last-child{margin-bottom:0}
+.chg b{display:block;font-size:13px}
+.chg .was{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
+.chg .now{color:var(--code)}
+.none{color:var(--muted);font-size:14px;margin:0}
+.reveal{margin-top:14px}
+.reveal summary{cursor:pointer;color:var(--accent);font-size:14px;padding:6px 0}
+.reveal[open] summary{margin-bottom:10px}
+.diff{background:var(--code);border-radius:12px;padding:16px;font-size:13px;line-height:1.6;overflow-x:auto;margin:0;color:#c8d6cf}
+.diff .add{color:#9fe3b6}
+.diff .del{color:#f0a9a0}
+.diff .hunk{color:#8ea89c}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(14px);background:var(--code);color:#eaf1ed;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:9}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.crumbs{color:var(--muted);font-size:14px;margin-top:26px}
+.crumbs a{color:var(--accent)}
+.other{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.other a{text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--card);min-width:150px}
+.other a:hover{border-color:#aac0b6;background:var(--soft)}
+.other code{color:var(--accent);font-weight:700}
+.other span{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+@media(max-width:760px){
+  .navlinks{display:none}
+  .shead{padding-top:40px}
+  .two{grid-template-columns:1fr}
+  .sec{padding:40px 0;margin-top:40px}
+  .actions .btn,.rowbtns .btn{flex:1 1 auto;text-align:center}
+  .foot{display:block}.foot span{display:block;margin-top:8px}
+}
+@media(max-width:520px){
+  .wrap{width:min(100% - 24px,1120px)}
+  .card{padding:18px}
+}
+</style>
+</head>
+<body>
+  <header class="wrap nav">
+    <a class="brand" href="/">weindie</a>
+    <nav class="navlinks"><a href="/drift">/drift</a><a href="/kiss">/kiss</a><a href="/ship">/ship</a><a href="/#about">What this is</a></nav>
+  </header>
+  <main class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Spec First skill</div>
+      <div class="stitle"><h1>/spec</h1><span class="ver">v0.1</span></div>
+      <p class="squestion">What are we actually trying to do?</p>
+      <p class="ssummary">Establishes the goal, what finished looks like, and the boundaries — before substantial work begins.</p>
+      <div class="actions">
+        <a class="btn primary" href="#try">Try it once</a>
+        <a class="btn" href="#install">Install</a>
+        <a class="btn" href="#customise">Make it yours</a>
+        <a class="btn" href="#source">View SKILL.md</a>
+      </div>
+      <p class="crumbs">Sent this link by someone? <code>/spec</code> is a skill you can add to an AI coding tool — or just try the prompt below in a conversation you already have open.</p>
+    </div>
+
+    <section class="sec" id="try">
+      <h2>Try it once</h2>
+      <p class="lede">Nothing to install. Copy this into a conversation that is already underway, and see whether the idea is useful before you commit to it.</p>
+      <div class="card">
+        <pre class="src" id="tryPrompt">Before you build anything, work out what we are actually trying to do. Reconstruct the goal from what I have told you, state what &quot;done&quot; would look like, and note what is out of scope. Separate what I actually said from what you are inferring, and say the inferences out loud. Then ask me only about decisions where different answers would lead to materially different work — if the context is already clear enough, say so and continue.</pre>
+        <div class="rowbtns"><button class="btn primary" id="copyTry">Copy prompt</button></div>
+        <p class="note">This is a short, portable version. The installed skill below carries the fuller behaviour — when to stay quiet, how to report, and what not to flag — and your AI does not need to be able to read this page for either to work.</p>
+      </div>
+    </section>
+
+    <section class="sec" id="example">
+      <h2>What it looks like</h2>
+      <p class="lede">Someone has an idea, but the immediate goal is still unclear.</p>
+      <div class="chat"><div class="msg"><div class="who">You</div>I want to add onboarding to the app.</div><div class="msg"><div class="who">AI</div>I'll start with a five-step wizard, a progress bar and email verification.</div><div class="msg"><div class="who">/spec</div>None of that was specified. Known: you want onboarding. Assumed: that it is multi-step, and that email is involved. One question changes everything else — what must someone be able to do afterwards that they cannot do now? The rest I can infer from that.</div></div>
+    </section>
+
+    <section class="sec" id="when">
+      <h2>When to reach for it</h2>
+      <p class="lede">A skill that fires on everything stops meaning anything. <code>/spec</code> is allowed to find nothing.</p>
+      <div class="two">
+        <div class="card"><h3>Useful when</h3><ul><li>The request is short and the implied work is large.</li><li>The work is expensive, or difficult to reverse.</li><li>Several reasonable interpretations lead somewhere different.</li></ul></div>
+        <div class="card"><h3>Probably not needed when</h3><ul><li>The task is small, reversible and unambiguous.</li><li>The goal was already established earlier in the session.</li><li>Asking would cost more than trying it and adjusting.</li></ul></div>
+      </div>
+    </section>
+
+    <section class="sec" id="install">
+      <h2>Install the full skill</h2>
+      <p class="lede">One canonical skill, packaged for wherever you work. Choose your environment for the right path.</p>
+      <div class="card">
+        <div class="pills" id="platforms" role="group" aria-label="Environment">
+          <button class="pill active" data-platform="claude" aria-pressed="true">Claude Code</button><button class="pill" data-platform="cursor" aria-pressed="false">Cursor</button><button class="pill" data-platform="codex" aria-pressed="false">OpenAI / Codex</button><button class="pill" data-platform="generic" aria-pressed="false">Generic</button>
+        </div>
+        <h3 style="margin-top:20px">In a project</h3>
+        <div class="path" id="destPath"></div>
+        <div id="destUserRow"><h3 style="margin-top:16px">For all your projects</h3><div class="path" id="destUser"></div></div>
+        <p class="note" id="platformNote"></p>
+        <div class="rowbtns">
+          <button class="btn primary" id="dlCanonical">Download SKILL.md</button>
+          <button class="btn" id="copyCmd">Copy install command</button>
+          <a class="btn" id="docsLink" href="#" rel="noreferrer noopener" target="_blank"></a>
+        </div>
+        <p class="note">Or fetch it straight into place:</p>
+        <div class="path" id="cmd"></div>
+      </div>
+    </section>
+
+    <section class="sec" id="customise">
+      <h2>Make it yours</h2>
+      <p class="lede">A few choices that change how <code>/spec</code> behaves. Everything below happens in this browser — nothing is sent anywhere, and nothing is saved.</p>
+      <div class="card">
+        <div id="opts"></div>
+        <div class="changes" id="changes"></div>
+        <div class="rowbtns"><button class="btn primary" id="dlCustom">Download your /spec</button></div>
+        <p class="note">Install it exactly as above — same file name, same folder.</p>
+        <details class="reveal"><summary>View generated SKILL.md</summary><pre class="src" id="gen"></pre></details>
+        <details class="reveal"><summary id="diffTitle">Compare with default</summary><pre class="diff" id="diff"></pre></details>
+      </div>
+    </section>
+
+    <section class="sec" id="source">
+      <h2>Skill source</h2>
+      <p class="lede">This is the whole skill — the same file the downloads are built from. Nothing downloadable here should be less inspectable than the page explaining it. Raw copy: <a href="/spec/SKILL.md"><code>/spec/SKILL.md</code></a></p>
+      <pre class="src">---
+name: spec
+description: Establish what a task is actually asking for before substantial work begins.
+metadata:
+  version: &quot;0.1&quot;
+  source: https://weindie.com/spec
+---
+
+# /spec
+
+**What are we actually trying to do?**
+
+Most bad AI work is not badly executed. It is well executed against a goal nobody
+established. This skill slows down the first minute of a task: reconstruct the
+goal, state what finished looks like, separate what was actually said from what is
+being assumed, and ask only about the decisions that would genuinely change the
+result.
+
+## Useful when
+
+- The request is short and the implied work is large.
+- The work is expensive, or difficult to reverse.
+- Several reasonable interpretations exist and they lead somewhere different.
+- You are starting a session with little shared context.
+
+## Probably not needed when
+
+- The task is small, reversible and unambiguous.
+- The goal has already been established earlier in the session.
+- Asking would cost more than simply trying it and adjusting.
+
+An established goal does not need re-establishing. If the context is already clear
+enough, say so and continue — do not interrogate a task that is already understood.
+
+## How to run the check
+
+1. **Reconstruct the goal.** In one sentence: what is this for? Not what is being
+   built — what it is meant to achieve.
+2. **State what done looks like.** The observable conditions that would let anyone
+   agree the task is complete.
+3. **Mark the boundaries.** What is explicitly not part of this, including things
+   that would be tempting to include.
+4. **Separate knowledge from assumption.** List what was actually stated, and
+   list what is being inferred. Inference is fine; silent inference is not.
+5. **Ask only what matters.** A question earns its place only if different answers
+   would lead to materially different work.
+
+## Reporting
+
+- Lead with the goal, not the process.
+- Keep the summary shorter than the work it precedes.
+- Flag assumptions in a form that is easy to correct in one line.
+- If nothing material is unclear, say &quot;the goal is clear enough&quot; and proceed.
+
+## Defaults you can change
+
+These are the adjustable lines of this skill. A customised copy from
+&lt;https://weindie.com/spec&gt; replaces them and records what changed.
+
+- **Questioning level.** Ask at most two or three questions, and only where different answers would lead to materially different work.
+- **Ask or infer.** Where a detail is unstated but the sensible default is obvious, infer it, state the inference plainly, and continue without asking.
+- **Small tasks.** Skip this check for small, reversible, unambiguous tasks and begin the work directly.
+- **Written summary.** Write a short goal-and-boundaries summary before starting, for substantial or hard-to-reverse work only.
+</pre>
+      <div class="rowbtns"><button class="btn" id="copySource">Copy SKILL.md</button><a class="btn" href="/spec/SKILL.md">Open raw file</a></div>
+    </section>
+
+    <section class="sec" id="more">
+      <h2>Other Spec First skills</h2>
+      <p class="lede">Independent lenses, not a pipeline. Use one when it helps.</p>
+      <div class="other"><a href="/drift"><code>/drift</code><span>Are we still doing what we meant to do?</span></a><a href="/kiss"><code>/kiss</code><span>Is this the smallest version that still works?</span></a><a href="/ship"><code>/ship</code><span>Does the evidence support calling this done?</span></a></div>
+    </section>
+  </main>
+  <footer class="wrap"><div class="foot"><strong>weindie</strong><span>Independent tools for navigating work with AI.</span></div></footer>
+  <script>window.SKILL={"slug":"spec","version":"0.1","source":"https://weindie.com/spec","raw":"https://weindie.com/spec/SKILL.md","canonical":"---\nname: spec\ndescription: Establish what a task is actually asking for before substantial work begins.\nmetadata:\n  version: \"0.1\"\n  source: https://weindie.com/spec\n---\n\n# /spec\n\n**What are we actually trying to do?**\n\nMost bad AI work is not badly executed. It is well executed against a goal nobody\nestablished. This skill slows down the first minute of a task: reconstruct the\ngoal, state what finished looks like, separate what was actually said from what is\nbeing assumed, and ask only about the decisions that would genuinely change the\nresult.\n\n## Useful when\n\n- The request is short and the implied work is large.\n- The work is expensive, or difficult to reverse.\n- Several reasonable interpretations exist and they lead somewhere different.\n- You are starting a session with little shared context.\n\n## Probably not needed when\n\n- The task is small, reversible and unambiguous.\n- The goal has already been established earlier in the session.\n- Asking would cost more than simply trying it and adjusting.\n\nAn established goal does not need re-establishing. If the context is already clear\nenough, say so and continue — do not interrogate a task that is already understood.\n\n## How to run the check\n\n1. **Reconstruct the goal.** In one sentence: what is this for? Not what is being\n   built — what it is meant to achieve.\n2. **State what done looks like.** The observable conditions that would let anyone\n   agree the task is complete.\n3. **Mark the boundaries.** What is explicitly not part of this, including things\n   that would be tempting to include.\n4. **Separate knowledge from assumption.** List what was actually stated, and\n   list what is being inferred. Inference is fine; silent inference is not.\n5. **Ask only what matters.** A question earns its place only if different answers\n   would lead to materially different work.\n\n## Reporting\n\n- Lead with the goal, not the process.\n- Keep the summary shorter than the work it precedes.\n- Flag assumptions in a form that is easy to correct in one line.\n- If nothing material is unclear, say \"the goal is clear enough\" and proceed.\n\n## Defaults you can change\n\nThese are the adjustable lines of this skill. A customised copy from\n\u003chttps://weindie.com/spec> replaces them and records what changed.\n\n- **Questioning level.** Ask at most two or three questions, and only where different answers would lead to materially different work.\n- **Ask or infer.** Where a detail is unstated but the sensible default is obvious, infer it, state the inference plainly, and continue without asking.\n- **Small tasks.** Skip this check for small, reversible, unambiguous tasks and begin the work directly.\n- **Written summary.** Write a short goal-and-boundaries summary before starting, for substantial or hard-to-reverse work only.\n","defaultsNote":"These are the adjustable lines of this skill. A customised copy from\n\u003chttps://weindie.com/spec> replaces them and records what changed.","tryOnce":"Before you build anything, work out what we are actually trying to do. Reconstruct the goal from what I have told you, state what \"done\" would look like, and note what is out of scope. Separate what I actually said from what you are inferring, and say the inferences out loud. Then ask me only about decisions where different answers would lead to materially different work — if the context is already clear enough, say so and continue.","options":[{"id":"questioning","label":"Questioning level","help":"How much is asked before work starts.","choices":[{"id":"minimal","label":"Minimal","line":"- **Questioning level.** Ask at most one question, and only when the work cannot sensibly begin without the answer.","isDefault":false},{"id":"balanced","label":"Balanced","line":"- **Questioning level.** Ask at most two or three questions, and only where different answers would lead to materially different work.","isDefault":true},{"id":"thorough","label":"Thorough","line":"- **Questioning level.** Ask as many questions as the ambiguity warrants, covering goal, boundaries and completion conditions before starting.","isDefault":false}]},{"id":"inference","label":"Ask or infer","help":"What happens when a detail is unstated but guessable.","choices":[{"id":"infer","label":"Infer and say so","line":"- **Ask or infer.** Where a detail is unstated but the sensible default is obvious, infer it, state the inference plainly, and continue without asking.","isDefault":true},{"id":"ask","label":"Ask rather than assume","line":"- **Ask or infer.** Where a detail is unstated, ask rather than assume, even when a sensible default seems obvious.","isDefault":false}]},{"id":"small","label":"Small tasks","help":"Whether quick reversible work skips the check.","choices":[{"id":"skip","label":"Skip the check","line":"- **Small tasks.** Skip this check for small, reversible, unambiguous tasks and begin the work directly.","isDefault":true},{"id":"always","label":"Always run it","line":"- **Small tasks.** Run this check on every task, however small, but keep the output to a single line when the goal is already clear.","isDefault":false}]},{"id":"summary","label":"Written summary","help":"Whether a short spec is written before execution.","choices":[{"id":"substantial","label":"For substantial work","line":"- **Written summary.** Write a short goal-and-boundaries summary before starting, for substantial or hard-to-reverse work only.","isDefault":true},{"id":"always","label":"Always","line":"- **Written summary.** Always write a short goal-and-boundaries summary before starting, and wait for it to be confirmed.","isDefault":false},{"id":"never","label":"Never","line":"- **Written summary.** Do not write a separate summary. Fold the goal and boundaries into the first line of the work itself.","isDefault":false}]}],"platforms":[{"id":"claude","name":"Claude Code","project":".claude/skills/\u003cslug>/SKILL.md","user":"~/.claude/skills/\u003cslug>/SKILL.md","note":"Project skills also load from any parent directory up to the repository root. On a name clash, a personal skill wins over a project one.","docs":"https://code.claude.com/docs/en/skills","docsLabel":"Claude Code skills documentation"},{"id":"cursor","name":"Cursor","project":".cursor/skills/\u003cslug>/SKILL.md","user":"~/.cursor/skills/\u003cslug>/SKILL.md","note":"Cursor also reads .agents/skills/, .claude/skills/ and .codex/skills/, so a skill installed for another tool is usually already available.","docs":"https://cursor.com/docs/skills","docsLabel":"Cursor skills documentation"},{"id":"codex","name":"OpenAI / Codex","project":".agents/skills/\u003cslug>/SKILL.md","user":"~/.agents/skills/\u003cslug>/SKILL.md","note":"Codex scans .agents/skills in every directory from the working directory up to the repository root.","docs":"https://developers.openai.com/codex/skills","docsLabel":"Codex skills documentation"},{"id":"generic","name":"Generic","project":".agents/skills/\u003cslug>/SKILL.md","user":"~/.agents/skills/\u003cslug>/SKILL.md","note":"The Agent Skills specification defines the folder and the SKILL.md format, but leaves it to each tool to decide where to look. .agents/skills/ is the most widely read location — check your tool if it is not picked up.","docs":"https://agentskills.io/specification","docsLabel":"Agent Skills specification"}]};</script>
+  <script>(function () {
+  var D = window.SKILL;
+  var $ = function (s) { return document.querySelector(s); };
+  var sel = {}, platform = D.platforms[0].id;
+
+  D.options.forEach(function (o) { sel[o.id] = def(o).id; });
+
+  function def(o) { return o.choices.filter(function (c) { return c.isDefault; })[0]; }
+  function cur(o) { return o.choices.filter(function (c) { return c.id === sel[o.id]; })[0]; }
+  function changedOptions() { return D.options.filter(function (o) { return cur(o).id !== def(o).id; }); }
+
+  /* ---- toast + copy ---- */
+  var toastEl = document.createElement('div');
+  toastEl.className = 'toast';
+  document.body.appendChild(toastEl);
+  var toastTimer;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 1900);
+  }
+  function copy(text, what) {
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.top = '-1000px';
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      ta.remove();
+      toast(ok ? what + ' copied' : 'Copy failed — select the text and copy manually');
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { toast(what + ' copied'); }, fallback);
+    } else { fallback(); }
+  }
+
+  /* ---- generate the customised skill ---- */
+  function generate() {
+    var text = D.canonical, changed = changedOptions();
+    changed.forEach(function (o) { text = text.split(def(o).line).join(cur(o).line); });
+    if (changed.length) {
+      text = text.replace(
+        '  source: ' + D.source + '\n',
+        '  source: ' + D.source + '\n  based_on: WeIndie /' + D.slug + ' v' + D.version + '\n'
+      );
+      text = text.replace(
+        D.defaultsNote,
+        'Customised from the WeIndie default, based on `/' + D.slug + '` v' + D.version +
+        '. Changed from default: ' + changed.map(function (o) { return o.label.toLowerCase(); }).join(', ') + '.'
+      );
+    }
+    return text;
+  }
+
+  /* ---- unified diff (LCS) ---- */
+  function diff(aText, bText) {
+    var a = aText.split('\n'), b = bText.split('\n');
+    var m = a.length, n = b.length, i, j;
+    var lcs = [];
+    for (i = 0; i <= m; i++) lcs.push(new Array(n + 1).fill(0));
+    for (i = m - 1; i >= 0; i--)
+      for (j = n - 1; j >= 0; j--)
+        lcs[i][j] = a[i] === b[j] ? lcs[i + 1][j + 1] + 1 : Math.max(lcs[i + 1][j], lcs[i][j + 1]);
+    var ops = [];
+    i = 0; j = 0;
+    while (i < m && j < n) {
+      if (a[i] === b[j]) { ops.push([' ', a[i]]); i++; j++; }
+      else if (lcs[i + 1][j] >= lcs[i][j + 1]) { ops.push(['-', a[i]]); i++; }
+      else { ops.push(['+', b[j]]); j++; }
+    }
+    while (i < m) { ops.push(['-', a[i++]]); }
+    while (j < n) { ops.push(['+', b[j++]]); }
+
+    var keep = {}, ctx = 2, k;
+    ops.forEach(function (op, idx) {
+      if (op[0] !== ' ') for (k = idx - ctx; k <= idx + ctx; k++) keep[k] = true;
+    });
+    var out = [], gap = false;
+    ops.forEach(function (op, idx) {
+      if (!keep[idx]) { gap = true; return; }
+      if (gap) { out.push(['hunk', '@@']); gap = false; }
+      out.push([op[0] === '+' ? 'add' : op[0] === '-' ? 'del' : '', op[0] + ' ' + op[1]]);
+    });
+    return out;
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  /* ---- render ---- */
+  function renderOptions() {
+    $('#opts').innerHTML = D.options.map(function (o) {
+      return '<div class="opt"><div class="lbl">' + esc(o.label) + '</div>' +
+        '<p class="help">' + esc(o.help) + '</p><div class="pills" role="group" aria-label="' + esc(o.label) + '">' +
+        o.choices.map(function (c) {
+          return '<button class="pill' + (c.id === sel[o.id] ? ' active' : '') + '" data-opt="' + o.id +
+            '" data-choice="' + c.id + '" aria-pressed="' + (c.id === sel[o.id]) + '">' + esc(c.label) + '</button>';
+        }).join('') + '</div></div>';
+    }).join('');
+    Array.prototype.forEach.call($('#opts').querySelectorAll('.pill'), function (b) {
+      b.addEventListener('click', function () {
+        sel[b.dataset.opt] = b.dataset.choice;
+        renderOptions();
+        renderCustom();
+      });
+    });
+  }
+
+  function renderCustom() {
+    var changed = changedOptions(), custom = generate();
+    $('#changes').innerHTML = changed.length
+      ? '<h3>Changed from default</h3>' + changed.map(function (o) {
+        return '<div class="chg"><b>' + esc(o.label) + '</b>' +
+          '<div class="was">' + esc(plain(def(o).line)) + '</div>' +
+          '<div class="now">' + esc(plain(cur(o).line)) + '</div></div>';
+      }).join('')
+      : '<h3>Changed from default</h3><p class="none">Nothing changed yet. This is the standard <code>/' +
+        esc(D.slug) + '</code> v' + esc(D.version) + '.</p>';
+    $('#gen').textContent = custom;
+    $('#diffTitle').textContent = changed.length ? 'Compare with default' : 'Compare with default (identical)';
+    $('#diff').innerHTML = changed.length
+      ? diff(D.canonical, custom).map(function (l) {
+          return '<span class="' + l[0] + '">' + esc(l[1]) + '</span>';
+        }).join('\n')
+      : 'No differences.';
+    $('#dlCustom').textContent = changed.length ? 'Download your /' + D.slug : 'Download /' + D.slug;
+  }
+
+  function plain(line) {
+    return line.replace(/^- \*\*[^*]+\.\*\*\s*/, '').replace(/^-\s*/, '');
+  }
+
+  function platformById(id) {
+    return D.platforms.filter(function (p) { return p.id === id; })[0];
+  }
+
+  function renderPlatform() {
+    var p = platformById(platform);
+    $('#destPath').textContent = p.project.replace(/<slug>/g, D.slug);
+    $('#destUser').textContent = p.user ? p.user.replace(/<slug>/g, D.slug) : '';
+    $('#destUserRow').style.display = p.user ? '' : 'none';
+    $('#platformNote').textContent = p.note || '';
+    $('#platformNote').style.display = p.note ? '' : 'none';
+    $('#docsLink').href = p.docs;
+    $('#docsLink').textContent = p.docsLabel;
+    $('#cmd').textContent = 'mkdir -p ' + dir(p) + ' && curl -fsSL ' + D.raw + ' -o ' + dir(p) + '/SKILL.md';
+    Array.prototype.forEach.call(document.querySelectorAll('#platforms .pill'), function (b) {
+      var on = b.dataset.platform === platform;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', on);
+    });
+  }
+  function dir(p) {
+    return p.project.replace(/<slug>/g, D.slug).replace(/\/SKILL\.md$/, '');
+  }
+
+  function download(text) {
+    var url = URL.createObjectURL(new Blob([text], { type: 'text/markdown' }));
+    var a = document.createElement('a');
+    a.href = url; a.download = 'SKILL.md'; a.style.display = 'none';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    toast('SKILL.md downloaded');
+  }
+
+  /* ---- wire up ---- */
+  Array.prototype.forEach.call(document.querySelectorAll('#platforms .pill'), function (b) {
+    b.addEventListener('click', function () { platform = b.dataset.platform; renderPlatform(); });
+  });
+  $('#copyTry').addEventListener('click', function () { copy(D.tryOnce, 'Prompt'); });
+  $('#copyCmd').addEventListener('click', function () { copy($('#cmd').textContent, 'Command'); });
+  $('#dlCanonical').addEventListener('click', function () { download(D.canonical); });
+  $('#dlCustom').addEventListener('click', function () { download(generate()); });
+  $('#copySource').addEventListener('click', function () { copy(D.canonical, 'SKILL.md'); });
+
+  renderOptions();
+  renderCustom();
+  renderPlatform();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+{
+  "slug": "kiss",
+  "question": "Is this the smallest version that still works?",
+  "summary": "Reviews work for complexity that is not earning its place, and proposes the smallest version that still meets the goal.",
+  "share": "Is this the smallest version that still works? Reviews AI work for complexity that is not earning its place.",
+  "homeLabel": "Simplify something",
+  "homeBlurb": "Look for complexity that does not earn its place.",
+  "tryOnce": "Review the current work using a keep-it-simple pass. Point out complexity that is not earning its place — unnecessary abstraction, indirection, structure or process — and describe the smallest version that still meets the goal, including what it gives up. Preserve anything justified by a real constraint and name that constraint. If the current complexity is warranted, say so plainly rather than simplifying for its own sake.",
+  "example": {
+    "caption": "A simple implementation has accumulated unnecessary abstractions.",
+    "turns": [
+      {
+        "who": "You",
+        "text": "I added one field to the settings form and it's touched 14 files."
+      },
+      {
+        "who": "AI",
+        "text": "The field goes through a FieldRegistry, a validator factory and a config schema, so new fields are declarative."
+      },
+      {
+        "who": "/kiss",
+        "text": "That structure would earn its place at thirty fields. There are four. Keep the config schema — the API already reads it. The rest can collapse into the input, one validation check beside it, and the existing save call. Three files instead of fourteen."
+      }
+    ]
+  },
+  "usefulWhen": [
+    "A small change has spread across many files.",
+    "New abstractions appeared that the goal did not ask for.",
+    "Something is hard to explain, or hard to change safely."
+  ],
+  "notNeededWhen": [
+    "The complexity is load-bearing and you already know why.",
+    "The work is genuinely intricate and the structure reflects that.",
+    "Simplifying now would cost more than living with it."
+  ],
+  "match": [
+    "complex",
+    "complicated",
+    "simplify",
+    "simpler",
+    "overengineer",
+    "over-engineer",
+    "too much",
+    "abstraction",
+    "bloat",
+    "convoluted",
+    "too many files",
+    "overkill"
+  ],
+  "options": [
+    {
+      "id": "pressure",
+      "label": "Simplification pressure",
+      "help": "How readily complexity gets flagged.",
+      "choices": [
+        {
+          "id": "gentle",
+          "label": "Gentle",
+          "line": "- **Simplification pressure.** Flag only complexity that is actively causing a problem now — something hard to change, hard to explain, or already a source of bugs."
+        },
+        {
+          "id": "balanced",
+          "label": "Balanced",
+          "default": true,
+          "line": "- **Simplification pressure.** Flag complexity that is not currently carrying weight, but leave anything with a plausible near-term justification in place."
+        },
+        {
+          "id": "aggressive",
+          "label": "Aggressive",
+          "line": "- **Simplification pressure.** Flag every piece of structure that is not currently required, and default to removing it unless a present constraint demands otherwise."
+        }
+      ]
+    },
+    {
+      "id": "abstractions",
+      "label": "Tolerance for abstraction",
+      "help": "When an abstraction counts as speculative.",
+      "choices": [
+        {
+          "id": "tolerant",
+          "label": "Tolerant",
+          "line": "- **Abstractions.** Accept an abstraction with a single caller where it genuinely makes the code clearer, and question only those with no caller or no clear purpose."
+        },
+        {
+          "id": "balanced",
+          "label": "Balanced",
+          "default": true,
+          "line": "- **Abstractions.** Treat an abstraction with a single caller as speculative unless a second use is already known and imminent."
+        },
+        {
+          "id": "strict",
+          "label": "Strict",
+          "line": "- **Abstractions.** Treat every abstraction as speculative until a second real use exists, however much clearer it appears."
+        }
+      ]
+    },
+    {
+      "id": "scope",
+      "label": "Scope of review",
+      "help": "Whether surrounding architecture is in scope.",
+      "choices": [
+        {
+          "id": "changed",
+          "label": "Changed work only",
+          "line": "- **Scope of review.** Review only the work that has recently changed. Leave surrounding architecture out of the discussion entirely."
+        },
+        {
+          "id": "balanced",
+          "label": "Changed work, plus its causes",
+          "default": true,
+          "line": "- **Scope of review.** Review the work that has recently changed, and mention surrounding architecture only where it is the direct cause of the complexity."
+        },
+        {
+          "id": "wide",
+          "label": "Include surrounding architecture",
+          "line": "- **Scope of review.** Review the changed work together with the surrounding architecture, including structure that predates this task."
+        }
+      ]
+    },
+    {
+      "id": "prose",
+      "label": "Prose and responses",
+      "help": "Whether the same lens applies to writing.",
+      "choices": [
+        {
+          "id": "code",
+          "label": "Code only",
+          "default": true,
+          "line": "- **Prose and responses.** Review code and structure only; leave the wording of explanations and responses alone."
+        },
+        {
+          "id": "both",
+          "label": "Code and writing",
+          "line": "- **Prose and responses.** Review the complexity of explanations and responses as well as code — over-long answers, unnecessary caveats, and restated context."
+        }
+      ]
+    }
+  ]
+}

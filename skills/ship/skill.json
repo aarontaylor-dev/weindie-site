@@ -1,0 +1,129 @@
+{
+  "slug": "ship",
+  "question": "Does the evidence support calling this done?",
+  "summary": "Separates what has actually been verified from what is being assumed, and gives a verdict either way.",
+  "share": "Does the evidence support calling this done? Separates what AI work has actually verified from what it is assuming.",
+  "homeLabel": "Check it is finished",
+  "homeBlurb": "Check whether the evidence supports calling the work complete.",
+  "tryOnce": "Before calling this done, check it against the evidence. List everything that was actually asked for, and for each part say whether it has been verified and by what — a test that ran, output you observed, a path you exercised. Mark anything supported only by reading the code as unverified. Then give a verdict: READY, or NOT READY with the specific missing evidence and the smallest thing that would close it.",
+  "example": {
+    "caption": "The agent reports done, but part of the requested behaviour was never verified.",
+    "turns": [
+      {
+        "who": "You",
+        "text": "Implementation's finished. /ship"
+      },
+      {
+        "who": "AI",
+        "text": "All done — the upload works and the tests pass."
+      },
+      {
+        "who": "/ship",
+        "text": "NOT READY. The upload path is verified by the test run. The request also included rejecting files over 10MB — that limit is in the code but nothing exercises it, so it is believed rather than verified. One test closes the gap."
+      }
+    ]
+  },
+  "usefulWhen": [
+    "Work is about to be reported as finished, merged or handed over.",
+    "Several behaviours were requested and only some are visibly exercised.",
+    "An agent has said \"done\" without saying how it knows."
+  ],
+  "notNeededWhen": [
+    "The change is trivial and its effect is directly visible.",
+    "Verification has just happened and nothing has changed since.",
+    "The work is explicitly exploratory and not being claimed as finished."
+  ],
+  "match": [
+    "finish",
+    "done",
+    "ready",
+    "ship",
+    "complete",
+    "tested",
+    "test",
+    "verify",
+    "verified",
+    "evidence",
+    "claims it works",
+    "says it works"
+  ],
+  "options": [
+    {
+      "id": "evidence",
+      "label": "Required evidence",
+      "help": "What counts as proof that something works.",
+      "choices": [
+        {
+          "id": "stated",
+          "label": "Accounted for",
+          "line": "- **Evidence level.** Require each requested behaviour to be accounted for explicitly, but accept a clear reading of the code where running a check is impractical."
+        },
+        {
+          "id": "demonstrated",
+          "label": "Demonstrated",
+          "default": true,
+          "line": "- **Evidence level.** Require each requested behaviour to be demonstrated by something that actually ran; reasoning about the code is not evidence."
+        },
+        {
+          "id": "quoted",
+          "label": "Demonstrated and quoted",
+          "line": "- **Evidence level.** Require each requested behaviour to be demonstrated by something that actually ran, and quote the relevant output in the report."
+        }
+      ]
+    },
+    {
+      "id": "fixing",
+      "label": "Failed checks",
+      "help": "Whether the agent fixes failures before reporting.",
+      "choices": [
+        {
+          "id": "fix",
+          "label": "Fix, then report both",
+          "default": true,
+          "line": "- **Fixing failures.** When a check fails, fix it, re-run it, and report both the failure and the fix."
+        },
+        {
+          "id": "report",
+          "label": "Report without fixing",
+          "line": "- **Fixing failures.** When a check fails, stop and report it. Do not attempt a fix without being asked."
+        }
+      ]
+    },
+    {
+      "id": "manual",
+      "label": "Manual verification",
+      "help": "What happens when something cannot be checked automatically.",
+      "choices": [
+        {
+          "id": "describe",
+          "label": "Describe the manual check",
+          "default": true,
+          "line": "- **Manual verification.** Where a behaviour cannot be checked automatically, say so and describe the manual check the human should run."
+        },
+        {
+          "id": "block",
+          "label": "Withhold READY until confirmed",
+          "line": "- **Manual verification.** Where a behaviour cannot be checked automatically, treat it as unverified and withhold READY until a human confirms it."
+        }
+      ]
+    },
+    {
+      "id": "unresolved",
+      "label": "Known unresolved issues",
+      "help": "Whether open issues block a READY verdict.",
+      "choices": [
+        {
+          "id": "allow",
+          "label": "Allow, if listed",
+          "default": true,
+          "line": "- **Unresolved issues.** A known unresolved issue does not block READY, provided it is listed explicitly and is unrelated to the requested behaviour."
+        },
+        {
+          "id": "block",
+          "label": "Block READY",
+          "line": "- **Unresolved issues.** Any known unresolved issue blocks READY until it is either fixed or explicitly accepted."
+        }
+      ]
+    }
+  ]
+}

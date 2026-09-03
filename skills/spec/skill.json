@@ -1,0 +1,134 @@
+{
+  "slug": "spec",
+  "question": "What are we actually trying to do?",
+  "summary": "Establishes the goal, what finished looks like, and the boundaries — before substantial work begins.",
+  "share": "What are we actually trying to do? Establishes the goal, what done looks like and the boundaries before AI work begins.",
+  "homeLabel": "Understand a task",
+  "homeBlurb": "Establish what you are actually trying to do.",
+  "tryOnce": "Before you build anything, work out what we are actually trying to do. Reconstruct the goal from what I have told you, state what \"done\" would look like, and note what is out of scope. Separate what I actually said from what you are inferring, and say the inferences out loud. Then ask me only about decisions where different answers would lead to materially different work — if the context is already clear enough, say so and continue.",
+  "example": {
+    "caption": "Someone has an idea, but the immediate goal is still unclear.",
+    "turns": [
+      {
+        "who": "You",
+        "text": "I want to add onboarding to the app."
+      },
+      {
+        "who": "AI",
+        "text": "I'll start with a five-step wizard, a progress bar and email verification."
+      },
+      {
+        "who": "/spec",
+        "text": "None of that was specified. Known: you want onboarding. Assumed: that it is multi-step, and that email is involved. One question changes everything else — what must someone be able to do afterwards that they cannot do now? The rest I can infer from that."
+      }
+    ]
+  },
+  "usefulWhen": [
+    "The request is short and the implied work is large.",
+    "The work is expensive, or difficult to reverse.",
+    "Several reasonable interpretations lead somewhere different."
+  ],
+  "notNeededWhen": [
+    "The task is small, reversible and unambiguous.",
+    "The goal was already established earlier in the session.",
+    "Asking would cost more than trying it and adjusting."
+  ],
+  "match": [
+    "vague",
+    "unclear",
+    "not sure",
+    "what should",
+    "goal",
+    "requirements",
+    "understand",
+    "idea",
+    "ambiguous",
+    "before i start",
+    "where to start",
+    "scope out"
+  ],
+  "options": [
+    {
+      "id": "questioning",
+      "label": "Questioning level",
+      "help": "How much is asked before work starts.",
+      "choices": [
+        {
+          "id": "minimal",
+          "label": "Minimal",
+          "line": "- **Questioning level.** Ask at most one question, and only when the work cannot sensibly begin without the answer."
+        },
+        {
+          "id": "balanced",
+          "label": "Balanced",
+          "default": true,
+          "line": "- **Questioning level.** Ask at most two or three questions, and only where different answers would lead to materially different work."
+        },
+        {
+          "id": "thorough",
+          "label": "Thorough",
+          "line": "- **Questioning level.** Ask as many questions as the ambiguity warrants, covering goal, boundaries and completion conditions before starting."
+        }
+      ]
+    },
+    {
+      "id": "inference",
+      "label": "Ask or infer",
+      "help": "What happens when a detail is unstated but guessable.",
+      "choices": [
+        {
+          "id": "infer",
+          "label": "Infer and say so",
+          "default": true,
+          "line": "- **Ask or infer.** Where a detail is unstated but the sensible default is obvious, infer it, state the inference plainly, and continue without asking."
+        },
+        {
+          "id": "ask",
+          "label": "Ask rather than assume",
+          "line": "- **Ask or infer.** Where a detail is unstated, ask rather than assume, even when a sensible default seems obvious."
+        }
+      ]
+    },
+    {
+      "id": "small",
+      "label": "Small tasks",
+      "help": "Whether quick reversible work skips the check.",
+      "choices": [
+        {
+          "id": "skip",
+          "label": "Skip the check",
+          "default": true,
+          "line": "- **Small tasks.** Skip this check for small, reversible, unambiguous tasks and begin the work directly."
+        },
+        {
+          "id": "always",
+          "label": "Always run it",
+          "line": "- **Small tasks.** Run this check on every task, however small, but keep the output to a single line when the goal is already clear."
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "label": "Written summary",
+      "help": "Whether a short spec is written before execution.",
+      "choices": [
+        {
+          "id": "substantial",
+          "label": "For substantial work",
+          "default": true,
+          "line": "- **Written summary.** Write a short goal-and-boundaries summary before starting, for substantial or hard-to-reverse work only."
+        },
+        {
+          "id": "always",
+          "label": "Always",
+          "line": "- **Written summary.** Always write a short goal-and-boundaries summary before starting, and wait for it to be confirmed."
+        },
+        {
+          "id": "never",
+          "label": "Never",
+          "line": "- **Written summary.** Do not write a separate summary. Fold the goal and boundaries into the first line of the work itself."
+        }
+      ]
+    }
+  ]
+}
