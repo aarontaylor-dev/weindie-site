@@ -169,10 +169,11 @@ details.reveal[open] > summary{margin-bottom:10px}
 
 /* diff keeps the one code treatment, tinted by sign only */
 .diff{font-family:var(--mono);font-size:13px;line-height:1.65;background:var(--sunk);border:1px solid var(--rule);padding:14px 16px;overflow-x:auto;margin:0}
-.diff .add{color:#1f6b45;display:block}
-.diff .del{color:#a8412c;display:block}
-.diff .hunk{color:var(--faint);display:block}
-.diff span:not([class]){display:block;color:var(--muted)}
+/* every line is a block; context lines carry class="" so :not([class]) misses them */
+.diff span{display:block;color:var(--muted)}
+.diff .add{color:#1f6b45}
+.diff .del{color:#a8412c}
+.diff .hunk{color:var(--faint)}
 
 /* other skills */
 .index{display:grid;gap:0;border-top:1px solid var(--rule)}
