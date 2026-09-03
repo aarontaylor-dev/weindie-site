@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>/spec — WeIndie</title>
-  <meta name="description" content="What are we actually trying to do? Establishes the goal, what done looks like and the boundaries before AI work begins.">
+  <meta name="description" content="What are we actually trying to do? Reaches shared understanding with an AI before the work starts — on planning, research, writing or code.">
   <link rel="canonical" href="https://weindie.com/spec">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23315c4d'/%3E%3Cpath d='M8 22L14 10M18 22l6-12' fill='none' stroke='%23fbfaf7' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="WeIndie">
   <meta property="og:title" content="/spec — WeIndie">
-  <meta property="og:description" content="What are we actually trying to do? Establishes the goal, what done looks like and the boundaries before AI work begins.">
+  <meta property="og:description" content="What are we actually trying to do? Reaches shared understanding with an AI before the work starts — on planning, research, writing or code.">
   <meta property="og:url" content="https://weindie.com/spec">
   <meta property="og:image" content="https://weindie.com/og/spec.png">
   <meta property="og:image:type" content="image/png">
@@ -19,7 +19,7 @@
   <meta property="og:image:alt" content="/spec — What are we actually trying to do?">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="/spec — WeIndie">
-  <meta name="twitter:description" content="What are we actually trying to do? Establishes the goal, what done looks like and the boundaries before AI work begins.">
+  <meta name="twitter:description" content="What are we actually trying to do? Reaches shared understanding with an AI before the work starts — on planning, research, writing or code.">
   <meta name="twitter:image" content="https://weindie.com/og/spec.png">
   <meta name="twitter:image:alt" content="/spec — What are we actually trying to do?">
   <link rel="preload" href="/fonts/ibm-plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -360,26 +360,26 @@ footer{border-top:2px solid var(--ink);margin-top:64px;padding:20px 0 56px}
   </header>
   <main class="wrap" id="main">
     <div class="shead">
-      <div class="stitle"><h1>/spec</h1><span class="ver">Spec First skill &middot; v0.1</span></div>
+      <div class="stitle"><h1>/spec</h1><span class="ver">Spec First skill &middot; v0.2</span></div>
       <h2 class="squestion">What are we actually trying to do?</h2>
-      <p class="ssummary">Establishes the goal, what finished looks like, and the boundaries — before substantial work begins.</p>
+      <p class="ssummary">Reaches shared understanding before the work starts — on planning, research, writing or code.</p>
       <div class="actions seg">
         <a href="#try-once">Try it once</a>
         <a href="#install">Install</a>
         <a href="#make-it-yours">Make it yours</a>
         <a href="#skill-source">SKILL.md</a>
       </div>
-      <p class="crumbs">Sent this link by someone? <code>/spec</code> is a skill you can add to an AI coding tool &mdash; or just try the prompt below in a conversation you already have open.</p>
+      <p class="crumbs">Sent this link by someone? <code>/spec</code> is a skill you can add to an AI tool &mdash; or just try the prompt below in a conversation you already have open.</p>
     </div>
     <section class="blk" id="example">
       <div class="rail"><div class="n">&sect; 1</div><h2>Example</h2></div>
-      <div class="body"><p class="lede">Someone has an idea, but the immediate goal is still unclear.</p>
-        <div class="chat"><div class="msg"><div class="who">You</div><p>I want to add onboarding to the app.</p></div><div class="msg"><div class="who">AI</div><p>I'll start with a five-step wizard, a progress bar and email verification.</p></div><div class="msg skill"><div class="who">/spec</div><p>None of that was specified. Known: you want onboarding. Assumed: that it is multi-step, and that email is involved. One question changes everything else — what must someone be able to do afterwards that they cannot do now? The rest I can infer from that.</p></div></div></div>
+      <div class="body"><p class="lede">A short request with a lot of unsaid context — and not a line of code in sight.</p>
+        <div class="chat"><div class="msg"><div class="who">You</div><p>Help me write a message to my landlord about the boiler without it sounding harsh.</p></div><div class="msg"><div class="who">AI</div><p>Sure — here's a polite draft asking them to arrange a repair at their earliest convenience.</p></div><div class="msg skill"><div class="who">/spec</div><p>Before drafting: I know it's about the boiler and you don't want to sound harsh. I'm assuming it's a repeat problem rather than the first report — say if not. One thing that changes the whole message: what do you actually want out of it? (A) it fixed quickly, no friction (B) a firm record because this has dragged on (C) compensation or rent reduction. I'd guess B from &quot;without sounding harsh&quot;. Tell me the letter and I'll write it.</p></div></div></div>
     </section>
     <section class="blk" id="try-once">
       <div class="rail"><div class="n">&sect; 2</div><h2>Try once</h2></div>
       <div class="body"><p class="lede">Nothing to install. Copy this into a conversation that is already underway, and see whether the idea is useful before you commit to it.</p>
-        <pre class="code" id="tryPrompt">Before you build anything, work out what we are actually trying to do. Reconstruct the goal from what I have told you, state what &quot;done&quot; would look like, and note what is out of scope. Separate what I actually said from what you are inferring, and say the inferences out loud. Then ask me only about decisions where different answers would lead to materially different work — if the context is already clear enough, say so and continue.</pre>
+        <pre class="code" id="tryPrompt">Before you start, work out whether we actually understand this the same way. Use what is already in this conversation first, then sort it into what you know, what you can reasonably infer, what you could look up yourself, and what genuinely needs a decision from me. Close the first three yourself and say your inferences out loud. Ask me only about the last group, and where the answer can be reduced to choices, offer me the choices rather than an open question. Recommend what you would do. Stop as soon as we understand it well enough to move.</pre>
         <div class="btnrow"><button class="btn primary" id="copyTry">Copy prompt</button></div>
         <p class="small" style="margin-top:16px">A short, portable version. The installed skill carries the fuller behaviour &mdash; when to stay quiet, how to report, what not to flag &mdash; and neither needs your AI to be able to read this page.</p></div>
     </section>
@@ -387,8 +387,8 @@ footer{border-top:2px solid var(--ink);margin-top:64px;padding:20px 0 56px}
       <div class="rail"><div class="n">&sect; 3</div><h2>When</h2></div>
       <div class="body"><p class="lede">A skill that fires on everything stops meaning anything. <code>/spec</code> is allowed to find nothing.</p>
         <div class="two">
-          <div><h3>Useful when</h3><ul><li>The request is short and the implied work is large.</li><li>The work is expensive, or difficult to reverse.</li><li>Several reasonable interpretations lead somewhere different.</li></ul></div>
-          <div><h3>Probably not needed when</h3><ul><li>The task is small, reversible and unambiguous.</li><li>The goal was already established earlier in the session.</li><li>Asking would cost more than trying it and adjusting.</li></ul></div>
+          <div><h3>Useful when</h3><ul><li>There is more context in your head than you have actually said out loud.</li><li>The request is short and the work it implies is large.</li><li>The work is expensive, public, or hard to undo.</li></ul></div>
+          <div><h3>Probably not needed when</h3><ul><li>The task is small, reversible and unambiguous.</li><li>The goal was established earlier in the same conversation.</li><li>Asking would cost more than trying it and adjusting.</li></ul></div>
         </div></div>
     </section>
     <section class="blk" id="install">
@@ -428,10 +428,10 @@ footer{border-top:2px solid var(--ink);margin-top:64px;padding:20px 0 56px}
       <div class="body"><p class="lede">The whole skill, and the same file every download is built from. Nothing downloadable here should be less inspectable than the page explaining it.</p>
         <pre class="code">---
 name: spec
-description: Establish what a task is actually asking for before substantial work begins.
+description: Reach shared understanding before work starts — on anything, not only code.
 license: MIT
 metadata:
-  version: &quot;0.1&quot;
+  version: &quot;0.2&quot;
   source: https://weindie.com/spec
 ---
 
@@ -439,47 +439,58 @@ metadata:
 
 **What are we actually trying to do?**
 
-Most bad AI work is not badly executed. It is well executed against a goal nobody
-established. This skill slows down the first minute of a task: reconstruct the
-goal, state what finished looks like, separate what was actually said from what is
-being assumed, and ask only about the decisions that would genuinely change the
-result.
+Most disappointing AI work is not badly executed. It is well executed against a
+goal nobody established. This skill spends the first minute of a task making
+sure both sides understand the same thing, and then gets out of the way.
+
+It is not a coding skill. Use it before planning something, researching a
+purchase, writing a message you are not sure how to pitch, making a decision,
+or thinking an idea through out loud. Code is one case, not the point.
+
+The test is not &quot;is this specified?&quot; It is:
+
+&gt; Do we understand this well enough to move?
 
 ## Useful when
 
-- The request is short and the implied work is large.
-- The work is expensive, or difficult to reverse.
-- Several reasonable interpretations exist and they lead somewhere different.
-- You are starting a session with little shared context.
+- There is more context in your head than you have actually said out loud.
+- The request is short and the work it implies is large.
+- Several reasonable readings of the request lead somewhere different.
+- The work is expensive, public, or hard to undo.
 
 ## Probably not needed when
 
 - The task is small, reversible and unambiguous.
-- The goal has already been established earlier in the session.
-- Asking would cost more than simply trying it and adjusting.
+- The goal was established earlier in the same conversation.
+- Asking would cost more than trying it and adjusting.
 
-An established goal does not need re-establishing. If the context is already clear
-enough, say so and continue — do not interrogate a task that is already understood.
+Re-establishing an established goal is just delay. If the context is already
+clear enough, say so and start.
 
 ## How to run the check
 
-1. **Reconstruct the goal.** In one sentence: what is this for? Not what is being
-   built — what it is meant to achieve.
-2. **State what done looks like.** The observable conditions that would let anyone
-   agree the task is complete.
-3. **Mark the boundaries.** What is explicitly not part of this, including things
-   that would be tempting to include.
-4. **Separate knowledge from assumption.** List what was actually stated, and
-   list what is being inferred. Inference is fine; silent inference is not.
-5. **Ask only what matters.** A question earns its place only if different answers
-   would lead to materially different work.
+1. **Use what is already there.** Read the conversation, the files, the ticket.
+   Never ask something that has already been answered.
+2. **Sort what you have** into five piles: known, reasonably inferred,
+   answerable by your own research, still ambiguous, and genuinely needs a
+   decision from the human.
+3. **Close the first three yourself.** Infer sensible defaults and say them out
+   loud. Look up what can be looked up.
+4. **Ask only about the last pile** — decisions that are actually the human's to
+   make, where different answers lead to materially different work.
+5. **Surface contradictions** rather than quietly picking a side.
+6. **Stop when there is enough to move.** The goal is confidence to proceed, not
+   a complete specification.
 
 ## Reporting
 
-- Lead with the goal, not the process.
-- Keep the summary shorter than the work it precedes.
-- Flag assumptions in a form that is easy to correct in one line.
-- If nothing material is unclear, say &quot;the goal is clear enough&quot; and proceed.
+- Lead with the goal in one sentence, then what &quot;done&quot; would look like.
+- Say the inferences out loud, so they are cheap to correct.
+- Recommend. A question that comes with a suggested answer is worth three open
+  ones; a skill that only interrogates is a questionnaire, not a collaborator.
+- Keep the understanding shorter than the work it precedes.
+- Once work is underway, raise important new ambiguity instead of guessing
+  silently — but use judgement. Not every small unknown is worth an interruption.
 
 ## Defaults you can change
 
@@ -487,9 +498,9 @@ These are the adjustable lines of this skill. A customised copy from
 &lt;https://weindie.com/spec&gt; replaces them and records what changed.
 
 - **Questioning level.** Ask at most two or three questions, and only where different answers would lead to materially different work.
-- **Ask or infer.** Where a detail is unstated but the sensible default is obvious, infer it, state the inference plainly, and continue without asking.
+- **Question style.** Offer a short list of options whenever the answer can sensibly be reduced to choices, and fall back to an open question only when it cannot.
 - **Small tasks.** Skip this check for small, reversible, unambiguous tasks and begin the work directly.
-- **Written summary.** Write a short goal-and-boundaries summary before starting, for substantial or hard-to-reverse work only.
+- **What survives.** Keep the working understanding in the conversation. When the work is done, preserve only what genuinely needs to outlive it, in whichever ticket, document or note it naturally belongs to.
 </pre>
         <div class="btnrow"><button class="btn" id="copySource">Copy SKILL.md</button><a class="btn" href="/spec/SKILL.md">Open raw file</a></div></div>
     </section>
@@ -499,7 +510,7 @@ These are the adjustable lines of this skill. A customised copy from
     </section>
   </main>
   <footer class="wrap"><div class="foot"><b>weindie</b><span>Independent tools for navigating work with AI.</span><span>v1.1 &middot; early and evolving</span><span><a href="/LICENSE.txt">MIT licensed</a></span></div></footer>
-  <script>window.SKILL={"slug":"spec","version":"0.1","source":"https://weindie.com/spec","raw":"https://weindie.com/spec/SKILL.md","canonical":"---\nname: spec\ndescription: Establish what a task is actually asking for before substantial work begins.\nlicense: MIT\nmetadata:\n  version: \"0.1\"\n  source: https://weindie.com/spec\n---\n\n# /spec\n\n**What are we actually trying to do?**\n\nMost bad AI work is not badly executed. It is well executed against a goal nobody\nestablished. This skill slows down the first minute of a task: reconstruct the\ngoal, state what finished looks like, separate what was actually said from what is\nbeing assumed, and ask only about the decisions that would genuinely change the\nresult.\n\n## Useful when\n\n- The request is short and the implied work is large.\n- The work is expensive, or difficult to reverse.\n- Several reasonable interpretations exist and they lead somewhere different.\n- You are starting a session with little shared context.\n\n## Probably not needed when\n\n- The task is small, reversible and unambiguous.\n- The goal has already been established earlier in the session.\n- Asking would cost more than simply trying it and adjusting.\n\nAn established goal does not need re-establishing. If the context is already clear\nenough, say so and continue — do not interrogate a task that is already understood.\n\n## How to run the check\n\n1. **Reconstruct the goal.** In one sentence: what is this for? Not what is being\n   built — what it is meant to achieve.\n2. **State what done looks like.** The observable conditions that would let anyone\n   agree the task is complete.\n3. **Mark the boundaries.** What is explicitly not part of this, including things\n   that would be tempting to include.\n4. **Separate knowledge from assumption.** List what was actually stated, and\n   list what is being inferred. Inference is fine; silent inference is not.\n5. **Ask only what matters.** A question earns its place only if different answers\n   would lead to materially different work.\n\n## Reporting\n\n- Lead with the goal, not the process.\n- Keep the summary shorter than the work it precedes.\n- Flag assumptions in a form that is easy to correct in one line.\n- If nothing material is unclear, say \"the goal is clear enough\" and proceed.\n\n## Defaults you can change\n\nThese are the adjustable lines of this skill. A customised copy from\n\u003chttps://weindie.com/spec> replaces them and records what changed.\n\n- **Questioning level.** Ask at most two or three questions, and only where different answers would lead to materially different work.\n- **Ask or infer.** Where a detail is unstated but the sensible default is obvious, infer it, state the inference plainly, and continue without asking.\n- **Small tasks.** Skip this check for small, reversible, unambiguous tasks and begin the work directly.\n- **Written summary.** Write a short goal-and-boundaries summary before starting, for substantial or hard-to-reverse work only.\n","defaultsNote":"These are the adjustable lines of this skill. A customised copy from\n\u003chttps://weindie.com/spec> replaces them and records what changed.","tryOnce":"Before you build anything, work out what we are actually trying to do. Reconstruct the goal from what I have told you, state what \"done\" would look like, and note what is out of scope. Separate what I actually said from what you are inferring, and say the inferences out loud. Then ask me only about decisions where different answers would lead to materially different work — if the context is already clear enough, say so and continue.","options":[{"id":"questioning","label":"Questioning level","help":"How much is asked before work starts.","choices":[{"id":"minimal","label":"Minimal","line":"- **Questioning level.** Ask at most one question, and only when the work cannot sensibly begin without the answer.","isDefault":false},{"id":"balanced","label":"Balanced","line":"- **Questioning level.** Ask at most two or three questions, and only where different answers would lead to materially different work.","isDefault":true},{"id":"thorough","label":"Thorough","line":"- **Questioning level.** Ask as many questions as the ambiguity warrants, covering goal, boundaries and completion conditions before starting.","isDefault":false}]},{"id":"inference","label":"Ask or infer","help":"What happens when a detail is unstated but guessable.","choices":[{"id":"infer","label":"Infer and say so","line":"- **Ask or infer.** Where a detail is unstated but the sensible default is obvious, infer it, state the inference plainly, and continue without asking.","isDefault":true},{"id":"ask","label":"Ask rather than assume","line":"- **Ask or infer.** Where a detail is unstated, ask rather than assume, even when a sensible default seems obvious.","isDefault":false}]},{"id":"small","label":"Small tasks","help":"Whether quick reversible work skips the check.","choices":[{"id":"skip","label":"Skip the check","line":"- **Small tasks.** Skip this check for small, reversible, unambiguous tasks and begin the work directly.","isDefault":true},{"id":"always","label":"Always run it","line":"- **Small tasks.** Run this check on every task, however small, but keep the output to a single line when the goal is already clear.","isDefault":false}]},{"id":"summary","label":"Written summary","help":"Whether a short spec is written before execution.","choices":[{"id":"substantial","label":"For substantial work","line":"- **Written summary.** Write a short goal-and-boundaries summary before starting, for substantial or hard-to-reverse work only.","isDefault":true},{"id":"always","label":"Always","line":"- **Written summary.** Always write a short goal-and-boundaries summary before starting, and wait for it to be confirmed.","isDefault":false},{"id":"never","label":"Never","line":"- **Written summary.** Do not write a separate summary. Fold the goal and boundaries into the first line of the work itself.","isDefault":false}]}],"platforms":[{"id":"claude","name":"Claude Code","project":".claude/skills/\u003cslug>/SKILL.md","user":"~/.claude/skills/\u003cslug>/SKILL.md","note":"Project skills also load from any parent directory up to the repository root. On a name clash, a personal skill wins over a project one.","docs":"https://code.claude.com/docs/en/skills","docsLabel":"Claude Code skills documentation"},{"id":"cursor","name":"Cursor","project":".cursor/skills/\u003cslug>/SKILL.md","user":"~/.cursor/skills/\u003cslug>/SKILL.md","note":"Cursor also reads .agents/skills/, .claude/skills/ and .codex/skills/, so a skill installed for another tool is usually already available.","docs":"https://cursor.com/docs/skills","docsLabel":"Cursor skills documentation"},{"id":"codex","name":"OpenAI / Codex","project":".agents/skills/\u003cslug>/SKILL.md","user":"~/.agents/skills/\u003cslug>/SKILL.md","note":"Codex scans .agents/skills in every directory from the working directory up to the repository root.","docs":"https://developers.openai.com/codex/skills","docsLabel":"Codex skills documentation"},{"id":"generic","name":"Generic","project":".agents/skills/\u003cslug>/SKILL.md","user":"~/.agents/skills/\u003cslug>/SKILL.md","note":"The Agent Skills specification defines the folder and the SKILL.md format, but leaves it to each tool to decide where to look. .agents/skills/ is the most widely read location — check your tool if it is not picked up.","docs":"https://agentskills.io/specification","docsLabel":"Agent Skills specification"}]};</script>
+  <script>window.SKILL={"slug":"spec","version":"0.2","source":"https://weindie.com/spec","raw":"https://weindie.com/spec/SKILL.md","canonical":"---\nname: spec\ndescription: Reach shared understanding before work starts — on anything, not only code.\nlicense: MIT\nmetadata:\n  version: \"0.2\"\n  source: https://weindie.com/spec\n---\n\n# /spec\n\n**What are we actually trying to do?**\n\nMost disappointing AI work is not badly executed. It is well executed against a\ngoal nobody established. This skill spends the first minute of a task making\nsure both sides understand the same thing, and then gets out of the way.\n\nIt is not a coding skill. Use it before planning something, researching a\npurchase, writing a message you are not sure how to pitch, making a decision,\nor thinking an idea through out loud. Code is one case, not the point.\n\nThe test is not \"is this specified?\" It is:\n\n> Do we understand this well enough to move?\n\n## Useful when\n\n- There is more context in your head than you have actually said out loud.\n- The request is short and the work it implies is large.\n- Several reasonable readings of the request lead somewhere different.\n- The work is expensive, public, or hard to undo.\n\n## Probably not needed when\n\n- The task is small, reversible and unambiguous.\n- The goal was established earlier in the same conversation.\n- Asking would cost more than trying it and adjusting.\n\nRe-establishing an established goal is just delay. If the context is already\nclear enough, say so and start.\n\n## How to run the check\n\n1. **Use what is already there.** Read the conversation, the files, the ticket.\n   Never ask something that has already been answered.\n2. **Sort what you have** into five piles: known, reasonably inferred,\n   answerable by your own research, still ambiguous, and genuinely needs a\n   decision from the human.\n3. **Close the first three yourself.** Infer sensible defaults and say them out\n   loud. Look up what can be looked up.\n4. **Ask only about the last pile** — decisions that are actually the human's to\n   make, where different answers lead to materially different work.\n5. **Surface contradictions** rather than quietly picking a side.\n6. **Stop when there is enough to move.** The goal is confidence to proceed, not\n   a complete specification.\n\n## Reporting\n\n- Lead with the goal in one sentence, then what \"done\" would look like.\n- Say the inferences out loud, so they are cheap to correct.\n- Recommend. A question that comes with a suggested answer is worth three open\n  ones; a skill that only interrogates is a questionnaire, not a collaborator.\n- Keep the understanding shorter than the work it precedes.\n- Once work is underway, raise important new ambiguity instead of guessing\n  silently — but use judgement. Not every small unknown is worth an interruption.\n\n## Defaults you can change\n\nThese are the adjustable lines of this skill. A customised copy from\n\u003chttps://weindie.com/spec> replaces them and records what changed.\n\n- **Questioning level.** Ask at most two or three questions, and only where different answers would lead to materially different work.\n- **Question style.** Offer a short list of options whenever the answer can sensibly be reduced to choices, and fall back to an open question only when it cannot.\n- **Small tasks.** Skip this check for small, reversible, unambiguous tasks and begin the work directly.\n- **What survives.** Keep the working understanding in the conversation. When the work is done, preserve only what genuinely needs to outlive it, in whichever ticket, document or note it naturally belongs to.\n","defaultsNote":"These are the adjustable lines of this skill. A customised copy from\n\u003chttps://weindie.com/spec> replaces them and records what changed.","tryOnce":"Before you start, work out whether we actually understand this the same way. Use what is already in this conversation first, then sort it into what you know, what you can reasonably infer, what you could look up yourself, and what genuinely needs a decision from me. Close the first three yourself and say your inferences out loud. Ask me only about the last group, and where the answer can be reduced to choices, offer me the choices rather than an open question. Recommend what you would do. Stop as soon as we understand it well enough to move.","options":[{"id":"questioning","label":"Questioning level","help":"How much is asked before work starts.","choices":[{"id":"minimal","label":"Minimal","line":"- **Questioning level.** Ask at most one question, and only when the work cannot sensibly begin without the answer.","isDefault":false},{"id":"balanced","label":"Balanced","line":"- **Questioning level.** Ask at most two or three questions, and only where different answers would lead to materially different work.","isDefault":true},{"id":"thorough","label":"Thorough","line":"- **Questioning level.** Ask as many questions as the ambiguity warrants, covering goal, boundaries and completion conditions before starting.","isDefault":false}]},{"id":"style","label":"Question style","help":"Whether you get choices to pick from, or open questions.","choices":[{"id":"choices","label":"Offer choices","line":"- **Question style.** Offer a short list of options whenever the answer can sensibly be reduced to choices, and fall back to an open question only when it cannot.","isDefault":true},{"id":"open","label":"Ask openly","line":"- **Question style.** Ask open questions rather than offering options, so the answer is not shaped by the choices on offer.","isDefault":false}]},{"id":"small","label":"Small tasks","help":"Whether quick reversible work skips the check.","choices":[{"id":"skip","label":"Skip the check","line":"- **Small tasks.** Skip this check for small, reversible, unambiguous tasks and begin the work directly.","isDefault":true},{"id":"always","label":"Always run it","line":"- **Small tasks.** Run this check on every task, however small, but keep the output to a single line when the goal is already clear.","isDefault":false}]},{"id":"survives","label":"What survives","help":"What is left behind when the task is finished.","choices":[{"id":"residue","label":"Only what must outlive it","line":"- **What survives.** Keep the working understanding in the conversation. When the work is done, preserve only what genuinely needs to outlive it, in whichever ticket, document or note it naturally belongs to.","isDefault":true},{"id":"always","label":"Always write it down","line":"- **What survives.** Write a short goal-and-boundaries summary before starting and keep it as a durable artifact alongside the work.","isDefault":false},{"id":"nothing","label":"Leave nothing","line":"- **What survives.** Keep everything in the conversation and preserve nothing once the work is done.","isDefault":false}]}],"platforms":[{"id":"claude","name":"Claude Code","project":".claude/skills/\u003cslug>/SKILL.md","user":"~/.claude/skills/\u003cslug>/SKILL.md","note":"Project skills also load from any parent directory up to the repository root. On a name clash, a personal skill wins over a project one.","docs":"https://code.claude.com/docs/en/skills","docsLabel":"Claude Code skills documentation"},{"id":"cursor","name":"Cursor","project":".cursor/skills/\u003cslug>/SKILL.md","user":"~/.cursor/skills/\u003cslug>/SKILL.md","note":"Cursor also reads .agents/skills/, .claude/skills/ and .codex/skills/, so a skill installed for another tool is usually already available.","docs":"https://cursor.com/docs/skills","docsLabel":"Cursor skills documentation"},{"id":"codex","name":"OpenAI / Codex","project":".agents/skills/\u003cslug>/SKILL.md","user":"~/.agents/skills/\u003cslug>/SKILL.md","note":"Codex scans .agents/skills in every directory from the working directory up to the repository root.","docs":"https://developers.openai.com/codex/skills","docsLabel":"Codex skills documentation"},{"id":"generic","name":"Generic","project":".agents/skills/\u003cslug>/SKILL.md","user":"~/.agents/skills/\u003cslug>/SKILL.md","note":"The Agent Skills specification defines the folder and the SKILL.md format, but leaves it to each tool to decide where to look. .agents/skills/ is the most widely read location — check your tool if it is not picked up.","docs":"https://agentskills.io/specification","docsLabel":"Agent Skills specification"}]};</script>
   <script>(function () {
   var D = window.SKILL;
   var $ = function (s) { return document.querySelector(s); };

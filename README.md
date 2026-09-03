@@ -3,8 +3,15 @@
 Source for [weindie.com](https://weindie.com).
 
 WeIndie is a small independent workbench for practical AI work. The site explains
-what WeIndie is, and gives each skill in the current **Spec First** set
-(`/spec`, `/drift`, `/kiss`, `/ship`) a page you can send to someone.
+what WeIndie is, and gives each skill (`/spec`, `/drift`, `/kiss`, `/ship`) a
+page you can send to someone.
+
+The set is deliberately *not* named after one of its members. Only `/spec`
+belongs to **Spec First** — shared understanding before execution — and it
+carries that attribution through the optional `partOf` field in its
+`skill.json`. `/drift`, `/kiss` and `/ship` are about staying on task,
+simplifying and verifying, which happen during and after execution, so they are
+labelled simply as WeIndie skills.
 
 ## The model
 
@@ -17,7 +24,7 @@ Cursor or Codex variants — only different install paths.
 ## What is here
 
     skills/
-      catalogue.json        which skills exist, and in what order
+      catalogue.json        which skills exist, in what order, and the default label
       <slug>/SKILL.md       the canonical skill — the single source of truth
       <slug>/skill.json     page content and customisation options
 

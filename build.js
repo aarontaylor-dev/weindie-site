@@ -246,7 +246,7 @@ function block(n, name, inner) {
     </section>`;
 }
 
-function skillPage(s, all, project) {
+function skillPage(s, all, label) {
   const others = all.filter(x => x.slug !== s.slug);
   const li = a => a.map(x => `<li>${esc(x)}</li>`).join('');
 
@@ -317,7 +317,7 @@ function skillPage(s, all, project) {
   ${nav(others.map(o => `<a href="/${o.slug}">/${o.slug}</a>`).join('') + '<a href="/#skills">All skills</a>')}
   <main class="wrap" id="main">
     <div class="shead">
-      <div class="stitle"><h1>/${esc(s.slug)}</h1><span class="ver">${esc(project)} skill &middot; v${esc(s.version)}</span></div>
+      <div class="stitle"><h1>/${esc(s.slug)}</h1><span class="ver">${esc(s.partOf ? s.partOf + ' skill' : label)} &middot; v${esc(s.version)}</span></div>
       <h2 class="squestion">${esc(s.question)}</h2>
       <p class="ssummary">${esc(s.summary)}</p>
       <div class="actions seg">
@@ -326,7 +326,7 @@ function skillPage(s, all, project) {
         <a href="#make-it-yours">Make it yours</a>
         <a href="#skill-source">SKILL.md</a>
       </div>
-      <p class="crumbs">Sent this link by someone? <code>/${esc(s.slug)}</code> is a skill you can add to an AI coding tool &mdash; or just try the prompt below in a conversation you already have open.</p>
+      <p class="crumbs">Sent this link by someone? <code>/${esc(s.slug)}</code> is a skill you can add to an AI tool &mdash; or just try the prompt below in a conversation you already have open.</p>
     </div>
     ${block(1, 'Example', example)}
     ${block(2, 'Try once', tryOnce)}
@@ -395,8 +395,8 @@ function card(inner) {
   </style>${inner}`;
 }
 
-function ogCard(s, project) {
-  return card(`<div class="eyebrow">${esc(project)} skill</div>
+function ogCard(s, label) {
+  return card(`<div class="eyebrow">${esc(s.partOf ? s.partOf + ' skill' : label)}</div>
   <div class="slug">/${esc(s.slug)}</div>
   <div class="q">${esc(s.question)}</div>
   <div class="sum">${esc(s.summary)}</div>
@@ -465,7 +465,6 @@ function homePage(skills, cat) {
     .replace('<!--POSITION-->', esc(cat.position))
     .replace('<!--INDEX-->', index)
     .replace('<!--CHOICES-->', choices)
-    .replace('<!--PROJECT-->', esc(cat.project))
     .replace('<!--PROJECT_BLURB-->', esc(cat.blurb))
     .replace('<!--NAV-->', nav('<a href="#skills">The skills</a><a href="#which-one">Which one</a><a href="#what-this-is">What this is</a>'))
     .replace('<!--THEMEJS-->', THEME_JS)
@@ -483,9 +482,9 @@ for (const s of skills) {
   /* <slug>.html, not <slug>/index.html: Cloudflare Pages serves /kiss straight
      from kiss.html, where a directory would 308-redirect to /kiss/ and leave the
      address bar disagreeing with the canonical tag. The short URL is the point. */
-  write(s.slug + '.html', skillPage(s, skills, cat.project));
+  write(s.slug + '.html', skillPage(s, skills, cat.label));
   write(s.slug + '/SKILL.md', s.canonical);
-  write(CACHE + '/' + s.slug + '.html', ogCard(s, cat.project));
+  write(CACHE + '/' + s.slug + '.html', ogCard(s, cat.label));
   renderPng(CACHE + '/' + s.slug + '.html', 'og/' + s.slug + '.png');
   console.log('  page /' + s.slug);
 }
