@@ -29,9 +29,10 @@ const ROOT = __dirname;
 const ORIGIN = 'https://weindie.com';
 const REPO = 'https://github.com/aarontaylor-dev/weindie-site';
 const ISSUES = REPO + '/issues';
-/* Empty until the address exists. A mailto pointing nowhere is a worse door
-   than no door, so the footer omits the line until this is filled in. */
-const CONTACT = '';
+/* A personal address rather than an on-brand one: it is already the author of
+   every commit in this public repository, so forwarding hi@weindie.com to it
+   would protect nothing and cost a working mail setup. Empty disables the line. */
+const CONTACT = 'hi@aarontaylor.me';
 const read = p => fs.readFileSync(path.join(ROOT, p), 'utf8');
 /* Only touch a file when its contents actually change, so mtimes stay meaningful
    (the PNG step below compares them) and rebuilds produce no spurious diffs. */
