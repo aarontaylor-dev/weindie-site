@@ -1,85 +1,312 @@
-:root{--paper:#f6f3ec;--ink:#20201d;--muted:#68675f;--line:#d8d3c8;--card:#fffdf8;--accent:#315c4d;--soft:#e5ede8;--code:#19231f;--shadow:0 18px 45px rgba(40,37,30,.08)}
+/* WeIndie — Direction B, "Plain Text".
+   The product is readable plain-text files, so the site is set like one:
+   monospace carries structure, a reading serif carries language, and there
+   are no cards. Separation comes from rules and space. */
+
+@font-face{font-family:"IBM Plex Mono";src:url(/fonts/ibm-plex-mono-400.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"IBM Plex Mono";src:url(/fonts/ibm-plex-mono-500.woff2) format("woff2");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Newsreader";src:url(/fonts/newsreader-var.woff2) format("woff2");font-weight:400 600;font-style:normal;font-display:swap}
+
+:root{
+  --paper:#fbfaf7;
+  --sunk:#f2f0ea;
+  --rule:#d9d7ce;
+  --ink:#16181a;
+  --muted:#54574f;
+  --faint:#6b6e66;
+  --accent:#27705a;
+  --accent-deep:#1a5342;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --gut:clamp(20px,4vw,44px);
+  --add:#1f6b45;
+  --del:#a8412c;
+  color-scheme:light;
+}
+
+/* Dark is the same document under a reading lamp: warmer ink, same structure.
+   Defined three times so system-default, explicit-light and explicit-dark all
+   resolve — never style a component from inside one of these blocks. */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#121412;--sunk:#1a1d1a;--rule:#2d312c;
+    --ink:#ece9e1;--muted:#a9a89d;--faint:#83867c;
+    --accent:#5cb894;--accent-deep:#7fd0af;
+    --add:#6fd39c;--del:#e0876e;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121412;--sunk:#1a1d1a;--rule:#2d312c;
+  --ink:#ece9e1;--muted:#a9a89d;--faint:#83867c;
+  --accent:#5cb894;--accent-deep:#7fd0af;
+  --add:#6fd39c;--del:#e0876e;
+  color-scheme:dark;
+}
+
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button,textarea{font:inherit}
-a{color:inherit}
-code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-.wrap{width:min(1120px,calc(100% - 40px));margin:auto}
-.nav{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
-.brand{font-size:21px;font-weight:750;letter-spacing:-.04em;text-decoration:none}
-.navlinks{display:flex;gap:24px;color:var(--muted);font-size:14px}
-.navlinks a{text-decoration:none}
-.navlinks a:hover{color:var(--ink)}
-footer{padding:36px 0 52px;color:var(--muted);font-size:13px}
-.foot{display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--line);padding-top:28px}
-.eyebrow{color:var(--accent);font-size:12px;text-transform:uppercase;letter-spacing:.14em;font-weight:750}
-.btn{border:1px solid var(--line);background:transparent;border-radius:10px;padding:11px 15px;cursor:pointer;color:var(--ink);text-decoration:none;display:inline-block}
-.btn:hover{background:var(--soft);border-color:#aac0b6}
-.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
-.btn.primary:hover{filter:brightness(.93);background:var(--accent)}
-.pill{border:1px solid var(--line);background:transparent;border-radius:999px;padding:8px 12px;cursor:pointer;color:var(--muted)}
-.pill:hover,.pill.active{background:var(--soft);border-color:#aac0b6;color:var(--accent)}
-.pills{display:flex;flex-wrap:wrap;gap:8px}
-pre.src{background:var(--code);color:#eaf1ed;border-radius:12px;padding:18px;font-size:13px;line-height:1.6;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word;margin:0}
-.chat{background:var(--code);color:#eaf1ed;border-radius:12px;padding:18px;font-size:14px}
-.msg{margin-bottom:15px}.msg:last-child{margin-bottom:0}
-.who{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:#9cb1a7;margin-bottom:4px}
-
-/* skill page */
-.shead{padding:64px 0 0}
-.stitle{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-.stitle h1{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:clamp(40px,7vw,64px);line-height:1;letter-spacing:-.04em;margin:0;font-weight:600;color:var(--accent)}
-.ver{border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12px;color:var(--muted)}
-.squestion{font-family:Georgia,serif;font-size:clamp(24px,3.4vw,34px);line-height:1.2;letter-spacing:-.03em;margin:20px 0 14px;font-weight:500;max-width:19em}
-.ssummary{font-size:18px;color:var(--muted);max-width:34em;margin:0}
-.actions{display:flex;flex-wrap:wrap;gap:10px;margin:30px 0 8px}
-.sec{padding:52px 0;border-top:1px solid var(--line);margin-top:52px}
-.sec>h2{font:500 30px/1.15 Georgia,serif;letter-spacing:-.03em;margin:0 0 8px}
-.sec>.lede{color:var(--muted);margin:0 0 22px;max-width:38em}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.two h3,.card h3{font-size:15px;margin:0 0 10px}
-.two ul{margin:0;padding-left:18px;color:var(--muted)}
-.two li{margin-bottom:7px}
-.rowbtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;align-items:center}
-.note{color:var(--muted);font-size:14px;margin:12px 0 0}
-.path{background:var(--soft);border-radius:10px;padding:12px 14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;overflow-x:auto;color:var(--code)}
-.opt{border-top:1px solid var(--line);padding:18px 0}
-.opt:first-of-type{border-top:0;padding-top:0}
-.opt .lbl{font-weight:700;font-size:15px}
-.opt .help{color:var(--muted);font-size:14px;margin:2px 0 10px}
-.changes{background:var(--soft);border-radius:12px;padding:16px 18px;margin-top:6px}
-.changes h3{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent)}
-.chg{margin-bottom:12px;font-size:14px}.chg:last-child{margin-bottom:0}
-.chg b{display:block;font-size:13px}
-.chg .was{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
-.chg .now{color:var(--code)}
-.none{color:var(--muted);font-size:14px;margin:0}
-.reveal{margin-top:14px}
-.reveal summary{cursor:pointer;color:var(--accent);font-size:14px;padding:6px 0}
-.reveal[open] summary{margin-bottom:10px}
-.diff{background:var(--code);border-radius:12px;padding:16px;font-size:13px;line-height:1.6;overflow-x:auto;margin:0;color:#c8d6cf}
-.diff .add{color:#9fe3b6}
-.diff .del{color:#f0a9a0}
-.diff .hunk{color:#8ea89c}
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(14px);background:var(--code);color:#eaf1ed;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:9}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.crumbs{color:var(--muted);font-size:14px;margin-top:26px}
-.other{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
-.other a{text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--card);min-width:150px}
-.other a:hover{border-color:#aac0b6;background:var(--soft)}
-.other code{color:var(--accent);font-weight:700}
-.other span{display:block;color:var(--muted);font-size:13px;margin-top:4px}
-@media(max-width:760px){
-  .navlinks{display:none}
-  .shead{padding-top:40px}
-  .two{grid-template-columns:1fr}
-  .sec{padding:40px 0;margin-top:40px}
-  .actions .btn,.rowbtns .btn{flex:1 1 auto;text-align:center}
-  .foot{display:block}.foot span{display:block;margin-top:8px}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--serif);font-size:17px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
 }
-@media(max-width:520px){
-  .wrap{width:min(100% - 24px,1120px)}
-  .card{padding:18px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,.theming *{transition:none!important;animation:none!important}}
+
+button,input,textarea,select{font:inherit;color:inherit}
+a{color:var(--accent)}
+a:hover{color:var(--accent-deep)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3,h4{margin:0;font-weight:400;text-wrap:balance}
+p{margin:0}
+code{font-family:var(--mono);font-size:.86em}
+
+.wrap{width:min(1080px,calc(100% - var(--gut)*2));margin:0 auto}
+
+.skip{position:absolute;left:-9999px;top:0;z-index:20;font-family:var(--mono);font-size:12px;
+  background:var(--ink);color:var(--paper);padding:10px 16px;text-decoration:none}
+.skip:focus{left:8px;top:8px}
+
+/* ---------- masthead ---------- */
+.nav{
+  display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  padding:22px 0 12px;border-bottom:2px solid var(--ink);
+}
+.brand{color:var(--ink);text-decoration:none;font-weight:500}
+.navlinks{display:flex;gap:20px;color:var(--faint)}
+.navlinks a{color:var(--faint);text-decoration:none}
+.navlinks a:hover{color:var(--accent)}
+.navend{display:flex;align-items:center;gap:20px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* A bordered control, not another word in a row of words. */
+.theme{
+  display:grid;place-items:center;width:32px;height:32px;flex:none;
+  border:1px solid var(--rule);background:transparent;color:var(--muted);
+  cursor:pointer;padding:0;position:relative;
+  transition:color .2s,border-color .2s,background-color .2s;
+}
+.theme:hover{color:var(--accent);border-color:var(--accent);background:var(--sunk)}
+.tsvg{width:18px;height:18px;display:block;overflow:visible}
+.tsvg .orb{fill:currentColor;transform-box:fill-box;transform-origin:center;
+  transition:transform .42s cubic-bezier(.34,1.28,.5,1)}
+.tsvg .cut{transform-box:fill-box;transform-origin:center;
+  transition:transform .42s cubic-bezier(.34,1.28,.5,1)}
+.tsvg .rays{stroke:currentColor;stroke-width:1.7;transform-box:fill-box;transform-origin:center;
+  transition:transform .42s cubic-bezier(.34,1.28,.5,1),opacity .24s ease}
+.tsvg{transition:transform .42s cubic-bezier(.34,1.28,.5,1)}
+
+/* Light: a sun. The mask circle is parked clear of the orb so it bites nothing. */
+.tsvg .cut{transform:translate(10px,-10px)}
+
+/* Dark: the orb grows, the mask slides in, the rays retract. Declared for all
+   three states so the icon is right before any script runs. */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .tsvg{transform:rotate(-12deg)}
+  :root:not([data-theme="light"]) .tsvg .orb{transform:scale(1.5) translate(1.4px,-1.4px)}
+  :root:not([data-theme="light"]) .tsvg .cut{transform:translate(0,0)}
+  :root:not([data-theme="light"]) .tsvg .rays{transform:scale(.4);opacity:0}
+}
+:root[data-theme="dark"] .tsvg{transform:rotate(-12deg)}
+:root[data-theme="dark"] .tsvg .orb{transform:scale(1.5) translate(1.4px,-1.4px)}
+:root[data-theme="dark"] .tsvg .cut{transform:translate(0,0)}
+:root[data-theme="dark"] .tsvg .rays{transform:scale(.4);opacity:0}
+
+/* Colours cross-fade only while the theme is actually changing. */
+.theming *{transition:background-color .3s ease,color .3s ease,border-color .3s ease,fill .3s ease!important}
+
+/* ---------- shared type ---------- */
+.label{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+.lede{color:var(--muted);max-width:34em}
+.small{font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--faint)}
+
+/* one code treatment, everywhere */
+.code{
+  font-family:var(--mono);font-size:13px;line-height:1.65;
+  background:var(--sunk);border:1px solid var(--rule);
+  padding:14px 16px;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word;
+  margin:0;color:var(--ink);
+}
+.code.oneline{white-space:pre;padding:11px 14px}
+
+/* buttons: mono, square, hairline */
+.btn{
+  font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;
+  border:1px solid var(--ink);background:transparent;color:var(--ink);
+  padding:9px 15px;cursor:pointer;text-decoration:none;display:inline-block;
+}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn.primary:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+
+/* segmented switch */
+.seg{display:flex;flex-wrap:wrap;border:1px solid var(--ink)}
+.seg > *{
+  flex:1 1 auto;text-align:center;font-family:var(--mono);font-size:12.5px;letter-spacing:.05em;
+  padding:11px 12px;border:0;border-right:1px solid var(--ink);background:transparent;
+  color:var(--ink);text-decoration:none;cursor:pointer;white-space:nowrap;
+}
+.seg > *:last-child{border-right:0}
+.seg > *:hover{background:var(--sunk)}
+.seg > .on,.seg > [aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg > .on:hover,.seg > [aria-pressed="true"]:hover{background:var(--ink)}
+
+/* ---------- skill page head ---------- */
+.shead{padding:52px 0 0}
+.stitle{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.stitle h1{
+  font-family:var(--mono);font-weight:500;
+  font-size:clamp(46px,9vw,84px);line-height:.94;letter-spacing:-.05em;
+}
+.stitle .ver{font-family:var(--mono);font-size:13px;color:var(--faint)}
+.squestion{
+  font-size:clamp(27px,4.2vw,40px);line-height:1.14;letter-spacing:-.012em;
+  margin-top:22px;max-width:17em;font-weight:500;
+}
+.ssummary{margin-top:16px;color:var(--muted);max-width:33em;font-size:18px}
+.actions{margin-top:32px}
+.crumbs{margin-top:16px;font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--faint);max-width:56em}
+.crumbs code{color:var(--ink)}
+
+/* ---------- numbered blocks (the label rail) ---------- */
+.blk{
+  display:grid;grid-template-columns:154px minmax(0,1fr);gap:var(--gut);
+  border-top:1px solid var(--rule);padding:40px 0;margin-top:0;
+}
+.blk:first-of-type{border-top:2px solid var(--ink);margin-top:52px}
+.rail{position:sticky;top:22px;align-self:start}
+.rail .n{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.1em}
+.rail h2{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink);margin-top:5px;font-weight:500}
+.body{min-width:0}
+.body > .lede{margin-bottom:20px;font-size:17px}
+.body > .lede:last-child{margin-bottom:0}
+.stack{display:flex;flex-direction:column;gap:16px}
+
+/* transcript — a conversation, deliberately not styled as code */
+.chat{border-left:2px solid var(--rule);padding-left:20px;display:flex;flex-direction:column;gap:16px}
+.msg .who{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:4px}
+.msg.skill .who{color:var(--accent)}
+.msg p{color:var(--muted)}
+.msg.skill p{color:var(--ink)}
+
+/* two lists, no boxes */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:var(--gut)}
+.two h3{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin-bottom:10px;font-weight:500}
+.two ul{margin:0;padding:0;list-style:none}
+.two li{color:var(--muted);padding:7px 0;border-top:1px solid var(--rule)}
+.two li:first-child{border-top:0;padding-top:0}
+
+/* install */
+.dest{display:grid;gap:6px;margin-top:4px}
+.dest .label{margin-top:10px}
+.dest .label:first-child{margin-top:0}
+
+/* customiser */
+.opt{padding:16px 0;border-top:1px solid var(--rule)}
+.opt:first-of-type{border-top:0;padding-top:0}
+.opt .lbl{font-family:var(--mono);font-size:12.5px;letter-spacing:.03em}
+.opt .help{color:var(--muted);font-size:15.5px;margin:2px 0 10px}
+.opt .seg{border-color:var(--rule)}
+.opt .seg > *{border-right-color:var(--rule);font-size:12px;padding:8px 11px}
+.opt .seg > [aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.resting{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 16px;justify-content:space-between}
+.resting .now{font-family:var(--mono);font-size:12px;color:var(--faint);line-height:1.7}
+.resting .now b{color:var(--ink);font-weight:400}
+
+.changes{border-left:2px solid var(--accent);padding-left:18px;display:flex;flex-direction:column;gap:14px}
+.changes .h{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent)}
+.chg b{display:block;font-family:var(--mono);font-size:12px;font-weight:400;color:var(--faint);letter-spacing:.03em}
+.chg .was{color:var(--faint);text-decoration:line-through;text-decoration-thickness:1px}
+.chg .now{color:var(--ink)}
+.none{color:var(--muted)}
+
+details.reveal > summary{
+  font-family:var(--mono);font-size:12px;letter-spacing:.05em;color:var(--accent);
+  cursor:pointer;padding:9px 0;list-style:none;
+}
+details.reveal > summary::-webkit-details-marker{display:none}
+details.reveal > summary::before{content:"+ ";color:var(--faint)}
+details.reveal[open] > summary::before{content:"− "}
+details.reveal[open] > summary{margin-bottom:10px}
+
+/* diff keeps the one code treatment, tinted by sign only */
+.diff{font-family:var(--mono);font-size:13px;line-height:1.65;background:var(--sunk);border:1px solid var(--rule);padding:14px 16px;overflow-x:auto;margin:0}
+/* every line is a block; context lines carry class="" so :not([class]) misses them */
+.diff span{display:block;color:var(--muted)}
+.diff .add{color:var(--add)}
+.diff .del{color:var(--del)}
+.diff .hunk{color:var(--faint)}
+
+/* other skills */
+.index{display:grid;gap:0;border-top:1px solid var(--rule)}
+.index a{
+  display:grid;grid-template-columns:130px minmax(0,1fr);gap:20px;align-items:baseline;
+  padding:15px 0;border-bottom:1px solid var(--rule);text-decoration:none;color:var(--ink);
+}
+.index a:hover{background:var(--sunk)}
+.index .k{font-family:var(--mono);font-size:16px;color:var(--accent)}
+.index .q{color:var(--muted);font-size:17px}
+.index a:hover .q{color:var(--ink)}
+
+/* toast */
+.toast{
+  position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(12px);
+  background:var(--ink);color:var(--paper);padding:10px 18px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.04em;
+  opacity:0;pointer-events:none;transition:opacity .16s,transform .16s;z-index:9;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* footer */
+footer{border-top:2px solid var(--ink);margin-top:64px;padding:20px 0 56px}
+.foot{
+  display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;
+  font-family:var(--mono);font-size:12px;color:var(--faint);
+}
+.foot b{color:var(--ink);font-weight:500;letter-spacing:.08em;text-transform:uppercase}
+.foot a{color:var(--faint);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+.foot a:hover{color:var(--accent)}
+
+@media (max-width:820px){
+  .blk{grid-template-columns:1fr;gap:16px;padding:32px 0}
+  .rail{position:static;display:flex;align-items:baseline;gap:12px}
+  .rail h2{margin-top:0}
+  .two{grid-template-columns:1fr;gap:26px}
+  .navlinks{gap:14px}
+}
+@media (max-width:560px){
+  body{font-size:16px}
+  .navlinks{display:none}
+  .seg{flex-direction:column}
+  .seg > *{border-right:0;border-bottom:1px solid var(--ink);text-align:left}
+  .seg > *:last-child{border-bottom:0}
+  .opt .seg > *{border-bottom-color:var(--rule)}
+  .index a{grid-template-columns:1fr;gap:4px}
+}
+
+/* ---------- print ----------
+   A manual should print like one: ink on white, every panel open, and the
+   controls gone since none of them do anything on paper. */
+@media print{
+  :root{
+    --paper:#fff;--sunk:#fff;--rule:#bbb;--ink:#000;--muted:#333;--faint:#555;
+    --accent:#000;--accent-deep:#000;--add:#000;--del:#000;
+  }
+  body{font-size:11pt;line-height:1.45}
+  .nav,.skip,.actions,.btnrow,.toast,.navlinks,.theme,.crumbs{display:none!important}
+  .index a:hover{background:none}
+  details.reveal{display:none}            /* generated + diff are per-visit, not part of the document */
+  .blk{grid-template-columns:130px minmax(0,1fr);page-break-inside:avoid;border-top:1px solid #bbb}
+  .blk:first-of-type{border-top:1px solid #000;margin-top:24px}
+  .rail{position:static}
+  .code,.diff{border:1px solid #bbb;background:#fff;white-space:pre-wrap}
+  .chat{border-left:1px solid #bbb}
+  .shead{padding-top:0}
+  a{text-decoration:none}
+  .body a[href^="http"]::after,.body a[href^="/"]::after{content:" (" attr(href) ")";font-family:var(--mono);font-size:9pt;color:#555}
+  footer{border-top:1px solid #000}
+  section,footer{page-break-inside:avoid}
 }

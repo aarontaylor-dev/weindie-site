@@ -138,9 +138,42 @@ function loadSkill(slug) {
 
 /* ------------------------------------------------------------ page pieces */
 
+/* Runs in <head> so an explicit choice is on <html> before the first paint.
+   No stored choice means no attribute, which leaves prefers-color-scheme in charge. */
+const THEME_BOOT = "try{var t=localStorage.getItem('weindie-theme');" +
+  "if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}";
+
+const THEME_JS = `(function(){
+  var btn=document.getElementById('theme');if(!btn)return;
+  var root=document.documentElement, label=btn.querySelector('.vh'), t;
+  function current(){
+    var set=root.getAttribute('data-theme');
+    if(set)return set;
+    return matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
+  }
+  function paint(){
+    var next=current()==='dark'?'light':'dark';
+    var text='Switch to '+next+' theme';
+    btn.setAttribute('aria-label',text);
+    btn.setAttribute('title',text);
+    if(label)label.textContent=text;
+  }
+  btn.addEventListener('click',function(){
+    /* Colours only animate during the swap, so nothing pays for it while reading. */
+    root.classList.add('theming');
+    clearTimeout(t);t=setTimeout(function(){root.classList.remove('theming')},340);
+    var next=current()==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next);
+    try{localStorage.setItem('weindie-theme',next)}catch(e){}
+    paint();
+  });
+  matchMedia('(prefers-color-scheme:dark)').addEventListener('change',paint);
+  paint();
+})();`;
+
 const CSS = read('src/site.css');
 const SKILL_JS = read('src/skill.js');
-const FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23315c4d'/%3E%3Cpath d='M7 11l4 11 5-8 5 8 4-11' fill='none' stroke='%23f6f3ec' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E";
+const FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23315c4d'/%3E%3Cpath d='M8 22L14 10M18 22l6-12' fill='none' stroke='%23fbfaf7' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E";
 
 function head(o) {
   return `<meta charset="utf-8">
@@ -164,16 +197,110 @@ function head(o) {
   <meta name="twitter:description" content="${esc(o.description)}">
   <meta name="twitter:image" content="${esc(o.image)}">
   <meta name="twitter:image:alt" content="${esc(o.imageAlt)}">
-  <style>${CSS}</style>`;
+  <link rel="preload" href="/fonts/ibm-plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/ibm-plex-mono-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/newsreader-var.woff2" as="font" type="font/woff2" crossorigin>
+  <style>${CSS}</style>
+  <script>${THEME_BOOT}</script>`;
 }
 
-const FOOTER = `<footer class="wrap"><div class="foot"><strong>weindie</strong><span>Independent tools for navigating work with AI. <a href="/LICENSE.txt">MIT licensed</a>.</span></div></footer>`;
+/* Sun and moon are one shape: the orb grows and a mask circle slides in to
+   bite the crescent while the rays retract. Which one shows is decided in CSS
+   by the same three-state pattern as the palette, so it is correct before any
+   script runs. */
+const THEME_ICON = `<svg class="tsvg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <mask id="tcut"><rect width="24" height="24" fill="#fff"/><circle class="cut" cx="15.5" cy="8.5" r="7" fill="#000"/></mask>
+        <circle class="orb" cx="12" cy="12" r="5" mask="url(#tcut)"/>
+        <g class="rays" stroke-linecap="round">
+          <line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/>
+          <line x1="4.9" y1="4.9" x2="6.3" y2="6.3"/><line x1="17.7" y1="17.7" x2="19.1" y2="19.1"/>
+          <line x1="4.9" y1="19.1" x2="6.3" y2="17.7"/><line x1="17.7" y1="6.3" x2="19.1" y2="4.9"/>
+        </g>
+      </svg>`;
+
+const nav = links => `<a class="skip" href="#main">Skip to content</a>
+  <header class="wrap nav">
+    <a class="brand" href="/">weindie</a>
+    <div class="navend">
+      <nav class="navlinks">${links}</nav>
+      <button class="theme" id="theme" type="button">${THEME_ICON}<span class="vh">Switch theme</span></button>
+    </div>
+  </header>`;
+
+const FOOTER = `<footer class="wrap"><div class="foot">\
+<b>weindie</b>\
+<span>Independent tools for navigating work with AI.</span>\
+<span>v1.1 &middot; early and evolving</span>\
+<span><a href="/LICENSE.txt">MIT licensed</a></span>\
+</div></footer>`;
 
 /* --------------------------------------------------------- the skill page */
 
+/* Sections are numbered because a skill page is read in order by someone who
+   arrived cold: what it is, what it looks like, try it, when, install, own it. */
+function block(n, name, inner) {
+  return `<section class="blk" id="${name.toLowerCase().replace(/[^a-z]+/g, '-')}">
+      <div class="rail">${n ? `<div class="n">&sect; ${n}</div>` : ''}<h2>${esc(name)}</h2></div>
+      <div class="body">${inner}</div>
+    </section>`;
+}
+
 function skillPage(s, all, project) {
   const others = all.filter(x => x.slug !== s.slug);
-  const list = a => a.map(x => `<li>${esc(x)}</li>`).join('');
+  const li = a => a.map(x => `<li>${esc(x)}</li>`).join('');
+
+  const example = `<p class="lede">${esc(s.example.caption)}</p>
+        <div class="chat">${s.example.turns.map(t => {
+          const isSkill = t.who.startsWith('/');
+          return `<div class="msg${isSkill ? ' skill' : ''}"><div class="who">${esc(t.who)}</div><p>${esc(t.text)}</p></div>`;
+        }).join('')}</div>`;
+
+  const tryOnce = `<p class="lede">Nothing to install. Copy this into a conversation that is already underway, and see whether the idea is useful before you commit to it.</p>
+        <pre class="code" id="tryPrompt">${esc(s.tryOnce)}</pre>
+        <div class="btnrow"><button class="btn primary" id="copyTry">Copy prompt</button></div>
+        <p class="small" style="margin-top:16px">A short, portable version. The installed skill carries the fuller behaviour &mdash; when to stay quiet, how to report, what not to flag &mdash; and neither needs your AI to be able to read this page.</p>`;
+
+  const when = `<p class="lede">A skill that fires on everything stops meaning anything. <code>/${esc(s.slug)}</code> is allowed to find nothing.</p>
+        <div class="two">
+          <div><h3>Useful when</h3><ul>${li(s.usefulWhen)}</ul></div>
+          <div><h3>Probably not needed when</h3><ul>${li(s.notNeededWhen)}</ul></div>
+        </div>`;
+
+  const install = `<p class="lede">One canonical skill, packaged for wherever you work.</p>
+        <div class="seg" id="platforms" role="group" aria-label="Environment">
+          ${PLATFORMS.map((p, i) => `<button data-platform="${esc(p.id)}" aria-pressed="${i === 0}">${esc(p.name)}</button>`).join('')}
+        </div>
+        <div class="dest">
+          <div class="label">In a project</div>
+          <div class="code oneline" id="destPath"></div>
+          <div id="destUserRow"><div class="label">For all your projects</div><div class="code oneline" id="destUser"></div></div>
+        </div>
+        <p class="small" id="platformNote" style="margin-top:14px"></p>
+        <div class="btnrow">
+          <button class="btn primary" id="dlCanonical">Download SKILL.md</button>
+          <button class="btn" id="copyCmd">Copy install command</button>
+          <a class="btn" id="docsLink" href="#" target="_blank" rel="noreferrer noopener"></a>
+        </div>
+        <div class="label" style="margin:18px 0 6px">Or fetch it straight into place</div>
+        <div class="code oneline" id="cmd"></div>`;
+
+  const custom = `<p class="lede">A few choices that change how <code>/${esc(s.slug)}</code> behaves. Everything here happens in this browser &mdash; nothing is sent anywhere, and nothing is saved.</p>
+        <div class="resting">
+          <div class="now" id="restNow"></div>
+          <button class="btn primary" id="dlCustom">Download /${esc(s.slug)}</button>
+        </div>
+        <details class="reveal" id="optsWrap"><summary>Change the defaults</summary><div id="opts"></div></details>
+        <div class="changes" id="changes"></div>
+        <details class="reveal"><summary>View generated SKILL.md</summary><pre class="code" id="gen"></pre></details>
+        <details class="reveal"><summary id="diffTitle">Compare with default</summary><pre class="diff" id="diff"></pre></details>`;
+
+  const source = `<p class="lede">The whole skill, and the same file every download is built from. Nothing downloadable here should be less inspectable than the page explaining it.</p>
+        <pre class="code">${esc(s.canonical)}</pre>
+        <div class="btnrow"><button class="btn" id="copySource">Copy SKILL.md</button><a class="btn" href="/${esc(s.slug)}/SKILL.md">Open raw file</a></div>`;
+
+  const more = `<div class="index">${others.map(o =>
+          `<a href="/${o.slug}"><span class="k">/${o.slug}</span><span class="q">${esc(o.question)}</span></a>`).join('')}</div>`;
 
   return `<!doctype html>
 <html lang="en">
@@ -187,98 +314,27 @@ function skillPage(s, all, project) {
   })}
 </head>
 <body>
-  <header class="wrap nav">
-    <a class="brand" href="/">weindie</a>
-    <nav class="navlinks">${others.map(o => `<a href="/${o.slug}">/${o.slug}</a>`).join('')}<a href="/#about">What this is</a></nav>
-  </header>
-  <main class="wrap">
+  ${nav(others.map(o => `<a href="/${o.slug}">/${o.slug}</a>`).join('') + '<a href="/#skills">All skills</a>')}
+  <main class="wrap" id="main">
     <div class="shead">
-      <div class="eyebrow">${esc(project)} skill</div>
-      <div class="stitle"><h1>/${esc(s.slug)}</h1><span class="ver">v${esc(s.version)}</span></div>
-      <p class="squestion">${esc(s.question)}</p>
+      <div class="stitle"><h1>/${esc(s.slug)}</h1><span class="ver">${esc(project)} skill &middot; v${esc(s.version)}</span></div>
+      <h2 class="squestion">${esc(s.question)}</h2>
       <p class="ssummary">${esc(s.summary)}</p>
-      <div class="actions">
-        <a class="btn primary" href="#try">Try it once</a>
-        <a class="btn" href="#install">Install</a>
-        <a class="btn" href="#customise">Make it yours</a>
-        <a class="btn" href="#source">View SKILL.md</a>
+      <div class="actions seg">
+        <a href="#try-once">Try it once</a>
+        <a href="#install">Install</a>
+        <a href="#make-it-yours">Make it yours</a>
+        <a href="#skill-source">SKILL.md</a>
       </div>
-      <p class="crumbs">Sent this link by someone? <code>/${esc(s.slug)}</code> is a skill you can add to an AI coding tool — or just try the prompt below in a conversation you already have open.</p>
+      <p class="crumbs">Sent this link by someone? <code>/${esc(s.slug)}</code> is a skill you can add to an AI coding tool &mdash; or just try the prompt below in a conversation you already have open.</p>
     </div>
-
-    <section class="sec" id="try">
-      <h2>Try it once</h2>
-      <p class="lede">Nothing to install. Copy this into a conversation that is already underway, and see whether the idea is useful before you commit to it.</p>
-      <div class="card">
-        <pre class="src" id="tryPrompt">${esc(s.tryOnce)}</pre>
-        <div class="rowbtns"><button class="btn primary" id="copyTry">Copy prompt</button></div>
-        <p class="note">This is a short, portable version. The installed skill below carries the fuller behaviour — when to stay quiet, how to report, and what not to flag — and your AI does not need to be able to read this page for either to work.</p>
-      </div>
-    </section>
-
-    <section class="sec" id="example">
-      <h2>What it looks like</h2>
-      <p class="lede">${esc(s.example.caption)}</p>
-      <div class="chat">${s.example.turns.map(t =>
-        `<div class="msg"><div class="who">${esc(t.who)}</div>${esc(t.text)}</div>`).join('')}</div>
-    </section>
-
-    <section class="sec" id="when">
-      <h2>When to reach for it</h2>
-      <p class="lede">A skill that fires on everything stops meaning anything. <code>/${esc(s.slug)}</code> is allowed to find nothing.</p>
-      <div class="two">
-        <div class="card"><h3>Useful when</h3><ul>${list(s.usefulWhen)}</ul></div>
-        <div class="card"><h3>Probably not needed when</h3><ul>${list(s.notNeededWhen)}</ul></div>
-      </div>
-    </section>
-
-    <section class="sec" id="install">
-      <h2>Install the full skill</h2>
-      <p class="lede">One canonical skill, packaged for wherever you work. Choose your environment for the right path.</p>
-      <div class="card">
-        <div class="pills" id="platforms" role="group" aria-label="Environment">
-          ${PLATFORMS.map((p, i) => `<button class="pill${i === 0 ? ' active' : ''}" data-platform="${esc(p.id)}" aria-pressed="${i === 0}">${esc(p.name)}</button>`).join('')}
-        </div>
-        <h3 style="margin-top:20px">In a project</h3>
-        <div class="path" id="destPath"></div>
-        <div id="destUserRow"><h3 style="margin-top:16px">For all your projects</h3><div class="path" id="destUser"></div></div>
-        <p class="note" id="platformNote"></p>
-        <div class="rowbtns">
-          <button class="btn primary" id="dlCanonical">Download SKILL.md</button>
-          <button class="btn" id="copyCmd">Copy install command</button>
-          <a class="btn" id="docsLink" href="#" rel="noreferrer noopener" target="_blank"></a>
-        </div>
-        <p class="note">Or fetch it straight into place:</p>
-        <div class="path" id="cmd"></div>
-      </div>
-    </section>
-
-    <section class="sec" id="customise">
-      <h2>Make it yours</h2>
-      <p class="lede">A few choices that change how <code>/${esc(s.slug)}</code> behaves. Everything below happens in this browser — nothing is sent anywhere, and nothing is saved.</p>
-      <div class="card">
-        <div id="opts"></div>
-        <div class="changes" id="changes"></div>
-        <div class="rowbtns"><button class="btn primary" id="dlCustom">Download your /${esc(s.slug)}</button></div>
-        <p class="note">Install it exactly as above — same file name, same folder.</p>
-        <details class="reveal"><summary>View generated SKILL.md</summary><pre class="src" id="gen"></pre></details>
-        <details class="reveal"><summary id="diffTitle">Compare with default</summary><pre class="diff" id="diff"></pre></details>
-      </div>
-    </section>
-
-    <section class="sec" id="source">
-      <h2>Skill source</h2>
-      <p class="lede">This is the whole skill — the same file the downloads are built from. Nothing downloadable here should be less inspectable than the page explaining it. Raw copy: <a href="/${esc(s.slug)}/SKILL.md"><code>/${esc(s.slug)}/SKILL.md</code></a></p>
-      <pre class="src">${esc(s.canonical)}</pre>
-      <div class="rowbtns"><button class="btn" id="copySource">Copy SKILL.md</button><a class="btn" href="/${esc(s.slug)}/SKILL.md">Open raw file</a></div>
-    </section>
-
-    <section class="sec" id="more">
-      <h2>Other ${esc(project)} skills</h2>
-      <p class="lede">Independent lenses, not a pipeline. Use one when it helps.</p>
-      <div class="other">${others.map(o =>
-        `<a href="/${o.slug}"><code>/${o.slug}</code><span>${esc(o.question)}</span></a>`).join('')}</div>
-    </section>
+    ${block(1, 'Example', example)}
+    ${block(2, 'Try once', tryOnce)}
+    ${block(3, 'When', when)}
+    ${block(4, 'Install', install)}
+    ${block(5, 'Make it yours', custom)}
+    ${block(6, 'Skill source', source)}
+    ${block(null, 'Other skills', more)}
   </main>
   ${FOOTER}
   <script>window.SKILL=${json({
@@ -290,97 +346,129 @@ function skillPage(s, all, project) {
     })), platforms: PLATFORMS
   })};</script>
   <script>${SKILL_JS}</script>
+  <script>${THEME_JS}</script>
 </body>
 </html>
 `;
 }
 
 /* ----------------------------------------------------------- link preview */
+/* Cards are rendered as HTML in headless Chrome rather than hand-positioned
+   SVG, so they use the site's real faces and wrap text by themselves.
+   sips could not do this: it rasterises SVG with system fonts only. */
 
-function wrap(text, max) {
-  const words = String(text).split(' '), lines = [];
-  let line = '';
-  for (const w of words) {
-    if (line && (line + ' ' + w).length > max) { lines.push(line); line = w; }
-    else line = line ? line + ' ' + w : w;
-  }
-  if (line) lines.push(line);
-  return lines;
+const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const CACHE = '.cache/og';
+
+function fontFace(family, file, weight) {
+  const b64 = fs.readFileSync(path.join(ROOT, 'fonts', file)).toString('base64');
+  return `@font-face{font-family:"${family}";src:url(data:font/woff2;base64,${b64}) format("woff2");` +
+         `font-weight:${weight};font-style:normal}`;
 }
-const sesc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+let FACES = null;
+const faces = () => (FACES = FACES || [
+  fontFace('IBM Plex Mono', 'ibm-plex-mono-400.woff2', 400),
+  fontFace('IBM Plex Mono', 'ibm-plex-mono-500.woff2', 500),
+  fontFace('Newsreader', 'newsreader-var.woff2', '400 600')
+].join(''));
+
+function card(inner) {
+  return `<!doctype html><meta charset="utf-8"><style>${faces()}
+  *{box-sizing:border-box;margin:0}
+  html,body{width:1200px;height:630px}
+  body{background:#fbfaf7;color:#16181a;display:flex;flex-direction:column;
+    padding:64px 88px 48px;font-family:Newsreader,serif;
+    border-top:10px solid #27705a;-webkit-font-smoothing:antialiased}
+  .mono{font-family:"IBM Plex Mono",monospace}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:19px;font-weight:500;
+    letter-spacing:.18em;text-transform:uppercase;color:#27705a}
+  .slug{font-family:"IBM Plex Mono",monospace;font-weight:500;font-size:96px;
+    letter-spacing:-.05em;line-height:1;margin:26px 0 0}
+  h1{font-size:78px;line-height:1.06;letter-spacing:-.03em;font-weight:500;margin:22px 0 0;max-width:15em}
+  .q{font-size:52px;line-height:1.12;letter-spacing:-.02em;font-weight:500;margin:24px 0 0;max-width:17em}
+  .sum{font-size:26px;line-height:1.4;color:#54574f;margin:20px 0 0;max-width:36em}
+  .spacer{flex:1}
+  .foot{display:flex;justify-content:space-between;align-items:baseline;
+    border-top:1px solid #d9d7ce;padding-top:22px}
+  .foot .name{font-family:"IBM Plex Mono",monospace;font-weight:500;font-size:26px;letter-spacing:.06em;text-transform:uppercase}
+  .foot .meta{font-family:"IBM Plex Mono",monospace;font-size:21px;color:#54574f}
+  </style>${inner}`;
+}
 
 function ogCard(s, project) {
-  const q = wrap(s.question, 34).slice(0, 2);
-  const sum = wrap(s.summary, 62).slice(0, 2);
-  const H = 'Helvetica Neue,Helvetica,Arial,sans-serif';
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#f6f3ec"/>
-  <rect x="0" y="0" width="1200" height="8" fill="#315c4d"/>
-  <text x="90" y="130" font-family="${H}" font-size="19" font-weight="700" letter-spacing="2.9" fill="#315c4d">${sesc(project.toUpperCase())} SKILL</text>
-  <text x="86" y="240" font-family="Menlo,Consolas,monospace" font-size="86" letter-spacing="-3" fill="#315c4d">/${sesc(s.slug)}</text>
-${q.map((l, i) => `  <text x="88" y="${330 + i * 62}" font-family="Georgia,serif" font-size="54" letter-spacing="-2" fill="#20201d">${sesc(l)}</text>`).join('\n')}
-${sum.map((l, i) => `  <text x="90" y="${(q.length > 1 ? 470 : 410) + i * 34}" font-family="${H}" font-size="23" fill="#68675f">${sesc(l)}</text>`).join('\n')}
-  <line x1="90" y1="522" x2="1110" y2="522" stroke="#d8d3c8" stroke-width="1"/>
-  <text x="88" y="570" font-family="${H}" font-size="27" font-weight="700" letter-spacing="-1.1" fill="#20201d">weindie</text>
-  <text x="1110" y="570" text-anchor="end" font-family="Georgia,serif" font-size="22" fill="#68675f">weindie.com/${sesc(s.slug)} &#183; v${sesc(s.version)}</text>
-</svg>
-`;
+  return card(`<div class="eyebrow">${esc(project)} skill</div>
+  <div class="slug">/${esc(s.slug)}</div>
+  <div class="q">${esc(s.question)}</div>
+  <div class="sum">${esc(s.summary)}</div>
+  <div class="spacer"></div>
+  <div class="foot"><span class="name">weindie</span><span class="meta">weindie.com/${esc(s.slug)} &middot; v${esc(s.version)}</span></div>`);
 }
 
 function homeCard(skills) {
-  const H = 'Helvetica Neue,Helvetica,Arial,sans-serif';
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#f6f3ec"/>
-  <rect x="0" y="0" width="1200" height="8" fill="#315c4d"/>
-  <text x="90" y="150" font-family="${H}" font-size="19" font-weight="700" letter-spacing="2.9" fill="#315c4d">WE ARE INDEPENDENT</text>
-  <text x="86" y="290" font-family="Georgia,serif" font-size="92" letter-spacing="-3.6" fill="#20201d">Small tools for</text>
-  <text x="86" y="386" font-family="Georgia,serif" font-size="92" letter-spacing="-3.6" fill="#20201d">working with AI.</text>
-  <text x="90" y="452" font-family="${H}" font-size="23" fill="#68675f">Skills, notes and experiments for a changing AI landscape.</text>
-  <line x1="90" y1="522" x2="1110" y2="522" stroke="#d8d3c8" stroke-width="1"/>
-  <text x="88" y="570" font-family="${H}" font-size="27" font-weight="700" letter-spacing="-1.1" fill="#20201d">weindie</text>
-  <text x="1110" y="570" text-anchor="end" font-family="Georgia,serif" font-size="22" fill="#68675f">${skills.map(s => '/' + sesc(s.slug)).join(' &#183; ')}</text>
-</svg>
-`;
+  return card(`<div class="eyebrow">We are independent</div>
+  <h1>Skills you can read before you run them.</h1>
+  <div class="sum">Small, plain-text skills for working with AI.</div>
+  <div class="spacer"></div>
+  <div class="foot"><span class="name">weindie</span><span class="meta">${skills.map(s => '/' + esc(s.slug)).join(' &middot; ')}</span></div>`);
 }
 
-/* PNG is what link scrapers actually fetch. Convert with the tool this machine has. */
-function toPng(svgPath, pngPath) {
-  const svg = path.join(ROOT, svgPath), png = path.join(ROOT, pngPath);
-  if (fs.existsSync(png) && fs.statSync(png).mtimeMs >= fs.statSync(svg).mtimeMs) return;
+function renderPng(htmlPath, pngPath) {
+  const png = path.join(ROOT, pngPath), html = path.join(ROOT, htmlPath);
+  if (fs.existsSync(png) && fs.statSync(png).mtimeMs >= fs.statSync(html).mtimeMs) return;
+  fs.mkdirSync(path.dirname(png), { recursive: true });
   try {
-    execFileSync('sips', ['-s', 'format', 'png', svg, '--out', png], { stdio: 'ignore' });
+    execFileSync(CHROME, ['--headless=new', '--disable-gpu', '--hide-scrollbars',
+      '--force-device-scale-factor=1', '--window-size=1200,630',
+      '--virtual-time-budget=3000', '--screenshot=' + png, 'file://' + html],
+      { stdio: 'ignore' });
   } catch (e) {
-    fail('could not convert ' + svgPath + ' to PNG.\n' +
-      '  This needs macOS "sips". Run it yourself, or generate ' + pngPath + ' another way:\n' +
-      '    sips -s format png ' + svgPath + ' --out ' + pngPath);
+    fail('could not render ' + pngPath + '.\n' +
+      '  Needs Google Chrome at:\n    ' + CHROME + '\n' +
+      '  The cards use the site\'s own webfonts, which an SVG rasteriser cannot see.');
   }
-  console.log('  png  ' + pngPath);
+  if (!fs.existsSync(png)) fail('Chrome produced no file for ' + pngPath);
+  console.log('  card ' + pngPath);
 }
 
-/* -------------------------------------------------------------- homepage */
+/* Generated like every other page so it cannot drift from the design tokens. */
+function notFoundPage(skills) {
+  return read('src/404.html')
+    .replace('<!--HEAD-->', head({
+      title: 'Not found — WeIndie',
+      description: 'That page is not here.',
+      url: ORIGIN + '/404',
+      image: ORIGIN + '/og.png',
+      imageAlt: 'WeIndie'
+    }).replace('<meta property="og:type"', '<meta name="robots" content="noindex">\n  <meta property="og:type"'))
+    .replace('<!--NAV-->', nav(skills.map(s => `<a href="/${s.slug}">/${s.slug}</a>`).join('')))
+    .replace('<!--THEMEJS-->', THEME_JS)
+    .replace('<!--FOOTER-->', FOOTER);
+}
 
 function homePage(skills, cat) {
   const template = read('src/home.html');
-  const cards = skills.map(s =>
-    `<a class="skill-card" href="/${s.slug}"><code>/${s.slug}</code><p>${esc(s.homeBlurb)}</p></a>`).join('');
+  const index = skills.map(s =>
+    `<a href="/${s.slug}"><span class="k">/${s.slug}</span><span class="q">${esc(s.question)}</span></a>`).join('');
   const choices = skills.map(s =>
-    `<button class="choice" data-key="${esc(s.slug)}" aria-pressed="false">${esc(s.homeLabel)}</button>`).join('');
+    `<button data-key="${esc(s.slug)}" aria-pressed="false">${esc(s.homeLabel)}</button>`).join('');
   const data = json(skills.map(s => ({
-    slug: s.slug, question: s.question, summary: s.summary,
-    match: s.match || [], example: s.example
+    slug: s.slug, question: s.question, summary: s.summary, match: s.match || []
   })));
   return template
     .replace('<!--HEAD-->', head({
-      title: 'WeIndie — Tools for working with AI',
-      description: 'WeIndie makes small, open tools for navigating work with AI.',
+      title: 'WeIndie — Skills you can read before you run them',
+      description: 'Small, plain-text skills for working with AI. Read the whole thing before you install it, change what you disagree with, and keep it.',
       url: ORIGIN + '/',
       image: ORIGIN + '/og.png',
-      imageAlt: 'WeIndie — small tools for working with AI.'
+      imageAlt: 'WeIndie — skills you can read before you run them.'
     }))
+    .replace('<!--POSITION-->', esc(cat.position))
+    .replace('<!--INDEX-->', index)
     .replace('<!--CHOICES-->', choices)
-    .replace('<!--CARDS-->', cards)
     .replace('<!--PROJECT-->', esc(cat.project))
     .replace('<!--PROJECT_BLURB-->', esc(cat.blurb))
+    .replace('<!--NAV-->', nav('<a href="#skills">The skills</a><a href="#which-one">Which one</a><a href="#what-this-is">What this is</a>'))
+    .replace('<!--THEMEJS-->', THEME_JS)
     .replace('<!--FOOTER-->', FOOTER)
     .replace('<!--DATA-->', data);
 }
@@ -397,12 +485,13 @@ for (const s of skills) {
      address bar disagreeing with the canonical tag. The short URL is the point. */
   write(s.slug + '.html', skillPage(s, skills, cat.project));
   write(s.slug + '/SKILL.md', s.canonical);
-  write('og/' + s.slug + '.svg', ogCard(s, cat.project));
-  toPng('og/' + s.slug + '.svg', 'og/' + s.slug + '.png');
+  write(CACHE + '/' + s.slug + '.html', ogCard(s, cat.project));
+  renderPng(CACHE + '/' + s.slug + '.html', 'og/' + s.slug + '.png');
   console.log('  page /' + s.slug);
 }
-write('og.svg', homeCard(skills));
-toPng('og.svg', 'og.png');
+write(CACHE + '/home.html', homeCard(skills));
+renderPng(CACHE + '/home.html', 'og.png');
 write('index.html', homePage(skills, cat));
+ write('404.html', notFoundPage(skills));
 console.log('  page /');
 console.log('done');
