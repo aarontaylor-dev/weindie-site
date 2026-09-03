@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>WeIndie</title>
+  <subtitle>What changed in the skills and the site, and when.</subtitle>
+  <id>https://weindie.com/feed.xml</id>
+  <link rel="self" type="application/atom+xml" href="https://weindie.com/feed.xml"/>
+  <link rel="alternate" type="text/html" href="https://weindie.com/changelog"/>
+  <updated>2026-09-03T00:00:00Z</updated>
+  <author><name>WeIndie</name></author>
+  <rights>MIT</rights>
+  <entry>
+    <title>A way in</title>
+    <id>https://weindie.com/changelog#2026-09-03-v1-2</id>
+    <link rel="alternate" type="text/html" href="https://weindie.com/changelog#2026-09-03-v1-2"/>
+    <updated>2026-09-03T00:00:00Z</updated>
+    <published>2026-09-03T00:00:00Z</published>
+    <category term="site"/>
+    <content type="html">&lt;p&gt;Until now this site had no door. No repository link, no address, nowhere to say that a skill had misfired — while the homepage invited you to fork the work. The licence made that legally true in v1.1. It was still practically impossible.&lt;/p&gt;&lt;p&gt;The source is now a public repository, linked from every page, and there is somewhere to report a problem. If a skill behaved badly, a page is wrong, or something here is unclear, that is worth knowing.&lt;/p&gt;&lt;p&gt;This changelog and its feed are also new. Skills carry a version in their frontmatter, and there was no way to learn that the file you downloaded had since changed. Now there is, and the build refuses to run if a skill's version has moved without an entry explaining why.&lt;/p&gt;&lt;p&gt;Also new: a page listing things that were considered and deliberately not built.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>/spec is no longer a coding skill</title>
+    <id>https://weindie.com/changelog#2026-09-03-spec-0-2</id>
+    <link rel="alternate" type="text/html" href="https://weindie.com/changelog#2026-09-03-spec-0-2"/>
+    <updated>2026-09-03T00:00:00Z</updated>
+    <published>2026-09-03T00:00:00Z</published>
+    <category term="/spec"/>
+    <content type="html">&lt;p&gt;Spec First v2 widened what the method covers — shared understanding before execution, with code as one case among planning, research, writing and deciding. /spec was still the narrow, code-only version v2 moved away from. It now says what v2 says, and its example is a message to a landlord rather than an onboarding flow.&lt;/p&gt;&lt;p&gt;Three behaviours are new. It prefers offering a short list of options to asking an open question. It recommends rather than interrogates, because a questionnaire is not a collaborator. And the working understanding is disposable: the default now preserves only what genuinely needs to outlive the task, in whichever ticket or document it already belongs to, instead of writing a competing summary.&lt;/p&gt;&lt;p&gt;Only /spec belongs to Spec First. /drift, /kiss and /ship are about staying on task, simplifying and verifying — which happen during and after execution, not before — so labelling all four as Spec First skills was itself a drift. They are now labelled simply as WeIndie skills.&lt;/p&gt;&lt;p&gt;If you installed 0.1, the whole file is on the page and re-reading it takes a minute. A customised download now records which version it came from.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>Every skill gets its own page</title>
+    <id>https://weindie.com/changelog#2026-09-03-v1-1</id>
+    <link rel="alternate" type="text/html" href="https://weindie.com/changelog#2026-09-03-v1-1"/>
+    <updated>2026-09-03T00:00:00Z</updated>
+    <published>2026-09-03T00:00:00Z</published>
+    <category term="site"/>
+    <content type="html">&lt;p&gt;v1 was a single page. Each skill now has its own address you can send to someone, with a worked example, a prompt to try before installing anything, install paths for each environment, and the whole SKILL.md in the page rather than behind a download.&lt;/p&gt;&lt;p&gt;You can also change the defaults you disagree with in the browser and download the result, with a diff showing exactly what moved. Nothing is sent anywhere.&lt;/p&gt;&lt;p&gt;Underneath, the site became generated. A build script with no dependencies reads the canonical skills and writes the pages, and it refuses to run if a skill and its options have drifted apart. Also added: light and dark themes, self-hosted webfonts so the site still makes no third-party requests, link-preview cards, a real 404 page, a print stylesheet, and an MIT licence — which is what makes &amp;quot;use it, change it, fork it&amp;quot; a permission rather than a sentiment.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>WeIndie, first published</title>
+    <id>https://weindie.com/changelog#2026-09-02-v1-0</id>
+    <link rel="alternate" type="text/html" href="https://weindie.com/changelog#2026-09-02-v1-0"/>
+    <updated>2026-09-02T00:00:00Z</updated>
+    <published>2026-09-02T00:00:00Z</published>
+    <category term="/spec"/>
+    <category term="/drift"/>
+    <category term="/kiss"/>
+    <category term="/ship"/>
+    <category term="site"/>
+    <content type="html">&lt;p&gt;Four small skills for working with AI, on one page: /spec, /drift, /kiss and /ship. Plain text, readable in full before you install them, and free to change.&lt;/p&gt;&lt;p&gt;Four is the whole catalogue on purpose. A skill that fires on everything stops meaning anything.&lt;/p&gt;</content>
+  </entry>
+</feed>

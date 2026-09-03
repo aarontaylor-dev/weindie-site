@@ -8,11 +8,15 @@
  *   skills/<slug>/SKILL.md    canonical skill — the single source of truth
  *   skills/<slug>/skill.json  page content and customisation options
  *   skills/catalogue.json     which skills exist, and in what order
+ *   changelog.json            what changed, and when — also the site version
  *
  * Generated output (do not edit by hand):
  *   <slug>.html         the public page          -> https://weindie.com/<slug>
  *   <slug>/SKILL.md     copy of the canonical    -> https://weindie.com/<slug>/SKILL.md
  *   index.html          homepage
+ *   changelog.html      the changelog          -> https://weindie.com/changelog
+ *   not-built.html      what was left out      -> https://weindie.com/not-built
+ *   feed.xml            Atom feed of the changelog
  *   og.svg, og/<slug>.svg + .png   link-preview cards
  */
 
@@ -23,6 +27,11 @@ const { execFileSync } = require('child_process');
 
 const ROOT = __dirname;
 const ORIGIN = 'https://weindie.com';
+const REPO = 'https://github.com/aarontaylor-dev/weindie-site';
+const ISSUES = REPO + '/issues';
+/* Empty until the address exists. A mailto pointing nowhere is a worse door
+   than no door, so the footer omits the line until this is filled in. */
+const CONTACT = '';
 const read = p => fs.readFileSync(path.join(ROOT, p), 'utf8');
 /* Only touch a file when its contents actually change, so mtimes stay meaningful
    (the PNG step below compares them) and rebuilds produce no spurious diffs. */
@@ -136,6 +145,71 @@ function loadSkill(slug) {
   });
 }
 
+/* Stable and permanent: this is both the Atom entry id and the anchor it points
+   at on /changelog, so it must never be regenerated differently for an entry
+   that has already been published. */
+const entryId = e => (e.date + '-' + (e.site ? 'v' + e.site
+  : Object.entries(e.skills).map(([slug, v]) => slug + '-' + v).join('-'))).replace(/\./g, '-');
+
+/* The changelog is held to the same standard as the skills: the build stops
+   rather than publish a record that disagrees with the files it describes. */
+function loadChangelog(slugs) {
+  const where = 'changelog.json';
+  const entries = JSON.parse(read(where)).entries;
+  if (!Array.isArray(entries) || !entries.length) fail(where + ': needs a non-empty "entries" array');
+
+  const ids = new Set();
+  let previous = null;
+
+  entries.forEach((e, i) => {
+    const at = where + ' entry ' + (i + 1);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(e.date || '')) fail(at + ': date must be YYYY-MM-DD');
+    if (new Date(e.date + 'T00:00:00Z').toISOString().slice(0, 10) !== e.date)
+      fail(at + ': ' + e.date + ' is not a real date');
+    if (!e.title || typeof e.title !== 'string') fail(at + ': needs a title');
+    if (!Array.isArray(e.body) || !e.body.length || e.body.some(x => typeof x !== 'string' || !x.trim()))
+      fail(at + ': body must be a non-empty array of non-empty paragraphs');
+    if (!e.site && !e.skills) fail(at + ': needs "site", "skills" or both — an entry with neither describes nothing');
+    for (const [slug, v] of Object.entries(e.skills || {})) {
+      if (!slugs.includes(slug)) fail(at + ': names "' + slug + '", which is not in the catalogue');
+      if (!v || typeof v !== 'string') fail(at + ': /' + slug + ' needs a version string');
+    }
+
+    /* Newest first. Equal dates are fine — file order decides, and file order is
+       what the page, the feed and the version lookups below all read. */
+    if (previous && e.date > previous)
+      fail(at + ': dated ' + e.date + ', which is newer than the entry above it (' + previous + ')');
+    previous = e.date;
+
+    e.id = entryId(e);
+    if (ids.has(e.id)) fail(at + ': has the same feed id as an earlier entry (' + e.id + ')');
+    ids.add(e.id);
+  });
+
+  const latest = entries.find(e => e.site);
+  if (!latest) fail(where + ': no entry declares a "site" version, so the footer has nothing to show');
+  return { entries, siteVersion: latest.site };
+}
+
+/* A skill version that moved with nothing said about it is the exact gap the
+   changelog exists to close, so an unexplained bump stops the build. */
+function checkSkillVersions(entries, skills) {
+  for (const s of skills) {
+    const said = entries.find(e => e.skills && e.skills[s.slug]);
+    if (!said) fail('changelog.json: nothing mentions /' + s.slug + ' — every skill needs at least one entry');
+    if (said.skills[s.slug] !== s.version)
+      fail('changelog.json: the newest entry for /' + s.slug + ' says v' + said.skills[s.slug] +
+        ', but skills/' + s.slug + '/SKILL.md is v' + s.version + ' — write the entry that explains the change');
+  }
+}
+
+/* ------------------------------------------------------------------- data */
+
+const cat = JSON.parse(read('skills/catalogue.json'));
+const skills = cat.skills.map(loadSkill);
+const changelog = loadChangelog(cat.skills);
+checkSkillVersions(changelog.entries, skills);
+
 /* ------------------------------------------------------------ page pieces */
 
 /* Runs in <head> so an explicit choice is on <html> before the first paint.
@@ -181,6 +255,7 @@ function head(o) {
   <title>${esc(o.title)}</title>
   <meta name="description" content="${esc(o.description)}">
   <link rel="canonical" href="${esc(o.url)}">
+  <link rel="alternate" type="application/atom+xml" title="WeIndie changelog" href="/feed.xml">
   <link rel="icon" href="${FAVICON}">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="WeIndie">
@@ -228,12 +303,23 @@ const nav = links => `<a class="skip" href="#main">Skip to content</a>
     </div>
   </header>`;
 
+/* The second row is the door: somewhere to read the source, somewhere to say a
+   skill misfired, and somewhere to write. Same register as the first row —
+   monospace, quiet, plain text links. The version comes from the changelog so
+   the two can never disagree. */
+const FOOT_LINKS = [
+  `<a href="${REPO}">Source on GitHub</a>`,
+  `<a href="${ISSUES}/new">Report a problem</a>`,
+  '<a href="/changelog">Changelog</a>',
+  CONTACT ? `<a href="mailto:${CONTACT}">${CONTACT}</a>` : ''
+].filter(Boolean).join('&nbsp;&middot; ');
+
 const FOOTER = `<footer class="wrap"><div class="foot">\
 <b>weindie</b>\
 <span>Independent tools for navigating work with AI.</span>\
-<span>v1.1 &middot; early and evolving</span>\
+<span>v${changelog.siteVersion} &middot; early and evolving</span>\
 <span><a href="/LICENSE.txt">MIT licensed</a></span>\
-</div></footer>`;
+</div><div class="foot2">${FOOT_LINKS}</div></footer>`;
 
 /* --------------------------------------------------------- the skill page */
 
@@ -445,6 +531,97 @@ function notFoundPage(skills) {
     .replace('<!--FOOTER-->', FOOTER);
 }
 
+/* ------------------------------------------------- changelog, feed, not-built */
+
+const skillNav = skills => nav(skills.map(s => `<a href="/${s.slug}">/${s.slug}</a>`).join(''));
+
+/* What an entry is about, shown in the rail: a site release, or the skills it
+   moved. Not uppercased like other rail headings — /SPEC is not how any skill
+   is written anywhere else on the site. */
+const entryTag = e => e.site ? 'v' + esc(e.site)
+  : Object.entries(e.skills).map(([slug, v]) => '/' + esc(slug) + ' ' + esc(v)).join(' &middot; ');
+
+function changelogPage(entries, skills) {
+  const items = entries.map(e => `<section class="blk entry" id="${esc(e.id)}">
+      <div class="rail"><div class="n">${esc(e.date)}</div><h2>${entryTag(e)}</h2></div>
+      <div class="body">
+        <h3>${esc(e.title)}</h3>
+        <div class="prose">${e.body.map(x => `<p>${esc(x)}</p>`).join('')}</div>
+      </div>
+    </section>`).join('\n    ');
+
+  return read('src/changelog.html')
+    .replace('<!--HEAD-->', head({
+      title: 'Changelog — WeIndie',
+      description: 'What changed in the skills and the site, and when. No schedule — entries appear when something actually changes.',
+      url: ORIGIN + '/changelog',
+      image: ORIGIN + '/og.png',
+      imageAlt: 'WeIndie — what changed, and when.'
+    }))
+    .replace('<!--NAV-->', skillNav(skills))
+    .replace('<!--ENTRIES-->', items)
+    .replace('<!--THEMEJS-->', THEME_JS)
+    .replace('<!--FOOTER-->', FOOTER);
+}
+
+function notBuiltPage(skills) {
+  return read('src/not-built.html')
+    .replace('<!--HEAD-->', head({
+      title: 'Not built — WeIndie',
+      description: 'Things that were considered for WeIndie and deliberately left out, and the reason for each.',
+      url: ORIGIN + '/not-built',
+      image: ORIGIN + '/og.png',
+      imageAlt: 'WeIndie — things considered, and deliberately left out.'
+    }))
+    .replace('<!--NAV-->', skillNav(skills))
+    .replace('<!--REPORT-->', `<a href="${ISSUES}">the issue tracker</a>`)
+    .replace('<!--THEMEJS-->', THEME_JS)
+    .replace('<!--FOOTER-->', FOOTER);
+}
+
+/* Atom rather than RSS: unambiguous dates, required stable ids, and every reader
+   supports it. Dates in changelog.json are days, so entries sit at midnight UTC.
+   Bodies are plain paragraphs, escaped twice on purpose — once so the text is
+   valid HTML, once so that HTML survives as XML character data. */
+function feedXml(entries) {
+  const stamp = d => d + 'T00:00:00Z';
+  const entryXml = e => `  <entry>
+    <title>${esc(e.title)}</title>
+    <id>${ORIGIN}/changelog#${e.id}</id>
+    <link rel="alternate" type="text/html" href="${ORIGIN}/changelog#${e.id}"/>
+    <updated>${stamp(e.date)}</updated>
+    <published>${stamp(e.date)}</published>
+${Object.keys(e.skills || {}).map(slug => `    <category term="/${slug}"/>\n`).join('')}\
+${e.site ? `    <category term="site"/>\n` : ''}\
+    <content type="html">${esc(e.body.map(x => '<p>' + esc(x) + '</p>').join(''))}</content>
+  </entry>`;
+
+  return `<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>WeIndie</title>
+  <subtitle>What changed in the skills and the site, and when.</subtitle>
+  <id>${ORIGIN}/feed.xml</id>
+  <link rel="self" type="application/atom+xml" href="${ORIGIN}/feed.xml"/>
+  <link rel="alternate" type="text/html" href="${ORIGIN}/changelog"/>
+  <updated>${stamp(entries[0].date)}</updated>
+  <author><name>WeIndie</name></author>
+  <rights>MIT</rights>
+${entries.map(entryXml).join('\n')}
+</feed>
+`;
+}
+
+/* The same three doors as the footer, with room to say what each one is for.
+   Keys stay short: the index reserves 130px for them. */
+const DOORS = [
+  [REPO, 'Source', 'github.com/aarontaylor-dev/weindie-site'],
+  [ISSUES + '/new', 'Report', 'A skill misfired, or a page here is wrong'],
+  ['/changelog', 'Changelog', 'What changed, and when'],
+  ['/not-built', 'Not built', 'What was considered and deliberately left out'],
+  CONTACT ? ['mailto:' + CONTACT, 'Email', CONTACT] : null
+].filter(Boolean).map(([href, k, q]) =>
+  `<a href="${esc(href)}"><span class="k">${esc(k)}</span><span class="q">${esc(q)}</span></a>`).join('');
+
 function homePage(skills, cat) {
   const template = read('src/home.html');
   const index = skills.map(s =>
@@ -466,6 +643,7 @@ function homePage(skills, cat) {
     .replace('<!--INDEX-->', index)
     .replace('<!--CHOICES-->', choices)
     .replace('<!--PROJECT_BLURB-->', esc(cat.blurb))
+    .replace('<!--DOORS-->', DOORS)
     .replace('<!--NAV-->', nav('<a href="#skills">The skills</a><a href="#which-one">Which one</a><a href="#what-this-is">What this is</a>'))
     .replace('<!--THEMEJS-->', THEME_JS)
     .replace('<!--FOOTER-->', FOOTER)
@@ -474,9 +652,8 @@ function homePage(skills, cat) {
 
 /* ------------------------------------------------------------------ main */
 
-const cat = JSON.parse(read('skills/catalogue.json'));
-const skills = cat.skills.map(loadSkill);
-console.log('weindie build — ' + skills.length + ' skills');
+console.log('weindie build — ' + skills.length + ' skills, ' +
+  changelog.entries.length + ' changelog entries');
 
 for (const s of skills) {
   /* <slug>.html, not <slug>/index.html: Cloudflare Pages serves /kiss straight
@@ -491,6 +668,9 @@ for (const s of skills) {
 write(CACHE + '/home.html', homeCard(skills));
 renderPng(CACHE + '/home.html', 'og.png');
 write('index.html', homePage(skills, cat));
- write('404.html', notFoundPage(skills));
-console.log('  page /');
+write('changelog.html', changelogPage(changelog.entries, skills));
+write('not-built.html', notBuiltPage(skills));
+write('feed.xml', feedXml(changelog.entries));
+write('404.html', notFoundPage(skills));
+console.log('  page /, /changelog, /not-built, /feed.xml');
 console.log('done');

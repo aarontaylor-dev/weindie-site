@@ -28,6 +28,8 @@ Cursor or Codex variants — only different install paths.
       <slug>/SKILL.md       the canonical skill — the single source of truth
       <slug>/skill.json     page content and customisation options
 
+    changelog.json          what changed and when — also the site version
+
     fonts/                  self-hosted woff2 + OFL licences (no third-party requests)
 
     src/
@@ -35,6 +37,8 @@ Cursor or Codex variants — only different install paths.
       home.html             homepage template
       skill.js              skill-page behaviour (copy, customise, diff, download)
 
+      changelog.html        changelog template
+      not-built.html        "what was left out" template
       404.html              not-found page template
 
     build.js                the generator — no dependencies
@@ -42,6 +46,9 @@ Cursor or Codex variants — only different install paths.
 Everything else in the repository root is **generated**. Do not edit it by hand:
 
     index.html              homepage
+    changelog.html          changelog       -> weindie.com/changelog
+    not-built.html          what was left out -> weindie.com/not-built
+    feed.xml                Atom feed of the changelog
     404.html                not-found page
     <slug>.html             skill page      -> weindie.com/<slug>
     <slug>/SKILL.md         raw skill       -> weindie.com/<slug>/SKILL.md
@@ -77,6 +84,8 @@ That last set is what keeps customisation honest: the browser generates a custom
 skill by replacing those exact lines, so if the text drifts apart the build stops
 rather than silently producing a file that changes nothing.
 
+The changelog is held to the same standard — see below.
+
 ## Adding a skill
 
 1. `mkdir skills/<slug>` and add `SKILL.md` and `skill.json`. Copy an existing
@@ -85,6 +94,46 @@ rather than silently producing a file that changes nothing.
 3. `node build.js`, then commit the generated output.
 
 Nothing assumes a particular number of skills.
+
+## Changelog
+
+`changelog.json` is the source for `/changelog`, `/feed.xml` **and the version
+in the footer**. There is no version string anywhere else, so the footer and the
+changelog cannot disagree.
+
+    {
+      "entries": [
+        {
+          "date": "2026-09-03",
+          "site": "1.2",                    optional — a site release
+          "skills": { "spec": "0.2" },      optional — skill versions this moved
+          "title": "A way in",
+          "body": ["one paragraph", "another"]
+        }
+      ]
+    }
+
+Entries are newest first, and an entry needs `site`, `skills` or both. `body` is
+an array of plain paragraphs rather than Markdown, so the build stays dependency
+free — same reason `skill.json` stores structured strings.
+
+The build refuses to run unless:
+
+- every date is a real `YYYY-MM-DD`, and no entry is newer than the one above it
+- every entry has a title and at least one non-empty paragraph
+- every slug named under `skills` is in the catalogue
+- every skill has at least one entry, and **the newest entry naming a skill
+  states that skill's current version in SKILL.md**
+- no two entries produce the same feed id
+- at least one entry declares a `site` version
+
+That fourth rule is the point of the file: bump a skill's version and the build
+stops until you have written what changed. The site asks people to read a file
+before running it, so it owes them a way to find out when the file moved.
+
+Feed ids are `https://weindie.com/changelog#<date>-<version>`, which is also the
+anchor on the page. They are permanent — never regenerate an id for an entry that
+has already been published, or every reader will show it as new.
 
 ## Frontmatter
 
@@ -134,9 +183,14 @@ There is also a print stylesheet: ink on white, panels open, controls hidden.
 ## Privacy
 
 No analytics, no trackers, no third-party requests, no build-time or run-time
-network calls, no cookies, no storage. Problem matching, customisation and
-download generation all happen in the visitor's browser. The claim on the site
-that nothing leaves the browser is literally true — keep it that way.
+network calls, no cookies. Problem matching, customisation and download
+generation all happen in the visitor's browser.
+
+One thing is stored: the theme toggle writes `weindie-theme` to `localStorage`
+so a chosen light or dark setting survives a reload. Nothing else is kept, and
+nothing is ever sent anywhere. The claim on the site — that what you type stays
+in the browser — is literally true. Keep it that way, and keep this paragraph
+accurate: the whole argument here is that the claims survive inspection.
 
 ## Deployment
 
@@ -156,9 +210,13 @@ static host. Run `node build.js` before committing.
 `https://www.weindie.com` redirects to `https://weindie.com` with a 301 that
 preserves the path and query string.
 
-## Repository status
+## Reporting a problem
 
-This repository is **private**.
+Open an issue: <https://github.com/aarontaylor-dev/weindie-site/issues>.
+
+A skill that misfired is the most useful thing to report — the site tells people
+to read a file before they run it, so a file that behaves unexpectedly is a
+defect in the writing, not in the reader.
 
 ## Licensing
 

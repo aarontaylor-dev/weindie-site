@@ -6,6 +6,7 @@
   <title>WeIndie — Skills you can read before you run them</title>
   <meta name="description" content="Small, plain-text skills for working with AI. Read the whole thing before you install it, change what you disagree with, and keep it.">
   <link rel="canonical" href="https://weindie.com/">
+  <link rel="alternate" type="application/atom+xml" title="WeIndie changelog" href="/feed.xml">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23315c4d'/%3E%3Cpath d='M8 22L14 10M18 22l6-12' fill='none' stroke='%23fbfaf7' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="WeIndie">
@@ -296,6 +297,15 @@ footer{border-top:2px solid var(--ink);margin-top:64px;padding:20px 0 56px}
 .foot b{color:var(--ink);font-weight:500;letter-spacing:.08em;text-transform:uppercase}
 .foot a{color:var(--faint);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
 .foot a:hover{color:var(--accent)}
+/* The door. Plain inline text rather than a flex row: the separators are glued
+   to the link before them with &nbsp;, so wrapping can never leave a middot
+   stranded at the start of a line. */
+.foot2{
+  margin-top:14px;line-height:1.9;
+  font-family:var(--mono);font-size:12px;color:var(--faint);
+}
+.foot2 a{color:var(--faint);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+.foot2 a:hover{color:var(--accent)}
 
 @media (max-width:820px){
   .blk{grid-template-columns:1fr;gap:16px;padding:32px 0}
@@ -438,12 +448,21 @@ footer{border-top:2px solid var(--ink);margin-top:64px;padding:20px 0 56px}
         <div class="principles">
           <div class="principle"><b>Useful on its own</b><span>Each piece should solve a recognisable problem without requiring the whole system.</span></div>
           <div class="principle"><b>Nothing hidden</b><span>Every skill is one readable file. If you cannot read it, do not install it.</span></div>
-          <div class="principle"><b>Honest about limits</b><span>If none of the current work fits a problem, the useful answer may simply be &ldquo;not yet&rdquo;.</span></div>
+          <div class="principle"><b>Honest about limits</b><span>If none of the current work fits a problem, the useful answer may simply be &ldquo;not yet&rdquo;. Some things were <a href="/not-built">considered and deliberately left out</a>.</span></div>
         </div>
       </div>
     </section>
+
+    <section class="blk" id="where-this-lives">
+      <div class="rail"><div class="n">&sect; 4</div><h2>Where this lives</h2></div>
+      <div class="body">
+        <p class="lede">Everything here &mdash; the site, the build and every skill &mdash; is one public repository. That is what makes &ldquo;fork it&rdquo; a practical statement rather than a licence term.</p>
+        <p class="lede">If a skill misfired, a page is wrong, or something here is unclear, that is worth knowing.</p>
+        <div class="index"><a href="https://github.com/aarontaylor-dev/weindie-site"><span class="k">Source</span><span class="q">github.com/aarontaylor-dev/weindie-site</span></a><a href="https://github.com/aarontaylor-dev/weindie-site/issues/new"><span class="k">Report</span><span class="q">A skill misfired, or a page here is wrong</span></a><a href="/changelog"><span class="k">Changelog</span><span class="q">What changed, and when</span></a><a href="/not-built"><span class="k">Not built</span><span class="q">What was considered and deliberately left out</span></a></div>
+      </div>
+    </section>
   </main>
-  <footer class="wrap"><div class="foot"><b>weindie</b><span>Independent tools for navigating work with AI.</span><span>v1.1 &middot; early and evolving</span><span><a href="/LICENSE.txt">MIT licensed</a></span></div></footer>
+  <footer class="wrap"><div class="foot"><b>weindie</b><span>Independent tools for navigating work with AI.</span><span>v1.2 &middot; early and evolving</span><span><a href="/LICENSE.txt">MIT licensed</a></span></div><div class="foot2"><a href="https://github.com/aarontaylor-dev/weindie-site">Source on GitHub</a>&nbsp;&middot; <a href="https://github.com/aarontaylor-dev/weindie-site/issues/new">Report a problem</a>&nbsp;&middot; <a href="/changelog">Changelog</a></div></footer>
   <script>
     var SKILLS = [{"slug":"spec","question":"What are we actually trying to do?","summary":"Reaches shared understanding before the work starts — on planning, research, writing or code.","match":["vague","unclear","not sure","what should","goal","requirements","understand","idea","ambiguous","before i start","where to start","same page","help me plan","help me write","help me decide","thinking through"]},{"slug":"drift","question":"Are we still doing what we meant to do?","summary":"Checks whether the current work has moved away from the task it was meant to do, and helps get back to it.","match":["drift","off track","unrelated","didn't ask","did not ask","wander","focus","refactor","scope creep","changing things","went off","distracted","keeps changing"]},{"slug":"kiss","question":"Is this the smallest version that still works?","summary":"Reviews work for complexity that is not earning its place, and proposes the smallest version that still meets the goal.","match":["complex","complicated","simplify","simpler","overengineer","over-engineer","too much","abstraction","bloat","convoluted","too many files","overkill"]},{"slug":"ship","question":"Does the evidence support calling this done?","summary":"Separates what has actually been verified from what is being assumed, and gives a verdict either way.","match":["finish","done","ready","ship","complete","tested","test","verify","verified","evidence","claims it works","says it works"]}];
     var $ = function (id) { return document.getElementById(id); };
