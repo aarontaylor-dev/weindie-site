@@ -1,5 +1,10 @@
 {
   "project": "Spec First",
-  "blurb": "Independent skills for working more clearly with AI. Use one when it helps. Use several together. They are lenses, not a pipeline.",
-  "skills": ["spec", "drift", "kiss", "ship"]
+  "blurb": "a set of independent skills for working more clearly with AI. Use one when it helps. Use several together. They are lenses, not a pipeline.",
+  "skills": [
+    "spec",
+    "drift",
+    "kiss",
+    "ship"
+  ]
 }
