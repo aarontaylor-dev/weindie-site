@@ -528,8 +528,9 @@ These are the adjustable lines of this skill. A customised copy from
     $('#diffTitle').textContent = changed.length ? 'Compare with default' : 'Compare with default (identical)';
     $('#diff').innerHTML = changed.length
       ? diff(D.canonical, custom).map(function (l) {
+          /* spans are block-level in the stylesheet, so no newline between them */
           return '<span class="' + l[0] + '">' + esc(l[1]) + '</span>';
-        }).join('\n')
+        }).join('')
       : 'No differences.';
     $('#dlCustom').textContent = changed.length ? 'Download your /' + D.slug : 'Download /' + D.slug;
   }
