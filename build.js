@@ -24,9 +24,13 @@ const { execFileSync } = require('child_process');
 const ROOT = __dirname;
 const ORIGIN = 'https://weindie.com';
 const read = p => fs.readFileSync(path.join(ROOT, p), 'utf8');
+/* Only touch a file when its contents actually change, so mtimes stay meaningful
+   (the PNG step below compares them) and rebuilds produce no spurious diffs. */
 const write = (p, s) => {
-  fs.mkdirSync(path.dirname(path.join(ROOT, p)), { recursive: true });
-  fs.writeFileSync(path.join(ROOT, p), s);
+  const full = path.join(ROOT, p);
+  if (fs.existsSync(full) && fs.readFileSync(full, 'utf8') === s) return;
+  fs.mkdirSync(path.dirname(full), { recursive: true });
+  fs.writeFileSync(full, s);
 };
 const fail = m => { console.error('build failed: ' + m); process.exit(1); };
 
@@ -389,7 +393,10 @@ const skills = cat.skills.map(loadSkill);
 console.log('weindie build — ' + skills.length + ' skills');
 
 for (const s of skills) {
-  write(s.slug + '/index.html', skillPage(s, skills, cat.project));
+  /* <slug>.html, not <slug>/index.html: Cloudflare Pages serves /kiss straight
+     from kiss.html, where a directory would 308-redirect to /kiss/ and leave the
+     address bar disagreeing with the canonical tag. The short URL is the point. */
+  write(s.slug + '.html', skillPage(s, skills, cat.project));
   write(s.slug + '/SKILL.md', s.canonical);
   write('og/' + s.slug + '.svg', ogCard(s, cat.project));
   toPng('og/' + s.slug + '.svg', 'og/' + s.slug + '.png');

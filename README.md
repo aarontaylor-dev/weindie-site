@@ -32,8 +32,14 @@ Cursor or Codex variants — only different install paths.
 Everything else in the repository root is **generated**. Do not edit it by hand:
 
     index.html              homepage
-    <slug>/index.html       skill page      -> weindie.com/<slug>
+    <slug>.html             skill page      -> weindie.com/<slug>
     <slug>/SKILL.md         raw skill       -> weindie.com/<slug>/SKILL.md
+
+The page is `<slug>.html` rather than `<slug>/index.html` on purpose: Cloudflare
+Pages serves `/kiss` straight from `kiss.html`, where a directory would
+308-redirect to `/kiss/` and leave the address bar disagreeing with the canonical
+tag. These URLs get pasted into conversations, so the short form should be what
+people end up on.
     og.svg, og.png          homepage link-preview card
     og/<slug>.svg, .png     per-skill link-preview cards
 
@@ -87,9 +93,9 @@ A customised download adds `based_on: WeIndie /drift v0.1` to the same map.
 
     python3 -m http.server 8787
 
-Then <http://127.0.0.1:8787/>. Use the trailing-slash form for skill pages
-(`/kiss/`) — Cloudflare Pages resolves `/kiss` in production, Python's server
-does not.
+Then <http://127.0.0.1:8787/>. Locally, skill pages need the extension
+(`/kiss.html`) — Cloudflare Pages resolves the extensionless `/kiss` in
+production, Python's server does not.
 
 ## Privacy
 
