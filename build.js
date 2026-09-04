@@ -27,7 +27,7 @@ const { execFileSync } = require('child_process');
 
 const ROOT = __dirname;
 const ORIGIN = 'https://weindie.com';
-const REPO = 'https://github.com/aarontaylor-dev/weindie-site';
+const REPO = 'https://github.com/aarontaylor-dev/weindie';
 const ISSUES = REPO + '/issues';
 /* A personal address rather than an on-brand one: it is already the author of
    every commit in this public repository, so forwarding hi@weindie.com to it
@@ -615,7 +615,7 @@ ${entries.map(entryXml).join('\n')}
 /* The same three doors as the footer, with room to say what each one is for.
    Keys stay short: the index reserves 130px for them. */
 const DOORS = [
-  [REPO, 'Source', 'github.com/aarontaylor-dev/weindie-site'],
+  [REPO, 'Source', 'github.com/aarontaylor-dev/weindie'],
   [ISSUES + '/new', 'Report', 'A skill misfired, or a page here is wrong'],
   ['/changelog', 'Changelog', 'What changed, and when'],
   ['/not-built', 'Not built', 'What was considered and deliberately left out'],

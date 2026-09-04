@@ -197,6 +197,10 @@ accurate: the whole argument here is that the claims survive inspection.
 Production is **Cloudflare Pages**, project `weindie-site`, connected to this
 repository. Pushing to `main` deploys automatically.
 
+The Pages project kept its original name when the repository was renamed from
+`weindie-site` to `weindie`. They are separate things: Pages tracks the
+repository by id rather than by name, so the rename did not break the link.
+
     Production branch    main
     Build command        (none — generated output is committed)
     Output directory     / (repository root)
@@ -212,7 +216,7 @@ preserves the path and query string.
 
 ## Reporting a problem
 
-Open an issue: <https://github.com/aarontaylor-dev/weindie-site/issues>.
+Open an issue: <https://github.com/aarontaylor-dev/weindie/issues>.
 
 A skill that misfired is the most useful thing to report — the site tells people
 to read a file before they run it, so a file that behaves unexpectedly is a
