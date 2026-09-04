@@ -1,6 +1,6 @@
 {
   "label": "WeIndie skill",
-  "blurb": "Four small skills for working with AI. Use one when it helps. Use several together. They are lenses, not a pipeline \u2014 and only /spec belongs to Spec First.",
+  "blurb": "Four small skills for working with AI. Use one when it helps. Use several together. They are lenses, not a pipeline, and no one of them is the point.",
   "skills": [
     "spec",
     "drift",

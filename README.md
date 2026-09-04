@@ -6,12 +6,15 @@ WeIndie is a small independent workbench for practical AI work. The site explain
 what WeIndie is, and gives each skill (`/spec`, `/drift`, `/kiss`, `/ship`) a
 page you can send to someone.
 
-The set is deliberately *not* named after one of its members. Only `/spec`
-belongs to **Spec First** — shared understanding before execution — and it
-carries that attribution through the optional `partOf` field in its
-`skill.json`. `/drift`, `/kiss` and `/ship` are about staying on task,
-simplifying and verifying, which happen during and after execution, so they are
+The set is deliberately *not* named after one of its members, and all four are
 labelled simply as WeIndie skills.
+
+`skill.json` has an optional `partOf` field that overrides that label, for a
+skill that belongs to a named method. It is currently unused. `/spec` carried
+`partOf: Spec First` until that method had somewhere public to point at —
+which it does not, so the label was a claim a reader could not check, and
+"spec-first" already means something else in API design. The field is kept for
+the day that changes; setting it is one line and the build does the rest.
 
 ## The model
 
